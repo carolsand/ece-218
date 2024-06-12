@@ -46,8 +46,6 @@
 #define BACKING_UP_TIME 400
 #define TURNING_TIME 250
 
-
-
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
@@ -57,8 +55,8 @@ typedef enum {
     InitPState,
     DRIVING_FORWARD,
     HIDING,
-            BACKING_UP,
-            BoundDetected,
+    BACKING_UP,
+    BoundDetected,
 } Robot_HSMState_t;
 
 static const char *StateNames[] = {
@@ -178,7 +176,7 @@ ES_Event RunRobot_HSM(ES_Event ThisEvent) {
                 case FOUND_TAPE: // when the tape sensor(s)(s) get activated                   
                     ThisEvent.EventType = ES_NO_EVENT; // (should always b done once we are done doing what we wanna do w current event)
                     break;
-                case ES_TIMEOUT: 
+                case ES_TIMEOUT:
                     break;
                 default: //ignore all other events
                     break;
@@ -207,7 +205,7 @@ ES_Event RunRobot_HSM(ES_Event ThisEvent) {
             }
             break;
             /*============================================BACKING_UP_STATE_END============*/
-       
+
         case BoundDetected: // in the first state, replace this with correct names
             // run sub-state machine for this state
             //NOTE: the SubState Machine runs and responds to events before anything in the this
