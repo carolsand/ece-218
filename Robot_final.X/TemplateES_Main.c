@@ -3,19 +3,20 @@
 #include <stdio.h>
 #include "ES_Configure.h"
 #include "ES_Framework.h"
+#include "Robot.h"
 
 void main(void)
 {
     ES_Return_t ErrorType;
 
     BOARD_Init();
-
+    
     printf("Starting ES Framework Template\r\n");
     printf("using the 2nd Generation Events & Services Framework\r\n");
 
 
     // Your hardware initialization function calls go here
-
+    Robot_Init();
     // now initialize the Events and Services Framework and start it running
     ErrorType = ES_Initialize();
     if (ErrorType == Success) {
@@ -30,9 +31,9 @@ void main(void)
     case FailedInit:
         printf("Failed Initialization");
         break;
-    case Running:
-         printf("passed");
-         break;
+//    case Running:
+//         printf("passed");
+//         break;
     default:
         printf("Other Failure: %d", ErrorType);
         break;

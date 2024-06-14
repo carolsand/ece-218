@@ -30,7 +30,7 @@
 #include "ES_Configure.h"
 #include "ES_Framework.h"
 #include "BOARD.h"
-#include "TemplateHSM.h"
+#include "RobotHSM.h"
 #include "TemplateSubHSM.h"
 
 /*******************************************************************************
