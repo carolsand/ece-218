@@ -38,8 +38,8 @@
 #define BACK_UP_SPEED 50
 #define TURN_SPEED    65
 #define TIME_WAITING  2000
-#define TIME_BACKING_UP 3000
-#define TIME_TURNING 500
+#define TIME_BACKING_UP 400
+#define TIME_TURNING 250
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

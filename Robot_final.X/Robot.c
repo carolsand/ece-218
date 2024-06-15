@@ -78,7 +78,7 @@
 #define LED_Off(i) *LED_LATSET[(unsigned int)i] = LED_bitsMap[(unsigned int)i];
 #define LED_Get(i) (*LED_LAT[(unsigned int)i]&LED_bitsMap[(unsigned int)i])
 
-#define TAPE_SENSOR_THRESHOLD 750
+#define TAPE_SENSOR_THRESHOLD 100
 #define TRACKWIRE_THRESHOLD 800
 
 /*******************************************************************************
