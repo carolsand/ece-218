@@ -148,13 +148,13 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                     //insideSubHSM_First will be 1 and it must be cleared
                     insideSubHSM_First = 0; //clear flag
 
-                    if (bumperReading && 0b1100) {
+                    //if (bumperReading && 0b0011) {
                         //if any of the front bumpers were hit, go in reverse
-                        Robot_Reverse(BACK_UP_SPEED);
-                    } else {
+                        Robot_Drive(-BACK_UP_SPEED);
+                    //} else {
                         //if any of the rear bumpers were hit, go forward
-                        Robot_Drive(BACK_UP_SPEED);
-                    }
+                    //    Robot_Drive(BACK_UP_SPEED);
+                    //}
 
                     //start back up timer to determine how long robot backs up
                     ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);

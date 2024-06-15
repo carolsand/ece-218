@@ -111,9 +111,9 @@ uint8_t InitRobotHSM(uint8_t Priority) {
  * @param ThisEvent - the event (type and param) to be posted to queue
  * @return TRUE or FALSE
  * @brief This function is a wrapper to the queue posting function, and its name
- *        will be used inside ES_Configure to point to which queue events should
- *        be posted to. Remember to rename to something appropriate.
- *        Returns TRUE if successful, FALSE otherwise
+ *  will be used inside ES_Configure to point to which queue events should
+ *  be posted to. Remember to rename to something appropriate.
+ *  Returns TRUE if successful, FALSE otherwise
  * @author Carol Sanders, 2024.06.14 */
 uint8_t PostRobotHSM(ES_Event ThisEvent) {
     return ES_PostToService(MyPriority, ThisEvent);

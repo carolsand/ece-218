@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=Robot_final.X
 
 # Active Configuration
-DEFAULTCONF=default
+DEFAULTCONF=MAIN
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=default 
+ALLCONFS=default MAIN ROBOT_TEST 
 
 
 # build
@@ -46,12 +46,16 @@ ALLCONFS=default
 # clobber
 .clobber-impl: .clobber-pre .depcheck-impl
 	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=default clean
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=MAIN clean
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=ROBOT_TEST clean
 
 
 
 # all
 .all-impl: .all-pre .depcheck-impl
 	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=default build
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=MAIN build
+	    ${MAKE} SUBPROJECTS=${SUBPROJECTS} CONF=ROBOT_TEST build
 
 
 

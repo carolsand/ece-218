@@ -309,7 +309,7 @@ unsigned int Robot_BatteryVoltage(void) {
  * @brief  Returns the state of the front left bumper
  * @author Max Dunne, 2012.01.06 */
 unsigned char Robot_ReadFrontLeftBumper(void) {
-    return !BUMP_FRONT_LEFT;
+    return BUMP_FRONT_LEFT;
 }
 
 /**
@@ -319,7 +319,7 @@ unsigned char Robot_ReadFrontLeftBumper(void) {
  * @brief  Returns the state of the front right bumper
  * @author Max Dunne, 2012.01.06 */
 unsigned char Robot_ReadFrontRightBumper(void) {
-    return !BUMP_FRONT_RIGHT;
+    return BUMP_FRONT_RIGHT;
 }
 
 /**
@@ -329,7 +329,7 @@ unsigned char Robot_ReadFrontRightBumper(void) {
  * @brief  Returns the state of the rear left bumper
  * @author Max Dunne, 2012.01.06 */
 unsigned char Robot_ReadRearLeftBumper(void) {
-    return !BUMP_REAR_LEFT;
+    return BUMP_REAR_LEFT;
 }
 
 /**
@@ -339,7 +339,7 @@ unsigned char Robot_ReadRearLeftBumper(void) {
  * @brief  Returns the state of the rear right bumper
  * @author Max Dunne, 2012.01.06 */
 unsigned char Robot_ReadRearRightBumper(void) {
-    return !BUMP_REAR_RIGHT;
+    return BUMP_REAR_RIGHT;
 }
 
 /**
@@ -351,7 +351,7 @@ unsigned char Robot_ReadRearRightBumper(void) {
 unsigned char Robot_ReadBumpers(void) {
     //unsigned char bump_state;
     //bump_state = (!BUMP_FRONT_LEFT + ((!BUMP_FRONT_RIGHT) << 1)+((!BUMP_REAR_LEFT) << 2)+((!BUMP_REAR_RIGHT) << 3));
-    return (!BUMP_FRONT_LEFT + ((!BUMP_FRONT_RIGHT) << 1)+((!BUMP_REAR_LEFT) << 2)+((!BUMP_REAR_RIGHT) << 3));
+    return (BUMP_FRONT_LEFT + ((BUMP_FRONT_RIGHT) << 1)+((BUMP_REAR_LEFT) << 2)+((BUMP_REAR_RIGHT) << 3));
 }
 
 /**
