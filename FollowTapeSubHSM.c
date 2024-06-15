@@ -173,7 +173,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     //turning left 
                     Robot_Turn(0, TURN_SPEED);
-                    ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING+100);
+                    ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING +100);
                     break;
 
                 case ES_TIMEOUT:

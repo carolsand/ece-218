@@ -589,14 +589,14 @@ void main(void) {
         //Robot_LeftMtrSpeed(100);
         //Robot_RightMtrSpeed(-100);
         if (Robot_ReadFrontLeftBumper() == BUMPER_TRIPPED) {
-            Robot_SetDoorServo(1050);
+            Robot_OpenDoor();
             //Robot_LeftMtrSpeed(100);
         }
         if (Robot_ReadRearLeftBumper() == BUMPER_TRIPPED) {
             Robot_Drive(0);
         }
         if (Robot_ReadFrontRightBumper() == BUMPER_TRIPPED) {
-            Robot_SetDoorServo(1950);
+            Robot_CloseDoor();
             //Robot_RightMtrSpeed(100);
         }
         if (Robot_ReadRearRightBumper() == BUMPER_TRIPPED) {

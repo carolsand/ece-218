@@ -25,14 +25,14 @@
       <itemPath>C:/ECE118/include/pwm.h</itemPath>
       <itemPath>C:/ECE118/include/serial.h</itemPath>
       <itemPath>C:/ECE118/include/timers.h</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/ES_Configure.h</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FinalEventChecker.h</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FollowTapeSubHSM.h</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FollowWallSubHSM.h</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/TapeBumpService.h</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/UnloadScoopService.h</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/RobotHSM.h</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/Robot.h</itemPath>
+      <itemPath>Robot.h</itemPath>
+      <itemPath>RobotHSM.h</itemPath>
+      <itemPath>../ES_Configure.h</itemPath>
+      <itemPath>../FinalEventChecker.h</itemPath>
+      <itemPath>../FollowTapeSubHSM.h</itemPath>
+      <itemPath>../FollowWallSubHSM.h</itemPath>
+      <itemPath>../TapeBumpService.h</itemPath>
+      <itemPath>../UnloadScoopService.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -57,14 +57,14 @@
       <itemPath>C:/ECE118/src/pwm.c</itemPath>
       <itemPath>C:/ECE118/src/serial.c</itemPath>
       <itemPath>C:/ECE118/src/timers.c</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FinalEventChecker.c</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FollowTapeSubHSM.c</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FollowWallSubHSM.c</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/TapeBumpService.c</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/UnloadScoopService.c</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/RobotHSM.c</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/TemplateES_Main.c</itemPath>
-      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/Robot.c</itemPath>
+      <itemPath>Robot.c</itemPath>
+      <itemPath>RobotHSM.c</itemPath>
+      <itemPath>TemplateES_Main.c</itemPath>
+      <itemPath>../FinalEventChecker.c</itemPath>
+      <itemPath>../FollowTapeSubHSM.c</itemPath>
+      <itemPath>../FollowWallSubHSM.c</itemPath>
+      <itemPath>../TapeBumpService.c</itemPath>
+      <itemPath>../UnloadScoopService.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -89,7 +89,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.10</languageToolchainVersion>
+        <languageToolchainVersion>4.35</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -409,7 +409,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.10</languageToolchainVersion>
+        <languageToolchainVersion>4.35</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -729,7 +729,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.10</languageToolchainVersion>
+        <languageToolchainVersion>4.35</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -898,24 +898,6 @@
         <property key="stack-smashing" value=""/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
-      <item path="C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/TemplateES_Main.c"
-            ex="true"
-            overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
@@ -987,6 +969,8 @@
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="3.25"/>
       </PICkit3PlatformTool>
+      <item path="TemplateES_Main.c" ex="true" overriding="false">
+      </item>
       <Tool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
