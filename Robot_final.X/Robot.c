@@ -78,7 +78,7 @@
 #define LED_Off(i) *LED_LATSET[(unsigned int)i] = LED_bitsMap[(unsigned int)i];
 #define LED_Get(i) (*LED_LAT[(unsigned int)i]&LED_bitsMap[(unsigned int)i])
 
-#define TAPE_SENSOR_THRESHOLD 100
+#define TAPE_SENSOR_THRESHOLD 500
 #define TRACKWIRE_THRESHOLD 800
 
 /*******************************************************************************
@@ -417,7 +417,7 @@ unsigned char Robot_ReadFrontLeftTape(void) {
 
     if (AD_IsNewDataReady) {
         tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT);
-        if (tapeSensorValue < TAPE_SENSOR_THRESHOLD) {
+        if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
             FL_tapeSensorStatus = TAPE_PRESENT;
             return TAPE_PRESENT;
         } else {
@@ -434,7 +434,7 @@ unsigned char Robot_ReadFrontRightTape(void) {
 
     if (AD_IsNewDataReady) {
         tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT);
-        if (tapeSensorValue < TAPE_SENSOR_THRESHOLD) {
+        if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
             FR_tapeSensorStatus = TAPE_PRESENT;
             return TAPE_PRESENT;
         } else {
@@ -451,8 +451,10 @@ unsigned char Robot_ReadRearLeftTape(void) {
 
     if (AD_IsNewDataReady) {
         tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_REAR_LEFT);
-        if (tapeSensorValue < TAPE_SENSOR_THRESHOLD) {
+        
+        if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
             RL_tapeSensorStatus = TAPE_PRESENT;
+            
             return TAPE_PRESENT;
         } else {
             RL_tapeSensorStatus = TAPE_NOT_PRESENT;
@@ -468,7 +470,7 @@ unsigned char Robot_ReadRearRightTape(void) {
 
     if (AD_IsNewDataReady) {
         tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT);
-        if (tapeSensorValue < TAPE_SENSOR_THRESHOLD) {
+        if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
             RR_tapeSensorStatus = TAPE_PRESENT;
             return TAPE_PRESENT;
         } else {
