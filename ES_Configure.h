@@ -16,9 +16,9 @@
 #define CONFIGURE_H
 
 //defines for keyboard input
-#define USE_KEYBOARD_INPUT
+//#define USE_KEYBOARD_INPUT
 //What State machine are we testing
-#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostRobotHSM
+//#define POSTFUNCTION_FOR_KEYBOARD_INPUT PostRobotHSM
 
 //define for TattleTale
 #define USE_TATTLETALE

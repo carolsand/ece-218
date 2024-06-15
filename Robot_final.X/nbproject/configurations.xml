@@ -25,14 +25,14 @@
       <itemPath>C:/ECE118/include/pwm.h</itemPath>
       <itemPath>C:/ECE118/include/serial.h</itemPath>
       <itemPath>C:/ECE118/include/timers.h</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/FinalEventChecker.h</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/TapeBumpService.h</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/RobotHSM.h</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/Robot.h</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/ES_Configure.h</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/UnloadScoopService.h</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/FollowWallSubHSM.h</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/FollowTapeSubHSM.h</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/ES_Configure.h</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FinalEventChecker.h</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FollowTapeSubHSM.h</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FollowWallSubHSM.h</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/TapeBumpService.h</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/UnloadScoopService.h</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/RobotHSM.h</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/Robot.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -57,14 +57,14 @@
       <itemPath>C:/ECE118/src/pwm.c</itemPath>
       <itemPath>C:/ECE118/src/serial.c</itemPath>
       <itemPath>C:/ECE118/src/timers.c</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/TemplateES_Main.c</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/RobotHSM.c</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/Robot.c</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/FinalEventChecker.c</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/Robot_final.X/TapeBumpService.c</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/UnloadScoopService.c</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/FollowWallSubHSM.c</itemPath>
-      <itemPath>C:/devproj/MPLABX Projects/finalProject/FollowTapeSubHSM.c</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FinalEventChecker.c</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FollowTapeSubHSM.c</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/FollowWallSubHSM.c</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/TapeBumpService.c</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/UnloadScoopService.c</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/RobotHSM.c</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/TemplateES_Main.c</itemPath>
+      <itemPath>C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/Robot.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -77,6 +77,7 @@
     <Elem>C:\ECE118_old\include</Elem>
     <Elem>C:\ECE118_old\templates</Elem>
     <Elem>C:\devproj\MPLABX Projects\finalProject</Elem>
+    <Elem>C:\Users\cfiguer7\Desktop\ECE218\ece118-2024</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -88,11 +89,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.35</languageToolchainVersion>
+        <languageToolchainVersion>4.10</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MX_DFP" vendor="Microchip" version="1.6.369"/>
+        <pack name="PIC32MX_DFP" vendor="Microchip" version="1.5.259"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -408,11 +409,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.35</languageToolchainVersion>
+        <languageToolchainVersion>4.10</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MX_DFP" vendor="Microchip" version="1.6.369"/>
+        <pack name="PIC32MX_DFP" vendor="Microchip" version="1.5.259"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -728,11 +729,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.35</languageToolchainVersion>
+        <languageToolchainVersion>4.10</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MX_DFP" vendor="Microchip" version="1.6.369"/>
+        <pack name="PIC32MX_DFP" vendor="Microchip" version="1.5.259"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -897,9 +898,23 @@
         <property key="stack-smashing" value=""/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
-      <item path="C:/devproj/MPLABX Projects/finalProject/Robot_final.X/TemplateES_Main.c"
+      <item path="C:/Users/cfiguer7/Desktop/ECE218/ece118-2024/Robot_final.X/TemplateES_Main.c"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>

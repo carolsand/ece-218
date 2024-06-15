@@ -72,7 +72,6 @@ static const char *StateNames[] = {
 static FollowWallSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
 
-static char insideSubHSM_First = 0; //0 means the event did not come from inside subHSM
 /*******************************************************************************
  * PUBLIC FUNCTIONS                                                            *
  ******************************************************************************/
@@ -138,26 +137,8 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
         case Back_Up:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ThisEvent.EventType = ES_NO_EVENT;
 
-                    // if the tape event came from HSM, then grab the value from there
-                    if (!insideSubHSM_First) {
-                        bumperReading = GrabBumperValue();
-                    }
-
-                    //if the bump event came from this subHSM then
-                    //insideSubHSM_First will be 1 and it must be cleared
-                    insideSubHSM_First = 0; //clear flag
-
-                    //if (bumperReading && 0b0011) {
-                        //if any of the front bumpers were hit, go in reverse
-                        Robot_Drive(-BACK_UP_SPEED);
-                    //} else {
-                        //if any of the rear bumpers were hit, go forward
-                    //    Robot_Drive(BACK_UP_SPEED);
-                    //}
-
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                     break;
 
                 case ES_TIMEOUT:
@@ -193,12 +174,18 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                     //we bumped into something while we were turning, so let's 
                     //transition to back up state
 
-                    //the bump event occurred inside this subHSM so raise this
-                    //flag so that the Back_Up state uses the reading from this
-                    //file and not the one from RobotHSM.c
-                    insideSubHSM_First = 1;
-                    bumperReading = ThisEvent.EventParam;
 
+                    bumperReading = ThisEvent.EventParam;
+                    if (bumperReading && 0b1100) {
+                        //if any of the front bumpers were hit, go in reverse
+                        Robot_Reverse(BACK_UP_SPEED);
+                    } else {
+                        //if any of the rear bumpers were hit, go forward
+                        Robot_Drive(BACK_UP_SPEED);
+                    }
+
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                     //transition to back up state
                     nextState = Back_Up;
                     makeTransition = TRUE;
@@ -219,12 +206,18 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                     //we bumped into something while we were traveling, so let's
                     //transition to back up state
 
-                    //the bump event occurred inside this subHSM so raise this
-                    //flag so that the Back_Up state uses the reading from this
-                    //file and not the one from RobotHSM.c
-                    insideSubHSM_First = 1;
-                    bumperReading = ThisEvent.EventParam;
 
+                    bumperReading = ThisEvent.EventParam;
+                    if (bumperReading && 0b1100) {
+                        //if any of the front bumpers were hit, go in reverse
+                        Robot_Reverse(BACK_UP_SPEED);
+                    } else {
+                        //if any of the rear bumpers were hit, go forward
+                        Robot_Drive(BACK_UP_SPEED);
+                    }
+
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                     //transition to back up state
                     nextState = Back_Up;
                     makeTransition = TRUE;
@@ -268,9 +261,18 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                     //the bump event occurred inside this subHSM so raise this
                     //flag so that the Back_Up state uses the reading from this
                     //file and not the one from RobotHSM.c
-                    insideSubHSM_First = 1;
-                    bumperReading = ThisEvent.EventParam;
 
+                    bumperReading = ThisEvent.EventParam;
+                    if (bumperReading && 0b1100) {
+                        //if any of the front bumpers were hit, go in reverse
+                        Robot_Reverse(BACK_UP_SPEED);
+                    } else {
+                        //if any of the rear bumpers were hit, go forward
+                        Robot_Drive(BACK_UP_SPEED);
+                    }
+
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                     //transition to back up state
                     nextState = Back_Up;
                     makeTransition = TRUE;
@@ -302,9 +304,18 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                     //the bump event occurred inside this subHSM so raise this
                     //flag so that the Back_Up state uses the reading from this
                     //file and not the one from RobotHSM.c
-                    insideSubHSM_First = 1;
-                    bumperReading = ThisEvent.EventParam;
 
+                    bumperReading = ThisEvent.EventParam;
+                    if (bumperReading && 0b1100) {
+                        //if any of the front bumpers were hit, go in reverse
+                        Robot_Reverse(BACK_UP_SPEED);
+                    } else {
+                        //if any of the rear bumpers were hit, go forward
+                        Robot_Drive(BACK_UP_SPEED);
+                    }
+
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                     //transition to back up state
                     nextState = Back_Up;
                     makeTransition = TRUE;

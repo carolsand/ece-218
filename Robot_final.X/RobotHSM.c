@@ -173,6 +173,18 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
 
                 case BUMP:
                     bumperValue = ThisEvent.EventParam; //save bumper value
+
+                    if (bumperValue && 0b1100) {
+                        //if any of the front bumpers were hit, go in reverse
+                        Robot_Reverse(BACK_UP_SPEED);
+                    } else {
+                        //if any of the rear bumpers were hit, go forward
+                        Robot_Drive(BACK_UP_SPEED);
+                    }
+
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
+
                     //transition to follow wall state
                     // now put the machine into the actual initial state
                     nextState = FollowWall;
@@ -255,6 +267,16 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
                     case BUMP:
                         bumperValue = ThisEvent.EventParam; //save bumper value
+                        if (bumperValue && 0b1100) {
+                            //if any of the front bumpers were hit, go in reverse
+                            Robot_Reverse(BACK_UP_SPEED);
+                        } else {
+                            //if any of the rear bumpers were hit, go forward
+                            Robot_Drive(BACK_UP_SPEED);
+                        }
+
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                         //transition to follow wall state
                         // now put the machine into the actual initial state
                         nextState = FollowWall;

@@ -351,7 +351,7 @@ unsigned char Robot_ReadRearRightBumper(void) {
 unsigned char Robot_ReadBumpers(void) {
     //unsigned char bump_state;
     //bump_state = (!BUMP_FRONT_LEFT + ((!BUMP_FRONT_RIGHT) << 1)+((!BUMP_REAR_LEFT) << 2)+((!BUMP_REAR_RIGHT) << 3));
-    return (BUMP_FRONT_LEFT + ((BUMP_FRONT_RIGHT) << 1)+((BUMP_REAR_LEFT) << 2)+((BUMP_REAR_RIGHT) << 3));
+    return ( BUMP_REAR_RIGHT + ((BUMP_REAR_LEFT) << 1)+((BUMP_FRONT_RIGHT) << 2)+((BUMP_FRONT_LEFT) << 3));
 }
 
 /**
@@ -593,16 +593,14 @@ void main(void) {
             //Robot_LeftMtrSpeed(100);
         }
         if (Robot_ReadRearLeftBumper() == BUMPER_TRIPPED) {
-            Robot_LeftMtrSpeed(0);
-            Robot_RightMtrSpeed(0);
+            Robot_Drive(0);
         }
         if (Robot_ReadFrontRightBumper() == BUMPER_TRIPPED) {
             Robot_SetDoorServo(1950);
             //Robot_RightMtrSpeed(100);
         }
         if (Robot_ReadRearRightBumper() == BUMPER_TRIPPED) {
-            Robot_RightMtrSpeed(-100);
-            Robot_LeftMtrSpeed(-100);
+            Robot_Reverse(100);
             
         }
 
