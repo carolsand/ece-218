@@ -135,25 +135,6 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
 
-                    // if the tape event came from HSM, then grab the value from there
-                    if (!insideSubHSM_First) {
-                        tapeSensorReading = GrabTapeSensorValue();
-                    }
-
-                    //if the tape event came from this subHSM then
-                    //insideSubHSM_First will be 1 and it must be cleared
-                    insideSubHSM_First = 0; //clear flag
-
-                    if (tapeSensorReading && 0b1100) {
-                        //if any of the front tape sensors were hit, go in reverse
-                        Robot_Reverse(BACK_UP_SPEED);
-                    } else {
-                        //if any of the rear tape sensors were hit, go forward
-                        Robot_Drive(BACK_UP_SPEED);
-                    }
-
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                     break;
 
                 case ES_TIMEOUT:
@@ -173,7 +154,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     //turning left 
                     Robot_Turn(0, TURN_SPEED);
-                    ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING +100);
+                    ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING + 100);
                     break;
 
                 case ES_TIMEOUT:
@@ -189,12 +170,17 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     //we ran into tape while we were turning, so let's transition
                     //to back up state
 
-                    //the tape event occurred inside this subHSM so raise this
-                    //flag so that the Back_Up state uses the reading from this
-                    //file and not the one from RobotHSM.c
-                    insideSubHSM_First = 1;
                     tapeSensorReading = ThisEvent.EventParam;
+                    if (tapeSensorReading && 0b1100) {
+                        //if any of the front tape sensors were hit, go in reverse
+                        Robot_Reverse(BACK_UP_SPEED);
+                    } else {
+                        //if any of the rear tape sensors were hit, go forward
+                        Robot_Drive(BACK_UP_SPEED);
+                    }
 
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                     //transition to back up state
                     nextState = Back_Up;
                     makeTransition = TRUE;
@@ -215,12 +201,17 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     //we ran into tape while we were traveling, so let's transition
                     //to back up state
 
-                    //the tape event occurred inside this subHSM so raise this
-                    //flag so that the Back_Up state uses the reading from this
-                    //file and not the one from RobotHSM.c
-                    insideSubHSM_First = 1;
                     tapeSensorReading = ThisEvent.EventParam;
+                    if (tapeSensorReading && 0b1100) {
+                        //if any of the front tape sensors were hit, go in reverse
+                        Robot_Reverse(BACK_UP_SPEED);
+                    } else {
+                        //if any of the rear tape sensors were hit, go forward
+                        Robot_Drive(BACK_UP_SPEED);
+                    }
 
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                     //transition to back up state
                     nextState = Back_Up;
                     makeTransition = TRUE;

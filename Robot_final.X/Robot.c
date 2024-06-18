@@ -497,7 +497,7 @@ unsigned char Robot_ReadTapeSensors(void){
     unsigned char rearLeft = Robot_ReadRearLeftTape();
     unsigned char rearRight = Robot_ReadRearRightTape();
     
-    return ((frontLeft << 3) + (frontRight << 2) + (rearLeft << 1) + rearRight);
+    return ((frontLeft << 3) | (frontRight << 2) | (rearLeft << 1) | rearRight);
     
 }
 

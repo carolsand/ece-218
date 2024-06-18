@@ -227,7 +227,7 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                 case FOUND_TAPE:
                     //if BOTH front tape sensors are hit at the same time then
                     //we can assume we are parallel with the wall, switch state
-                    if (ThisEvent.EventParam && 0b1100 == 0b1100) {
+                    if (ThisEvent.EventParam == 0b1100) {
                         //transition to first edge of wall state
                         nextState = First_Edge_of_Wall;
                         makeTransition = TRUE;
@@ -247,7 +247,7 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                 case FOUND_TAPE:
                     //if BOTH rear tape sensors are hit at the same time then
                     //we reached the other end of wall, switch state
-                    if (ThisEvent.EventParam && 0b0011 == 0b0011) {
+                    if (ThisEvent.EventParam == 0b0011) {
                         //transition to first edge of wall state
                         nextState = Second_Edge_of_Wall;
                         makeTransition = TRUE;
