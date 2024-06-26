@@ -210,12 +210,12 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                 switch (ThisEvent.EventType) {
                     case ES_ENTRY:
                         break;
-                    case FOUND_TRACKWIRE:
-                        //transition to dispense balls state
-                        nextState = DispenceBalls;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                        break;
+//                    case FOUND_TRACKWIRE:
+//                        //transition to dispense balls state
+//                        nextState = DispenceBalls;
+//                        makeTransition = TRUE;
+//                        ThisEvent.EventType = ES_NO_EVENT;
+//                        break;
                     case FOUND_TAPE:
                         //if we are here, it means that we hit the tape while
                         //"following the wall" but it wasn't both of the front 

@@ -144,23 +144,24 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
                 //read the current bumper value 
                 currentBumperValue = Robot_ReadBumpers();
 
-                if (currentBumperValue != lastBumperValue) { //compare current bumper value with last bumper value                  
-                    currentBumperState = BUMP; //if they don't match then update the state event to BUMP
+//                if (currentBumperValue != lastBumperValue && currentBumperValue!=0) { //compare current bumper value with last bumper value                  
+                if (currentBumperValue!=0) { //compare current bumper value with last bumper value                  
+                currentBumperState = BUMP; //if they don't match then update the state event to BUMP
                     lastBumperValue = currentBumperValue; //update lastBumperValue with the current value                   
                 } else { //if the current bumper value has not changed from last bumper
                     currentBumperState = NO_BUMP; //value then we can assume that the state is now NO_BUMP
                 }
 
-                if (currentBumperState != lastBumperState) { //event detected
+                if (currentBumperState == BUMP) { //event detected
 
                     // update ReturnEvent with the information of this event
                     ReturnEvent.EventType = currentBumperState;
                     ReturnEvent.EventParam = currentBumperValue;
 
                     // update lastBumperState to the new state
-                    lastBumperState = currentBumperState;
+//                    lastBumperState = currentBumperState;
 
-                    //post the event i.e. tell the framework an event has occured
+                    //post the event i.e. tell the framework an event has occurred
                     PostRobotHSM(ReturnEvent);
                 }
 
@@ -174,23 +175,25 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
                 //read the current bumper value 
                 currentTapeSensorValue = Robot_ReadTapeSensors();
 
-                if (currentTapeSensorValue != lastTapeSensorValue) { //compare current tape sensors value with last tape sensors value                  
-                    currentTapeSensorState = FOUND_TAPE; //if they don't match then update the state event to FOUND_TAPE
+//                if (currentTapeSensorValue != lastTapeSensorValue && currentTapeSensorValue != 0) { //compare current tape sensors value with last tape sensors value                  
+                if (currentTapeSensorValue != 0) { //compare current tape sensors value with last tape sensors value 
+                    // Which tape sensor?
+                currentTapeSensorState = FOUND_TAPE; //if they don't match then update the state event to FOUND_TAPE
                     lastTapeSensorValue = currentTapeSensorValue; //update lastTapeSensorValue with the current value                   
                 } else { //if the current tape sensor value has not changed from last bumper
                     currentTapeSensorState = LOST_TAPE; //value then we can assume that the state is now LOST_TAPE
                 }
 
-                if (currentTapeSensorState != lastTapeSensorState) { //event detected
+                if (currentTapeSensorState == FOUND_TAPE) { //event detected
 
                     // update ReturnEvent with the information of this event
                     ReturnEvent.EventType = currentTapeSensorState;
                     ReturnEvent.EventParam = currentTapeSensorValue;
 
                     // update lastTapeSensorState to the new state
-                    lastTapeSensorState = currentTapeSensorState;
+                    //lastTapeSensorState = currentTapeSensorState;
 
-                    //post the event i.e. tell the framework an event has occured
+                    //post the event i.e. tell the framework an event has occurred
                     PostRobotHSM(ReturnEvent);
                 }
 

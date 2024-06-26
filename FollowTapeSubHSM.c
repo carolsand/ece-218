@@ -144,16 +144,28 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     //insideSubHSM_First will be 1 and it must be cleared
                     insideSubHSM_First = 0; //clear flag
 
-                    if (tapeSensorReading && 0b1100) {
-                        //if any of the front tape sensors were hit, go in reverse
-                        Robot_Reverse(BACK_UP_SPEED);
-                    } else {
-                        //if any of the rear tape sensors were hit, go forward
-                        Robot_Drive(BACK_UP_SPEED);
+//                    if (tapeSensorReading && 0b1100) {
+//                        //if any of the front tape sensors were hit, go in reverse
+//                        Robot_Reverse(BACK_UP_SPEED);
+//                    } else {
+//                        //if any of the rear tape sensors were hit, go forward
+//                        Robot_Drive(BACK_UP_SPEED);
+//                    }
+//
+//                    //start back up timer to determine how long robot backs up
+//                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP+100);
+                    
+                    
+                    if (tapeSensorReading == 0b0100){ //if front right sensor hit
+                        nextState = Turn_Left;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
                     }
-
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
+                    
+                    if(tapeSensorReading == 0b1000){ //if front left sensor hit
+                        Robot_Reverse(BACK_UP_SPEED);
+                        ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP+100);
+                    }
                     break;
 
                 case ES_TIMEOUT:
@@ -172,8 +184,8 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     //turning left 
-                    Robot_Turn(0, TURN_SPEED);
-                    ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING +100);
+                    Robot_Turn(-TURN_SPEED, TURN_SPEED);
+                    ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING);
                     break;
 
                 case ES_TIMEOUT:
@@ -194,11 +206,18 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     //file and not the one from RobotHSM.c
                     insideSubHSM_First = 1;
                     tapeSensorReading = ThisEvent.EventParam;
-
+                    
+                    if (tapeSensorReading == 0b0010) { //if rear left
+                        nextState = Go_Forward;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    
+                    
                     //transition to back up state
-                    nextState = Back_Up;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+//                    nextState = Back_Up;
+//                    makeTransition = TRUE;
+//                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
 
             }
@@ -221,10 +240,16 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     insideSubHSM_First = 1;
                     tapeSensorReading = ThisEvent.EventParam;
 
+                    if (tapeSensorReading == 0b0010){ //if rear left sensor hit
+                        nextState = Turn_Left;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    
                     //transition to back up state
-                    nextState = Back_Up;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+//                    nextState = Back_Up;
+//                    makeTransition = TRUE;
+//                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
 
             }

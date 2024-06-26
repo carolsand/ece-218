@@ -143,6 +143,8 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
 
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                        //turning left 
+                        Robot_Turn(-TURN_SPEED, TURN_SPEED);
                         //we have finished backing up, so let's switch to Turn_Left state
                         nextState = Turn_Left;
                         makeTransition = TRUE;
@@ -156,8 +158,6 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
         case Turn_Left:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    //turning left 
-                    Robot_Turn(0, TURN_SPEED);
                     ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING);
                     break;
 
@@ -227,7 +227,7 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                 case FOUND_TAPE:
                     //if BOTH front tape sensors are hit at the same time then
                     //we can assume we are parallel with the wall, switch state
-                    if (ThisEvent.EventParam && 0b1100 == 0b1100) {
+                    if (ThisEvent.EventParam == 0b1100) {
                         //transition to first edge of wall state
                         nextState = First_Edge_of_Wall;
                         makeTransition = TRUE;
@@ -247,7 +247,7 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                 case FOUND_TAPE:
                     //if BOTH rear tape sensors are hit at the same time then
                     //we reached the other end of wall, switch state
-                    if (ThisEvent.EventParam && 0b0011 == 0b0011) {
+                    if (ThisEvent.EventParam == 0b0011) {
                         //transition to first edge of wall state
                         nextState = Second_Edge_of_Wall;
                         makeTransition = TRUE;
