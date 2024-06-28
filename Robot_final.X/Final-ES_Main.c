@@ -17,6 +17,7 @@ void main(void)
 
     // Your hardware initialization function calls go here
     Robot_Init();
+    
     // now initialize the Events and Services Framework and start it running
     ErrorType = ES_Initialize();
     if (ErrorType == Success) {

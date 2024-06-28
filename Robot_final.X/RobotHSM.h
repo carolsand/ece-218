@@ -34,12 +34,22 @@
 #define THIRTY_SECONDS      (30*1000)           // 30 seconds in msec
 #define HALF_SECOND         (500)               // half second in msec
 #define CHARGE_CHECK_TIME   (3*60*1000)         // 3 minutes in msec 
+<<<<<<< HEAD
 #define NOMINAL_SPEED 65
 #define BACK_UP_SPEED 45
 #define TURN_SPEED    55
 #define TIME_WAITING  2000
 #define TIME_BACKING_UP 600
 #define TIME_TURNING 500
+=======
+
+#define NOMINAL_SPEED 85
+#define BACK_UP_SPEED 50
+#define TURN_SPEED    65
+#define TIME_WAITING  2000
+#define TIME_BACKING_UP 500
+#define TIME_TURNING 300
+>>>>>>> 6420d81b88b30391db474d7547652a446b19e098
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

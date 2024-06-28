@@ -194,6 +194,16 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
 
                 case FOUND_TAPE:
                     tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
+                    if (tapeSensorValue && 0b1100) {
+                        //if any of the front tape sensors were hit, go in reverse
+                        Robot_Reverse(BACK_UP_SPEED);
+                    } else {
+                        //if any of the rear tape sensors were hit, go forward
+                        Robot_Drive(BACK_UP_SPEED);
+                    }
+
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                     //transition to follow tape state
                     nextState = FollowTape;
                     makeTransition = TRUE;
@@ -222,6 +232,16 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         //ones so the robot was not parallel with the wall,
                         //transition to follow tape state
                         tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
+                        if (tapeSensorValue && 0b1100) {
+                            //if any of the front tape sensors were hit, go in reverse
+                            Robot_Reverse(BACK_UP_SPEED);
+                        } else {
+                            //if any of the rear tape sensors were hit, go forward
+                            Robot_Drive(BACK_UP_SPEED);
+                        }
+
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
                         nextState = FollowTape;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;

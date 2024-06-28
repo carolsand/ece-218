@@ -79,8 +79,12 @@
 #define LED_Get(i) (*LED_LAT[(unsigned int)i]&LED_bitsMap[(unsigned int)i])
 
 #define TAPE_SENSOR_THRESHOLD 500
-#define TRACKWIRE_THRESHOLD 800
+#define TRACKWIRE_THRESHOLD   800
 
+#define SCOOP_DOWN_VALUE      560
+#define SCOOP_UP_VALUE       2300
+#define DOOR_CLOSED_VALUE    1800
+#define DOOR_OPEN_VALUE       800
 /*******************************************************************************
  * PRIVATE VARIABLES                                                           *
  ******************************************************************************/
@@ -176,8 +180,8 @@ void Robot_Init(void) {
     RC_AddPins(DOOR_SERVO | SCOOP_SERVO);
 
 
-    RC_SetPulseTime(DOOR_SERVO, 1950);
-    RC_SetPulseTime(SCOOP_SERVO, 1120);
+    RC_SetPulseTime(DOOR_SERVO, DOOR_CLOSED_VALUE);
+    RC_SetPulseTime(SCOOP_SERVO, SCOOP_DOWN_VALUE);
 
     // set up tape sensors 
 
@@ -451,10 +455,8 @@ unsigned char Robot_ReadRearLeftTape(void) {
 
     if (AD_IsNewDataReady) {
         tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_REAR_LEFT);
-        
         if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
             RL_tapeSensorStatus = TAPE_PRESENT;
-            
             return TAPE_PRESENT;
         } else {
             RL_tapeSensorStatus = TAPE_NOT_PRESENT;
@@ -495,7 +497,7 @@ unsigned char Robot_ReadTapeSensors(void){
     unsigned char rearLeft = Robot_ReadRearLeftTape();
     unsigned char rearRight = Robot_ReadRearRightTape();
     
-    return ((frontLeft << 3) + (frontRight << 2) + (rearLeft << 1) + rearRight);
+    return ((frontLeft << 3) | (frontRight << 2) | (rearLeft << 1) | rearRight);
     
 }
 
@@ -540,7 +542,7 @@ unsigned char Robot_SetScoopServo(int newPosition) {
  * @author
  */
 unsigned char Robot_SetDoorServo(int newPosition) {
-    if (newPosition > 2000 || newPosition < 1000) {
+    if (newPosition > 2500 || newPosition < 500) {
         return (ERROR);
     }
     RC_SetPulseTime(DOOR_SERVO, newPosition);
@@ -548,20 +550,20 @@ unsigned char Robot_SetDoorServo(int newPosition) {
 }
 
 unsigned char Robot_UnloadScoop(void){
-    RC_SetPulseTime(SCOOP_SERVO, 2450);
+    RC_SetPulseTime(SCOOP_SERVO, SCOOP_UP_VALUE);
     return (SUCCESS);
 }
 unsigned char Robot_ResetScoop(void){
-    RC_SetPulseTime(SCOOP_SERVO, 1120);
+    RC_SetPulseTime(SCOOP_SERVO, SCOOP_DOWN_VALUE);
     return (SUCCESS);
 }
 
 unsigned char Robot_OpenDoor(void){
-    RC_SetPulseTime(DOOR_SERVO, 1050);
+    RC_SetPulseTime(DOOR_SERVO, DOOR_OPEN_VALUE);
     return (SUCCESS);
 }
 unsigned char Robot_CloseDoor(void){
-    RC_SetPulseTime(DOOR_SERVO, 1950);
+    RC_SetPulseTime(DOOR_SERVO, DOOR_CLOSED_VALUE);
     return (SUCCESS);
 }
 
@@ -573,8 +575,8 @@ void main(void) {
     SERIAL_Init();
     Robot_Init();
     static char i = 0;
-    static unsigned int servoPulse = 1200;
-    static unsigned int doorPulse = 1500;
+    static unsigned int servoPulse = SCOOP_DOWN_VALUE;
+    static unsigned int doorPulse = DOOR_CLOSED_VALUE;
     static unsigned char tapeStatus = TAPE_NOT_PRESENT;
 
     printf("welcome to ece218 robot test harness \r\nenter a key to perform a test.\r\n\r\n");
@@ -582,8 +584,8 @@ void main(void) {
     printf("t: tests all the tape sensors, reads them and prints out the response and its raw value \r\n");
     printf("u: moves the scoop servo up\r\nd: moves the scoop servo down\r\n");
     printf("l: moves the door servo inwards\r\nr: moves the door servo outwards\r\n\r\n");
-    printf("press the bumpers to run the motors. \r\nfront right bumper = right motor max forward speed \r\n");
-    printf("front left bumper = left motor max forward speed \r\nrear right bumper = max reverse speed for both\r\n");
+    printf("press the bumpers to run the following actions. \r\nfront right bumper = close door \r\n");
+    printf("front left bumper = open door \r\nrear right bumper = max reverse speed for both\r\n");
     printf("rear left bumper = stop both motors\r\n\r\n");
 
 
@@ -591,15 +593,13 @@ void main(void) {
         //Robot_LeftMtrSpeed(100);
         //Robot_RightMtrSpeed(-100);
         if (Robot_ReadFrontLeftBumper() == BUMPER_TRIPPED) {
-            Robot_OpenDoor();
-            //Robot_LeftMtrSpeed(100);
+            Robot_OpenDoor();           
         }
         if (Robot_ReadRearLeftBumper() == BUMPER_TRIPPED) {
             Robot_Drive(0);
         }
         if (Robot_ReadFrontRightBumper() == BUMPER_TRIPPED) {
-            Robot_CloseDoor();
-            //Robot_RightMtrSpeed(100);
+            Robot_CloseDoor();         
         }
         if (Robot_ReadRearRightBumper() == BUMPER_TRIPPED) {
             Robot_Reverse(100);
@@ -642,7 +642,7 @@ void main(void) {
         }
         if (i == 'u') {
             if (servoPulse < 2500) {
-                servoPulse = servoPulse + 40;
+                servoPulse = servoPulse + 50;
                 Robot_SetScoopServo(servoPulse);
             }
             printf("scoop servo value: %d \r\n\r\n", servoPulse);
@@ -650,13 +650,13 @@ void main(void) {
 
         if (i == 'd') {
             if (servoPulse > 500) {
-                servoPulse = servoPulse - 40;
+                servoPulse = servoPulse - 50;
                 Robot_SetScoopServo(servoPulse);
             }
             printf("scoop servo value: %d \r\n\r\n", servoPulse);
         }
         if (i == 'l') {
-            if (doorPulse < 2000) {
+            if (doorPulse < 2500) {
                 doorPulse = doorPulse + 50;
                 Robot_SetDoorServo(doorPulse);
             }
@@ -664,7 +664,7 @@ void main(void) {
         }
 
         if (i == 'r') {
-            if (doorPulse > 1000) {
+            if (doorPulse > 500) {
                 doorPulse = doorPulse - 50;
                 Robot_SetDoorServo(doorPulse);
             }

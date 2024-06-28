@@ -4,27 +4,29 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>C:/ECE118/include/AD.h</itemPath>
-      <itemPath>C:/ECE118/include/BOARD.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_CheckEvents.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_Events.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_Framework.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_General.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_KeyboardInput.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_LookupTables.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_Port.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_PostList.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_PriorTables.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_Queue.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_ServiceHeaders.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_TattleTale.h</itemPath>
-      <itemPath>C:/ECE118/include/ES_Timers.h</itemPath>
-      <itemPath>C:/ECE118/include/IO_Ports.h</itemPath>
-      <itemPath>C:/ECE118/include/LED.h</itemPath>
-      <itemPath>C:/ECE118/include/RC_Servo.h</itemPath>
-      <itemPath>C:/ECE118/include/pwm.h</itemPath>
-      <itemPath>C:/ECE118/include/serial.h</itemPath>
-      <itemPath>C:/ECE118/include/timers.h</itemPath>
+      <logicalFolder name="f1" displayName="absolute" projectFiles="true">
+        <itemPath>C:/ECE118/include/ES_Events.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_LookupTables.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_General.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_CheckEvents.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_Framework.h</itemPath>
+        <itemPath>C:/ECE118/include/BOARD.h</itemPath>
+        <itemPath>C:/ECE118/include/AD.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_KeyboardInput.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_Port.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_PostList.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_PriorTables.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_Queue.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_TattleTale.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_ServiceHeaders.h</itemPath>
+        <itemPath>C:/ECE118/include/ES_Timers.h</itemPath>
+        <itemPath>C:/ECE118/include/IO_Ports.h</itemPath>
+        <itemPath>C:/ECE118/include/LED.h</itemPath>
+        <itemPath>C:/ECE118/include/RC_Servo.h</itemPath>
+        <itemPath>C:/ECE118/include/pwm.h</itemPath>
+        <itemPath>C:/ECE118/include/serial.h</itemPath>
+        <itemPath>C:/ECE118/include/timers.h</itemPath>
+      </logicalFolder>
       <itemPath>Robot.h</itemPath>
       <itemPath>RobotHSM.h</itemPath>
       <itemPath>../ES_Configure.h</itemPath>
@@ -42,29 +44,31 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>C:/ECE118/src/AD.c</itemPath>
-      <itemPath>C:/ECE118/src/BOARD.c</itemPath>
-      <itemPath>C:/ECE118/src/ES_CheckEvents.c</itemPath>
-      <itemPath>C:/ECE118/src/ES_Framework.c</itemPath>
-      <itemPath>C:/ECE118/src/ES_KeyboardInput.c</itemPath>
-      <itemPath>C:/ECE118/src/ES_PostList.c</itemPath>
-      <itemPath>C:/ECE118/src/ES_Queue.c</itemPath>
-      <itemPath>C:/ECE118/src/ES_TattleTale.c</itemPath>
-      <itemPath>C:/ECE118/src/ES_Timers.c</itemPath>
-      <itemPath>C:/ECE118/src/IO_Ports.c</itemPath>
-      <itemPath>C:/ECE118/src/LED.c</itemPath>
-      <itemPath>C:/ECE118/src/RC_Servo.c</itemPath>
-      <itemPath>C:/ECE118/src/pwm.c</itemPath>
-      <itemPath>C:/ECE118/src/serial.c</itemPath>
-      <itemPath>C:/ECE118/src/timers.c</itemPath>
+      <logicalFolder name="f1" displayName="absolute" projectFiles="true">
+        <itemPath>C:/ECE118/src/ES_PostList.c</itemPath>
+        <itemPath>C:/ECE118/src/ES_Queue.c</itemPath>
+        <itemPath>C:/ECE118/src/ES_CheckEvents.c</itemPath>
+        <itemPath>C:/ECE118/src/AD.c</itemPath>
+        <itemPath>C:/ECE118/src/ES_Framework.c</itemPath>
+        <itemPath>C:/ECE118/src/ES_TattleTale.c</itemPath>
+        <itemPath>C:/ECE118/src/ES_Timers.c</itemPath>
+        <itemPath>C:/ECE118/src/ES_KeyboardInput.c</itemPath>
+        <itemPath>C:/ECE118/src/BOARD.c</itemPath>
+        <itemPath>C:/ECE118/src/LED.c</itemPath>
+        <itemPath>C:/ECE118/src/IO_Ports.c</itemPath>
+        <itemPath>C:/ECE118/src/pwm.c</itemPath>
+        <itemPath>C:/ECE118/src/RC_Servo.c</itemPath>
+        <itemPath>C:/ECE118/src/serial.c</itemPath>
+        <itemPath>C:/ECE118/src/timers.c</itemPath>
+      </logicalFolder>
       <itemPath>Robot.c</itemPath>
       <itemPath>RobotHSM.c</itemPath>
-      <itemPath>TemplateES_Main.c</itemPath>
       <itemPath>../FinalEventChecker.c</itemPath>
       <itemPath>../FollowTapeSubHSM.c</itemPath>
       <itemPath>../FollowWallSubHSM.c</itemPath>
       <itemPath>../TapeBumpService.c</itemPath>
       <itemPath>../UnloadScoopService.c</itemPath>
+      <itemPath>Final-ES_Main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -89,7 +93,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.35</languageToolchainVersion>
+        <languageToolchainVersion>4.10</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -409,7 +413,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.35</languageToolchainVersion>
+        <languageToolchainVersion>4.10</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -729,7 +733,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.35</languageToolchainVersion>
+        <languageToolchainVersion>4.10</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -898,6 +902,22 @@
         <property key="stack-smashing" value=""/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <item path="Final-ES_Main.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
@@ -969,6 +989,7 @@
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="3.25"/>
       </PICkit3PlatformTool>
+<<<<<<< HEAD
       <item path="TemplateES_Main.c" ex="true" overriding="false">
         <C32>
         </C32>
@@ -985,6 +1006,8 @@
         <C32Global>
         </C32Global>
       </item>
+=======
+>>>>>>> 6420d81b88b30391db474d7547652a446b19e098
       <Tool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
