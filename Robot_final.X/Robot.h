@@ -33,7 +33,7 @@
 #define TRACKWIRE_PRESENT 1
 #define TRACKWIRE_NOT_PRESENT 0
 
-#define ROBOT_NOMINAL_SPEED 75
+#define ROBOT_NOMINAL_SPEED 85
 #define ROBOT_MAX_SPEED 100 
 
 /**
@@ -156,7 +156,7 @@ unsigned char Robot_ReadBumpers(void);
  * @return SUCCESS or ERROR
  * @brief  Forces the LEDs in (bank) to on (1) or off (0) to match the pattern.
  * @author Gabriel Hugh Elkaim, 2011.12.25 01:16 Dyamic Duo 2015.09.18 */
-char Robot_LEDSSet(uint16_t pattern);
+char Robot_LEDSSet(unsigned char pattern);
 
 /**
  * @Function Robot_LEDSGet(void)

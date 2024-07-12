@@ -14,6 +14,7 @@
 #include <serial.h>
 #include <AD.h>
 #include "IO_Ports.h"
+#include "LED.h"
 /*******************************************************************************
  * PRIVATE #DEFINES                                                            *
  ******************************************************************************/
@@ -25,13 +26,13 @@
 #define HIGH   1
 
 /* PINS FOR THE MOTORS */
-#define LEFT_DIR                PORTY09_LAT
-#define LEFT_DIR_INV            PORTZ09_LAT
+#define LEFT_DIR                PORTZ09_LAT
+#define LEFT_DIR_INV            PORTY09_LAT
 #define RIGHT_DIR               PORTY08_LAT
 #define RIGHT_DIR_INV           PORTY10_LAT
 
-#define LEFT_DIR_TRIS           PORTY09_TRIS
-#define LEFT_DIR_INV_TRIS       PORTZ09_TRIS
+#define LEFT_DIR_TRIS           PORTZ09_TRIS
+#define LEFT_DIR_INV_TRIS       PORTY09_TRIS
 #define RIGHT_DIR_TRIS          PORTY08_TRIS
 #define RIGHT_DIR_INV_TRIS      PORTY10_TRIS
 
@@ -54,10 +55,10 @@
 #define SCOOP_SERVO             RC_PORTX04
 
 /* PINS FOR DETECTORS */
-#define BEACON_DETECTOR         PORTZ08_BIT
+//#define BEACON_DETECTOR         PORTZ08_BIT
 #define TRACK_WIRE_DETECTOR     AD_PORTV8
 
-#define BEACON_DETECTOR_TRIS    PORTZ08_TRIS
+//#define BEACON_DETECTOR_TRIS    PORTZ08_TRIS
 //#define TRACK_WIRE_DETECT_TRIS  PORTY07_BIT
 
 /* PINS FOR TAPE SENSORS */
@@ -78,7 +79,7 @@
 #define LED_Off(i) *LED_LATSET[(unsigned int)i] = LED_bitsMap[(unsigned int)i];
 #define LED_Get(i) (*LED_LAT[(unsigned int)i]&LED_bitsMap[(unsigned int)i])
 
-#define TAPE_SENSOR_THRESHOLD 500
+#define TAPE_SENSOR_THRESHOLD 800
 #define TRACKWIRE_THRESHOLD   800
 
 #define SCOOP_DOWN_VALUE      560
@@ -151,7 +152,7 @@ static unsigned short int LED_bitsMap[] = {BIT_7, BIT_5, BIT_10, BIT_11, BIT_3, 
  * @author Max Dunne, 2012.01.06 */
 void Robot_Init(void) {
     // set up beacon detector and track wire detector as inputs 
-    BEACON_DETECTOR_TRIS = INPUT;
+    //BEACON_DETECTOR_TRIS = INPUT;
 
     // also set up bumpers (limit switches) as inputs
     BUMP_FRONT_LEFT_TRIS = INPUT;
@@ -177,7 +178,7 @@ void Robot_Init(void) {
 
     // set up servos
     RC_Init();
-    RC_AddPins(DOOR_SERVO | SCOOP_SERVO);
+    RC_AddPins(DOOR_SERVO);// | SCOOP_SERVO);
 
 
     RC_SetPulseTime(DOOR_SERVO, DOOR_CLOSED_VALUE);
@@ -188,8 +189,9 @@ void Robot_Init(void) {
     AD_Init();
     AD_AddPins(TAPE_SENSOR_FRONT_LEFT | TAPE_SENSOR_FRONT_RIGHT
             | TAPE_SENSOR_REAR_LEFT | TAPE_SENSOR_REAR_RIGHT | TRACK_WIRE_DETECTOR);
-
-
+    
+    LED_Init();
+    LED_AddBanks(LED_BANK1 || LED_BANK2 || LED_BANK3);
 }
 
 /**
@@ -255,7 +257,7 @@ char Robot_Drive(char speed){
     char returnValue = SUCCESS;
     
     returnValue = Robot_LeftMtrSpeed(speed);
-    returnValue = Robot_RightMtrSpeed(speed);
+    returnValue = Robot_RightMtrSpeed(speed+5);
     
     return returnValue;
 }
@@ -272,7 +274,7 @@ char Robot_Reverse(char speed){
     char trueSpeed = -speed;
     
     returnValue = Robot_LeftMtrSpeed(trueSpeed);
-    returnValue = Robot_RightMtrSpeed(trueSpeed);
+    returnValue = Robot_RightMtrSpeed(trueSpeed-5);
     
     return returnValue;
 }
@@ -364,15 +366,17 @@ unsigned char Robot_ReadBumpers(void) {
  * @return SUCCESS or ERROR
  * @brief  Forces the LEDs in (bank) to on (1) or off (0) to match the pattern.
  * @author Gabriel Hugh Elkaim, 2011.12.25 01:16 Max Dunne 2015.09.18 */
-char Robot_LEDSSet(uint16_t pattern) {
-    char i;
-    for (i = 0; i < NUMLEDS; i++) {
-        if (pattern & (1 << i)) {
-            LED_On(i);
-        } else {
-            LED_Off(i);
-        }
-    }
+char Robot_LEDSSet(unsigned char pattern) {
+    
+    LED_SetBank(LED_BANK1, pattern);
+//    char i;
+//    for (i = 0; i < NUMLEDS; i++) {
+//        if (pattern & (1 << i)) {
+//            LED_On(i);
+//        } else {
+//            LED_Off(i);
+//        }
+//    }
     return SUCCESS;
 }
 
@@ -381,6 +385,7 @@ char Robot_LEDSSet(uint16_t pattern) {
  * @return uint16_t: ERROR or state of BANK
  * @author Max Dunne, 203.10.21 01:16 2015.09.18 */
 uint16_t Robot_LEDSGet(void) {
+    
     uint16_t LEDStatus = 0;
     int8_t i;
     for (i = (NUMLEDS - 1); i >= 0; i--) {
@@ -575,14 +580,14 @@ void main(void) {
     SERIAL_Init();
     Robot_Init();
     static char i = 0;
-    static unsigned int servoPulse = SCOOP_DOWN_VALUE;
+   // static unsigned int servoPulse = SCOOP_DOWN_VALUE;
     static unsigned int doorPulse = DOOR_CLOSED_VALUE;
     static unsigned char tapeStatus = TAPE_NOT_PRESENT;
 
     printf("welcome to ece218 robot test harness \r\nenter a key to perform a test.\r\n\r\n");
     printf("w: print trackwire raw value\r\n");
     printf("t: tests all the tape sensors, reads them and prints out the response and its raw value \r\n");
-    printf("u: moves the scoop servo up\r\nd: moves the scoop servo down\r\n");
+   // printf("u: moves the scoop servo up\r\nd: moves the scoop servo down\r\n");
     printf("l: moves the door servo inwards\r\nr: moves the door servo outwards\r\n\r\n");
     printf("press the bumpers to run the following actions. \r\nfront right bumper = close door \r\n");
     printf("front left bumper = open door \r\nrear right bumper = max reverse speed for both\r\n");
@@ -602,8 +607,7 @@ void main(void) {
             Robot_CloseDoor();         
         }
         if (Robot_ReadRearRightBumper() == BUMPER_TRIPPED) {
-            Robot_Reverse(100);
-            
+            Robot_Drive(100);
         }
 
         i = GetChar();
@@ -638,23 +642,24 @@ void main(void) {
             } else {
                 printf("value: %d, rear right tape is NOT present \r\n", AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT));
             }
+            printf("-------------------------------------\r\n\r\n");
 
         }
-        if (i == 'u') {
-            if (servoPulse < 2500) {
-                servoPulse = servoPulse + 50;
-                Robot_SetScoopServo(servoPulse);
-            }
-            printf("scoop servo value: %d \r\n\r\n", servoPulse);
-        }
-
-        if (i == 'd') {
-            if (servoPulse > 500) {
-                servoPulse = servoPulse - 50;
-                Robot_SetScoopServo(servoPulse);
-            }
-            printf("scoop servo value: %d \r\n\r\n", servoPulse);
-        }
+//        if (i == 'u') {
+//            if (servoPulse < 2500) {
+//                servoPulse = servoPulse + 50;
+//                Robot_SetScoopServo(servoPulse);
+//            }
+//            printf("scoop servo value: %d \r\n\r\n", servoPulse);
+//        }
+//
+//        if (i == 'd') {
+//            if (servoPulse > 500) {
+//                servoPulse = servoPulse - 50;
+//                Robot_SetScoopServo(servoPulse);
+//            }
+//            printf("scoop servo value: %d \r\n\r\n", servoPulse);
+//        }
         if (i == 'l') {
             if (doorPulse < 2500) {
                 doorPulse = doorPulse + 50;

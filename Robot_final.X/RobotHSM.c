@@ -34,7 +34,8 @@
 #include "BOARD.h"
 #include "RobotHSM.h"
 #include "FollowWallSubHSM.h" //#include all sub state machines called
-#include "FollowTapeSubHSM.h" //#include all sub state machines called
+#include "FollowTapeSubHSM.h" //#include all sub state machines 
+
 /*******************************************************************************
  * PRIVATE #DEFINES                                                            *
  ******************************************************************************/
@@ -168,6 +169,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                     break;
 
                 case ES_ENTRY:
+                    Robot_LEDSSet(0); //turn off LEDs
                     Robot_Drive(NOMINAL_SPEED); // start motors
                     break;
 
@@ -176,14 +178,14 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
 
                     if (bumperValue && 0b1100) {
                         //if any of the front bumpers were hit, go in reverse
-                        Robot_Reverse(BACK_UP_SPEED);
+                        Robot_Reverse(BUMP_BACKUP_SPEED);
                     } else {
                         //if any of the rear bumpers were hit, go forward
-                        Robot_Drive(BACK_UP_SPEED);
+                        Robot_Drive(BUMP_BACKUP_SPEED);
                     }
 
                     //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
 
                     //transition to follow wall state
                     // now put the machine into the actual initial state
@@ -194,17 +196,17 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
 
                 case FOUND_TAPE:
                     tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
-                    if (tapeSensorValue && 0b1100) {
-                        //if any of the front tape sensors were hit, go in reverse
-                        Robot_Reverse(BACK_UP_SPEED);
-                    } else {
-                        //if any of the rear tape sensors were hit, go forward
-                        Robot_Drive(BACK_UP_SPEED);
-                    }
-
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
-                    //transition to follow tape state
+//                    if (tapeSensorValue && 0b1100) {
+//                        //if any of the front tape sensors were hit, go in reverse
+//                        Robot_Reverse(BACK_UP_SPEED);
+//                    } else {
+//                        //if any of the rear tape sensors were hit, go forward
+//                        Robot_Drive(BACK_UP_SPEED);
+//                    }
+//
+//                    //start back up timer to determine how long robot backs up
+//                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
+//                    //transition to follow tape state
                     nextState = FollowTape;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -289,14 +291,14 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         bumperValue = ThisEvent.EventParam; //save bumper value
                         if (bumperValue && 0b1100) {
                             //if any of the front bumpers were hit, go in reverse
-                            Robot_Reverse(BACK_UP_SPEED);
+                            Robot_Reverse(BUMP_BACKUP_SPEED);
                         } else {
                             //if any of the rear bumpers were hit, go forward
-                            Robot_Drive(BACK_UP_SPEED);
+                            Robot_Drive(BUMP_BACKUP_SPEED);
                         }
 
                         //start back up timer to determine how long robot backs up
-                        ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
+                        ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
                         //transition to follow wall state
                         // now put the machine into the actual initial state
                         nextState = FollowWall;

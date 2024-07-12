@@ -85,7 +85,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST CheckBattery//, CheckTrackwire
+#define EVENT_CHECK_LIST CheckBattery, CheckTrackwire
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the
@@ -98,8 +98,8 @@ static const char *EventNames[] = {
 #define TIMER3_RESP_FUNC PostRobotHSM
 #define TIMER4_RESP_FUNC PostTapeBumpService
 #define TIMER5_RESP_FUNC PostTapeBumpService
-#define TIMER6_RESP_FUNC PostUnloadScoopService
-#define TIMER7_RESP_FUNC PostUnloadScoopService
+#define TIMER6_RESP_FUNC TIMER_UNUSED
+#define TIMER7_RESP_FUNC TIMER_UNUSED
 #define TIMER8_RESP_FUNC TIMER_UNUSED
 #define TIMER9_RESP_FUNC TIMER_UNUSED
 #define TIMER10_RESP_FUNC TIMER_UNUSED
@@ -121,8 +121,6 @@ static const char *EventNames[] = {
 #define TURN_TIMER 3
 #define BUMPER_TIMER 4
 #define TAPE_SENSOR_TIMER 5
-#define SCOOP_TIMER 6
-#define PAUSE_TIMER 7
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 
@@ -133,7 +131,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // This macro determines that nuber of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 4
+#define NUM_SERVICES 3
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service

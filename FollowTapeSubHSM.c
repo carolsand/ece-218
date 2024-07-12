@@ -41,6 +41,7 @@ typedef enum {
     InitPSubState,
     Back_Up,
     Turn_Left,
+    Turn_Right,
     Go_Forward,
 } FollowTapeSubHSMState_t;
 
@@ -48,6 +49,7 @@ static const char *StateNames[] = {
 	"InitPSubState",
 	"Back_Up",
 	"Turn_Left",
+	"Turn_Right",
 	"Go_Forward",
 };
 
@@ -135,7 +137,6 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
 
-<<<<<<< HEAD
                     // if the tape event came from HSM, then grab the value from there
                     if (!insideSubHSM_First) {
                         tapeSensorReading = GrabTapeSensorValue();
@@ -145,30 +146,32 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     //insideSubHSM_First will be 1 and it must be cleared
                     insideSubHSM_First = 0; //clear flag
 
-//                    if (tapeSensorReading && 0b1100) {
-//                        //if any of the front tape sensors were hit, go in reverse
-//                        Robot_Reverse(BACK_UP_SPEED);
-//                    } else {
-//                        //if any of the rear tape sensors were hit, go forward
-//                        Robot_Drive(BACK_UP_SPEED);
-//                    }
-//
-//                    //start back up timer to determine how long robot backs up
-//                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP+100);
-                    
-                    
-                    if (tapeSensorReading == 0b0100){ //if front right sensor hit
+                    //                    if (tapeSensorReading && 0b1100) {
+                    //                        //if any of the front tape sensors were hit, go in reverse
+                    //                        Robot_Reverse(BACK_UP_SPEED);
+                    //                    } else {
+                    //                        //if any of the rear tape sensors were hit, go forward
+                    //                        Robot_Drive(BACK_UP_SPEED);
+                    //                    }
+                    //
+                    //                    //start back up timer to determine how long robot backs up
+                    //                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP+100);
+
+
+                    if (tapeSensorReading == 0b0100) { //if front right sensor hit
                         nextState = Turn_Left;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
-                    
-                    if(tapeSensorReading == 0b1000){ //if front left sensor hit
-                        Robot_Reverse(BACK_UP_SPEED);
-                        ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP+100);
+                    else {
+                        if (tapeSensorReading < 4) { //if rear sensor hit
+                            Robot_Drive(TAPE_BACKUP_SPEED);
+                        } else {
+                            //Robot_LEDSSet(1);
+                            Robot_Reverse(TAPE_BACKUP_SPEED);
+                        }
+                        ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_TAPE);
                     }
-=======
->>>>>>> 6420d81b88b30391db474d7547652a446b19e098
                     break;
 
                 case ES_TIMEOUT:
@@ -182,23 +185,56 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
 
                     // maybe we need FOUND_TAPE event case here too ???????
             }
+            break;
 
-        case Turn_Left:
+        case Turn_Right:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    //turning left 
-<<<<<<< HEAD
-                    Robot_Turn(-TURN_SPEED, TURN_SPEED);
+                    //Robot_LEDSSet(3);
+                    //turning right 
+                    Robot_Turn(TURN_SPEED, -TURN_SPEED);
                     ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING);
-=======
-                    Robot_Turn(0, TURN_SPEED);
-                    ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING + 100);
->>>>>>> 6420d81b88b30391db474d7547652a446b19e098
                     break;
 
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == TURN_TIMER) {
                         //we have finished turning, so let's switch to Go_Forward state
+                        //Robot_LEDSSet(0b111);
+                        nextState = Go_Forward;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case FOUND_TAPE:
+                    //we ran into tape while we were traveling, so let's transition
+                    //to back up state
+                    //Robot_LEDSSet(0);
+                    tapeSensorReading = ThisEvent.EventParam;
+
+                    //                    if (tapeSensorReading == 0b1000) { //if front left sensor hit inside turn right
+                    //                        nextState = Turn_Left;
+                    //                        makeTransition = TRUE;
+                    //                        ThisEvent.EventType = ES_NO_EVENT;
+                    //                    }
+
+                    break;
+            }
+
+            break;
+
+        case Turn_Left:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    //Robot_LEDSSet(3);
+                    //turning left 
+                    Robot_Turn(-TAPE_TURN_SPEED, TAPE_TURN_SPEED);
+                    ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING_TAPE);
+                    break;
+
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == TURN_TIMER) {
+                        //we have finished turning, so let's switch to Go_Forward state
+                        //Robot_LEDSSet(0b111);
                         nextState = Go_Forward;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
@@ -210,31 +246,27 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     //to back up state
 
                     tapeSensorReading = ThisEvent.EventParam;
-<<<<<<< HEAD
-                    
-                    if (tapeSensorReading == 0b0010) { //if rear left
+                    if (tapeSensorReading == 0b0100) { //if front right
                         nextState = Go_Forward;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
-                    
-                    
-=======
-                    if (tapeSensorReading && 0b1100) {
-                        //if any of the front tape sensors were hit, go in reverse
-                        Robot_Reverse(BACK_UP_SPEED);
-                    } else {
-                        //if any of the rear tape sensors were hit, go forward
-                        Robot_Drive(BACK_UP_SPEED);
-                    }
-
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
->>>>>>> 6420d81b88b30391db474d7547652a446b19e098
-                    //transition to back up state
-//                    nextState = Back_Up;
-//                    makeTransition = TRUE;
-//                    ThisEvent.EventType = ES_NO_EVENT;
+                    //                    
+                    //                    
+                    //                    if (tapeSensorReading && 0b1100) {
+                    //                        //if any of the front tape sensors were hit, go in reverse
+                    //                        Robot_Reverse(BACK_UP_SPEED);
+                    //                    } else {
+                    //                        //if any of the rear tape sensors were hit, go forward
+                    //                        Robot_Drive(BACK_UP_SPEED);
+                    //                    }
+                    //
+                    //                    //start back up timer to determine how long robot backs up
+                    //                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
+                    //                    transition to back up state
+                    //                    nextState = Back_Up;
+                    //                    makeTransition = TRUE;
+                    //                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
 
             }
@@ -243,38 +275,28 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
         case Go_Forward:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    //Robot_LEDSSet(0xF);
                     //go forward 
                     Robot_Drive(NOMINAL_SPEED);
+
                     break;
 
                 case FOUND_TAPE:
                     //we ran into tape while we were traveling, so let's transition
                     //to back up state
-
+                    //Robot_LEDSSet(0);
                     tapeSensorReading = ThisEvent.EventParam;
-                    if (tapeSensorReading && 0b1100) {
-                        //if any of the front tape sensors were hit, go in reverse
-                        Robot_Reverse(BACK_UP_SPEED);
-                    } else {
-                        //if any of the rear tape sensors were hit, go forward
-                        Robot_Drive(BACK_UP_SPEED);
-                    }
+                    insideSubHSM_First = 1;
+                    //                    if (tapeSensorReading == 0b0100) { //if front right sensor hit inside go forward
+                    //                        nextState = Turn_Right;
+                    //                        makeTransition = TRUE;
+                    //                        ThisEvent.EventType = ES_NO_EVENT;
+                    //                        break;
+                    //                    }
+                    nextState = Back_Up;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
 
-<<<<<<< HEAD
-                    if (tapeSensorReading == 0b0010){ //if rear left sensor hit
-                        nextState = Turn_Left;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    
-=======
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKING_UP);
->>>>>>> 6420d81b88b30391db474d7547652a446b19e098
-                    //transition to back up state
-//                    nextState = Back_Up;
-//                    makeTransition = TRUE;
-//                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
 
             }
