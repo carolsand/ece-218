@@ -40,30 +40,31 @@
 #define RIGHT_PWM               PWM_PORTY12
 
 /* PINS FOR THE BUMPERS (AKA LIMIT SWITCHES) */
-#define BUMP_FRONT_LEFT         PORTZ03_BIT
-#define BUMP_FRONT_RIGHT        PORTZ04_BIT
-#define BUMP_REAR_RIGHT         PORTZ05_BIT
-#define BUMP_REAR_LEFT          PORTZ07_BIT
+#define BUMP_WALL_LEFT         PORTZ03_BIT
+#define BUMP_WALL_RIGHT        PORTZ04_BIT
+#define BUMP_OBSTCL_RIGHT      PORTZ05_BIT
+#define BUMP_OBSTCL_LEFT       PORTZ07_BIT
 
-#define BUMP_FRONT_LEFT_TRIS    PORTZ03_TRIS
-#define BUMP_FRONT_RIGHT_TRIS   PORTZ04_TRIS
-#define BUMP_REAR_RIGHT_TRIS    PORTZ05_TRIS
-#define BUMP_REAR_LEFT_TRIS     PORTZ07_TRIS
+#define BUMP_WALL_LEFT_TRIS    PORTZ03_TRIS
+#define BUMP_WALL_RIGHT_TRIS   PORTZ04_TRIS
+#define BUMP_OBSTCL_RIGHT_TRIS PORTZ05_TRIS
+#define BUMP_OBSTCL_LEFT_TRIS  PORTZ07_TRIS
 
 /* PINS FOR SERVOS */
-#define DOOR_SERVO              RC_PORTX03
-#define SCOOP_SERVO             RC_PORTX04
+#define DOOR_SERVO              RC_PORTY06
+
+#define SERVO_SWITCH_TRIS       PORTY05_TRIS
+#define SERVO_SWITCH            PORTY05_BIT
+
 
 /* PINS FOR DETECTORS */
-//#define BEACON_DETECTOR         PORTZ08_BIT
 #define TRACK_WIRE_DETECTOR     AD_PORTV8
 
-//#define BEACON_DETECTOR_TRIS    PORTZ08_TRIS
 //#define TRACK_WIRE_DETECT_TRIS  PORTY07_BIT
 
 /* PINS FOR TAPE SENSORS */
 #define TAPE_SENSOR_FRONT_LEFT  AD_PORTV3
-#define TAPE_SENSOR_FRONT_RIGHT AD_PORTV4
+#define TAPE_SENSOR_FRONT_RIGHT AD_PORTV7
 #define TAPE_SENSOR_REAR_RIGHT  AD_PORTV5
 #define TAPE_SENSOR_REAR_LEFT   AD_PORTV6
 
@@ -79,13 +80,11 @@
 #define LED_Off(i) *LED_LATSET[(unsigned int)i] = LED_bitsMap[(unsigned int)i];
 #define LED_Get(i) (*LED_LAT[(unsigned int)i]&LED_bitsMap[(unsigned int)i])
 
-#define TAPE_SENSOR_THRESHOLD 800
-#define TRACKWIRE_THRESHOLD   800
+#define TAPE_SENSOR_THRESHOLD 300
+#define TRACKWIRE_THRESHOLD   650
 
-#define SCOOP_DOWN_VALUE      560
-#define SCOOP_UP_VALUE       2300
-#define DOOR_CLOSED_VALUE    1800
-#define DOOR_OPEN_VALUE       800
+#define DOOR_CLOSED_VALUE    1550
+#define DOOR_OPEN_VALUE      2475
 /*******************************************************************************
  * PRIVATE VARIABLES                                                           *
  ******************************************************************************/
@@ -151,14 +150,12 @@ static unsigned short int LED_bitsMap[] = {BIT_7, BIT_5, BIT_10, BIT_11, BIT_3, 
  * @note  None.
  * @author Max Dunne, 2012.01.06 */
 void Robot_Init(void) {
-    // set up beacon detector and track wire detector as inputs 
-    //BEACON_DETECTOR_TRIS = INPUT;
 
     // also set up bumpers (limit switches) as inputs
-    BUMP_FRONT_LEFT_TRIS = INPUT;
-    BUMP_FRONT_RIGHT_TRIS = INPUT;
-    BUMP_REAR_LEFT_TRIS = INPUT;
-    BUMP_REAR_RIGHT_TRIS = INPUT;
+    BUMP_WALL_LEFT_TRIS = INPUT;
+    BUMP_WALL_RIGHT_TRIS = INPUT;
+    BUMP_OBSTCL_LEFT_TRIS = INPUT;
+    BUMP_OBSTCL_RIGHT_TRIS = INPUT;
 
     //set the control pins for the motors
     PWM_Init();
@@ -176,22 +173,24 @@ void Robot_Init(void) {
     RIGHT_DIR_INV = HIGH;
 
 
-    // set up servos
+    // set up servo
+    SERVO_SWITCH_TRIS = OUTPUT;
+    SERVO_SWITCH = LOW;
+
     RC_Init();
-    RC_AddPins(DOOR_SERVO);// | SCOOP_SERVO);
-
-
+    RC_AddPins(DOOR_SERVO);
     RC_SetPulseTime(DOOR_SERVO, DOOR_CLOSED_VALUE);
-    RC_SetPulseTime(SCOOP_SERVO, SCOOP_DOWN_VALUE);
 
     // set up tape sensors 
 
     AD_Init();
     AD_AddPins(TAPE_SENSOR_FRONT_LEFT | TAPE_SENSOR_FRONT_RIGHT
             | TAPE_SENSOR_REAR_LEFT | TAPE_SENSOR_REAR_RIGHT | TRACK_WIRE_DETECTOR);
-    
+
     LED_Init();
     LED_AddBanks(LED_BANK1 || LED_BANK2 || LED_BANK3);
+    
+    RC_RemovePins(DOOR_SERVO);
 }
 
 /**
@@ -253,12 +252,12 @@ char Robot_RightMtrSpeed(char newSpeed) {
  * @return SUCCESS or ERROR
  * @brief  This function is used to set the speed of the motors going forward.
  * @author Dyamic Duo, 2024.06.13*/
-char Robot_Drive(char speed){
+char Robot_Drive(char speed) {
     char returnValue = SUCCESS;
-    
+
     returnValue = Robot_LeftMtrSpeed(speed);
-    returnValue = Robot_RightMtrSpeed(speed+5);
-    
+    returnValue = Robot_RightMtrSpeed(speed);
+
     return returnValue;
 }
 
@@ -269,13 +268,13 @@ char Robot_Drive(char speed){
  * @return SUCCESS or ERROR
  * @brief  This function is used to set the speed of the motors going forward.
  * @author Dyamic Duo, 2024.06.13*/
-char Robot_Reverse(char speed){
+char Robot_Reverse(char speed) {
     char returnValue = SUCCESS;
     char trueSpeed = -speed;
-    
+
     returnValue = Robot_LeftMtrSpeed(trueSpeed);
-    returnValue = Robot_RightMtrSpeed(trueSpeed-5);
-    
+    returnValue = Robot_RightMtrSpeed(trueSpeed);
+
     return returnValue;
 }
 
@@ -289,12 +288,12 @@ char Robot_Reverse(char speed){
  * @brief  This function is used to set independent speeds for the motors so it
  * can turn.
  * @author Dyamic Duo, 2024.06.13*/
-char Robot_Turn(char leftSpeed, char rightSpeed){
+char Robot_Turn(char leftSpeed, char rightSpeed) {
     char returnValue = SUCCESS;
-    
+
     returnValue = Robot_LeftMtrSpeed(leftSpeed);
     returnValue = Robot_RightMtrSpeed(rightSpeed);
-    
+
     return returnValue;
 }
 
@@ -314,8 +313,8 @@ unsigned int Robot_BatteryVoltage(void) {
  * @return BUMPER_TRIPPED or BUMPER_NOT_TRIPPED
  * @brief  Returns the state of the front left bumper
  * @author Max Dunne, 2012.01.06 */
-unsigned char Robot_ReadFrontLeftBumper(void) {
-    return BUMP_FRONT_LEFT;
+unsigned char Robot_ReadWallLeftBumper(void) {
+    return BUMP_WALL_LEFT;
 }
 
 /**
@@ -324,8 +323,8 @@ unsigned char Robot_ReadFrontLeftBumper(void) {
  * @return BUMPER_TRIPPED or BUMPER_NOT_TRIPPED
  * @brief  Returns the state of the front right bumper
  * @author Max Dunne, 2012.01.06 */
-unsigned char Robot_ReadFrontRightBumper(void) {
-    return BUMP_FRONT_RIGHT;
+unsigned char Robot_ReadWallRightBumper(void) {
+    return BUMP_WALL_RIGHT;
 }
 
 /**
@@ -334,8 +333,8 @@ unsigned char Robot_ReadFrontRightBumper(void) {
  * @return BUMPER_TRIPPED or BUMPER_NOT_TRIPPED
  * @brief  Returns the state of the rear left bumper
  * @author Max Dunne, 2012.01.06 */
-unsigned char Robot_ReadRearLeftBumper(void) {
-    return BUMP_REAR_LEFT;
+unsigned char Robot_ReadObstclLeftBumper(void) {
+    return BUMP_OBSTCL_LEFT;
 }
 
 /**
@@ -344,20 +343,20 @@ unsigned char Robot_ReadRearLeftBumper(void) {
  * @return BUMPER_TRIPPED or BUMPER_NOT_TRIPPED
  * @brief  Returns the state of the rear right bumper
  * @author Max Dunne, 2012.01.06 */
-unsigned char Robot_ReadRearRightBumper(void) {
-    return BUMP_REAR_RIGHT;
+unsigned char Robot_ReadObstclRightBumper(void) {
+    return BUMP_OBSTCL_RIGHT;
 }
 
 /**
  * @Function Robot_ReadBumpers(void)
  * @param None.
- * @return 4-bit value representing all four bumpers in following order: front left,front right, rear left, rear right
+ * @return 4-bit value representing all four bumpers in following order: wall left,wall right, obstacle left, obstacle right
  * @brief  Returns the state of all 4 bumpers
  * @author Max Dunne, 2012.01.06 */
 unsigned char Robot_ReadBumpers(void) {
     //unsigned char bump_state;
     //bump_state = (!BUMP_FRONT_LEFT + ((!BUMP_FRONT_RIGHT) << 1)+((!BUMP_REAR_LEFT) << 2)+((!BUMP_REAR_RIGHT) << 3));
-    return ( BUMP_REAR_RIGHT + ((BUMP_REAR_LEFT) << 1)+((BUMP_FRONT_RIGHT) << 2)+((BUMP_FRONT_LEFT) << 3));
+    return ( BUMP_OBSTCL_RIGHT + ((BUMP_OBSTCL_LEFT) << 1)+((BUMP_WALL_RIGHT) << 2)+((BUMP_WALL_LEFT) << 3));
 }
 
 /**
@@ -367,16 +366,16 @@ unsigned char Robot_ReadBumpers(void) {
  * @brief  Forces the LEDs in (bank) to on (1) or off (0) to match the pattern.
  * @author Gabriel Hugh Elkaim, 2011.12.25 01:16 Max Dunne 2015.09.18 */
 char Robot_LEDSSet(unsigned char pattern) {
-    
+
     LED_SetBank(LED_BANK1, pattern);
-//    char i;
-//    for (i = 0; i < NUMLEDS; i++) {
-//        if (pattern & (1 << i)) {
-//            LED_On(i);
-//        } else {
-//            LED_Off(i);
-//        }
-//    }
+    //    char i;
+    //    for (i = 0; i < NUMLEDS; i++) {
+    //        if (pattern & (1 << i)) {
+    //            LED_On(i);
+    //        } else {
+    //            LED_Off(i);
+    //        }
+    //    }
     return SUCCESS;
 }
 
@@ -385,7 +384,7 @@ char Robot_LEDSSet(unsigned char pattern) {
  * @return uint16_t: ERROR or state of BANK
  * @author Max Dunne, 203.10.21 01:16 2015.09.18 */
 uint16_t Robot_LEDSGet(void) {
-    
+
     uint16_t LEDStatus = 0;
     int8_t i;
     for (i = (NUMLEDS - 1); i >= 0; i--) {
@@ -496,17 +495,17 @@ unsigned char Robot_ReadRearRightTape(void) {
  * [from MSB to LSB] front left,front right, rear left, rear right
  * @brief  Returns the state of all 4 tape sensors
  * @author Dyamic Duo, 2024.06.14*/
-unsigned char Robot_ReadTapeSensors(void){
+unsigned char Robot_ReadTapeSensors(void) {
     unsigned char frontLeft = Robot_ReadFrontLeftTape();
     unsigned char frontRight = Robot_ReadFrontRightTape();
     unsigned char rearLeft = Robot_ReadRearLeftTape();
     unsigned char rearRight = Robot_ReadRearRightTape();
-    
+
     return ((frontLeft << 3) | (frontRight << 2) | (rearLeft << 1) | rearRight);
-    
+
 }
 
-unsigned char Robot_IsTrackwirePresent(void){
+unsigned char Robot_IsTrackwirePresent(void) {
     int trackwireValue = 0;
 
     if (AD_IsNewDataReady) {
@@ -524,22 +523,6 @@ unsigned char Robot_IsTrackwirePresent(void){
 }
 
 /**
- * @Function Robot_SetScoopServo(int position)
- * @param position (500 - 2500)
- * @return SUCCESS or ERROR
- * @brief This function is used to set the position of the servo 
- * @author
- */
-unsigned char Robot_SetScoopServo(int newPosition) {
-    if (newPosition > 2500 || newPosition < 500) {
-        return (ERROR);
-    }
-    RC_SetPulseTime(SCOOP_SERVO, newPosition);
-    return (SUCCESS);
-
-}
-
-/**
  * @Function Robot_SetDoorServo(int position)
  * @param position (1000-2000)
  * @return SUCCESS or ERROR
@@ -554,21 +537,19 @@ unsigned char Robot_SetDoorServo(int newPosition) {
     return (SUCCESS);
 }
 
-unsigned char Robot_UnloadScoop(void){
-    RC_SetPulseTime(SCOOP_SERVO, SCOOP_UP_VALUE);
-    return (SUCCESS);
-}
-unsigned char Robot_ResetScoop(void){
-    RC_SetPulseTime(SCOOP_SERVO, SCOOP_DOWN_VALUE);
-    return (SUCCESS);
-}
-
-unsigned char Robot_OpenDoor(void){
+unsigned char Robot_OpenDoor(void) {
+    RC_AddPins(DOOR_SERVO);
     RC_SetPulseTime(DOOR_SERVO, DOOR_OPEN_VALUE);
     return (SUCCESS);
 }
-unsigned char Robot_CloseDoor(void){
+
+unsigned char Robot_CloseDoor(void) {
+    int i;
     RC_SetPulseTime(DOOR_SERVO, DOOR_CLOSED_VALUE);
+    for (i=0; i < 1000; i++){
+        ;
+    }
+    RC_RemovePins(DOOR_SERVO);
     return (SUCCESS);
 }
 
@@ -580,86 +561,79 @@ void main(void) {
     SERIAL_Init();
     Robot_Init();
     static char i = 0;
-   // static unsigned int servoPulse = SCOOP_DOWN_VALUE;
     static unsigned int doorPulse = DOOR_CLOSED_VALUE;
     static unsigned char tapeStatus = TAPE_NOT_PRESENT;
-
+    //RC_RemovePins(DOOR_SERVO);
     printf("welcome to ece218 robot test harness \r\nenter a key to perform a test.\r\n\r\n");
     printf("w: print trackwire raw value\r\n");
     printf("t: tests all the tape sensors, reads them and prints out the response and its raw value \r\n");
-   // printf("u: moves the scoop servo up\r\nd: moves the scoop servo down\r\n");
     printf("l: moves the door servo inwards\r\nr: moves the door servo outwards\r\n\r\n");
     printf("press the bumpers to run the following actions. \r\nfront right bumper = close door \r\n");
     printf("front left bumper = open door \r\nrear right bumper = max reverse speed for both\r\n");
     printf("rear left bumper = stop both motors\r\n\r\n");
 
-
     while (1) {
-        //Robot_LeftMtrSpeed(100);
-        //Robot_RightMtrSpeed(-100);
-        if (Robot_ReadFrontLeftBumper() == BUMPER_TRIPPED) {
-            Robot_OpenDoor();           
+        if (Robot_ReadWallLeftBumper() == BUMPER_TRIPPED) {
+            Robot_OpenDoor();
         }
-        if (Robot_ReadRearLeftBumper() == BUMPER_TRIPPED) {
+        if (Robot_ReadObstclLeftBumper() == BUMPER_TRIPPED) {
             Robot_Drive(0);
         }
-        if (Robot_ReadFrontRightBumper() == BUMPER_TRIPPED) {
-            Robot_CloseDoor();         
+        if (Robot_ReadWallRightBumper() == BUMPER_TRIPPED) {
+            Robot_CloseDoor();
         }
-        if (Robot_ReadRearRightBumper() == BUMPER_TRIPPED) {
+        if (Robot_ReadObstclRightBumper() == BUMPER_TRIPPED) {
             Robot_Drive(100);
         }
 
         i = GetChar();
-        if(i=='w'){
-            printf("value: %d, trackwire value\r\n", AD_ReadADPin(TRACK_WIRE_DETECTOR));
+
+        if (i == 'w') {
+            printf("value: %d, trackwire value\r\n\r\n", AD_ReadADPin(TRACK_WIRE_DETECTOR));
         }
         if (i == 't') { //test tape sensors
             tapeStatus = Robot_ReadFrontLeftTape();
             if (tapeStatus == TAPE_PRESENT) {
-                printf("value: %d, front left tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT));
+                printf("value: %d, FL tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT));
             } else {
-                printf("value: %d, front left tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT));
+                printf("value: %d, FL tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT));
             }
 
             tapeStatus = Robot_ReadFrontRightTape();
             if (tapeStatus == TAPE_PRESENT) {
-                printf("value: %d, front right tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT));
+                printf("value: %d, FR tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT));
             } else {
-                printf("value: %d, front right tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT));
+                printf("value: %d, FR tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT));
             }
 
             tapeStatus = Robot_ReadRearLeftTape();
             if (tapeStatus == TAPE_PRESENT) {
-                printf("value: %d, rear left tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_REAR_LEFT));
+                printf("value: %d, RL tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_REAR_LEFT));
             } else {
-                printf("value: %d, rear left tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_REAR_LEFT));
+                printf("value: %d, RL tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_REAR_LEFT));
             }
 
             tapeStatus = Robot_ReadRearRightTape();
             if (tapeStatus == TAPE_PRESENT) {
-                printf("value: %d, rear right tape is present \r\n", AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT));
+                printf("value: %d, RR tape is present \r\n", AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT));
             } else {
-                printf("value: %d, rear right tape is NOT present \r\n", AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT));
+                printf("value: %d, RR tape is NOT present \r\n", AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT));
             }
             printf("-------------------------------------\r\n\r\n");
 
         }
-//        if (i == 'u') {
-//            if (servoPulse < 2500) {
-//                servoPulse = servoPulse + 50;
-//                Robot_SetScoopServo(servoPulse);
-//            }
-//            printf("scoop servo value: %d \r\n\r\n", servoPulse);
-//        }
-//
-//        if (i == 'd') {
-//            if (servoPulse > 500) {
-//                servoPulse = servoPulse - 50;
-//                Robot_SetScoopServo(servoPulse);
-//            }
-//            printf("scoop servo value: %d \r\n\r\n", servoPulse);
-//        }
+        if (i == 'u') {
+            RC_AddPins(DOOR_SERVO);
+            RC_SetPulseTime(DOOR_SERVO, DOOR_CLOSED_VALUE);
+        }
+
+        if (i == 'd') {
+            RC_RemovePins(DOOR_SERVO);
+        }
+        if (i == 's') {
+            Robot_Drive(0);
+        }
+
         if (i == 'l') {
             if (doorPulse < 2500) {
                 doorPulse = doorPulse + 50;

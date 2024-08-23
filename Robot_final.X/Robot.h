@@ -113,7 +113,7 @@ unsigned int Robot_BatteryVoltage(void);
  * @return BUMPER_TRIPPED or BUMPER_NOT_TRIPPED
  * @brief  Returns the state of the front left bumper
  * @author Dyamic Duo, 2024.05.25*/
-unsigned char Robot_ReadFrontLeftBumper(void);
+unsigned char Robot_ReadWallLeftBumper(void);
 
 
 /**
@@ -122,7 +122,7 @@ unsigned char Robot_ReadFrontLeftBumper(void);
  * @return BUMPER_TRIPPED or BUMPER_NOT_TRIPPED
  * @brief  Returns the state of the front right bumper
  * @author Dyamic Duo, 2024.05.25*/
-unsigned char Robot_ReadFrontRightBumper(void);
+unsigned char Robot_ReadWallRightBumper(void);
 
 /**
  * @Function Robot_ReadRearLeftBumper(void)
@@ -130,7 +130,7 @@ unsigned char Robot_ReadFrontRightBumper(void);
  * @return BUMPER_TRIPPED or BUMPER_NOT_TRIPPED
  * @brief  Returns the state of the rear left bumper
  * @author Dyamic Duo, 2024.05.25*/
-unsigned char Robot_ReadRearLeftBumper(void);
+unsigned char Robot_ReadObstclLeftBumper(void);
 
 /**
  * @Function Robot_ReadRearRightBumper(void)
@@ -138,7 +138,7 @@ unsigned char Robot_ReadRearLeftBumper(void);
  * @return BUMPER_TRIPPED or BUMPER_NOT_TRIPPED
  * @brief  Returns the state of the rear right bumper
  * @author Dyamic Duo, 2024.05.25*/
-unsigned char Robot_ReadRearRightBumper(void);
+unsigned char Robot_ReadObstclRightBumper(void);
 
 /**
  * @Function Robot_ReadBumpers(void)
@@ -215,15 +215,6 @@ unsigned char Robot_ReadRearRightTape(void);
 unsigned char Robot_ReadTapeSensors(void);
 
 /**
- * @Function Robot_SetScoopServo(int position)
- * @param position
- * @return SUCCESS or ERROR
- * @brief This function is used to set the position of the servo
- * @author
- */
-unsigned char Robot_SetScoopServo(int newPosition);
-
-/**
  * @Function Robot_SetDoorServo(int position)
  * @param position
  * @return SUCCESS or ERROR
@@ -232,8 +223,6 @@ unsigned char Robot_SetScoopServo(int newPosition);
  */
 unsigned char Robot_SetDoorServo(int newPosition);
 
-unsigned char Robot_UnloadScoop(void);
-unsigned char Robot_ResetScoop(void);
 unsigned char Robot_OpenDoor(void);
 unsigned char Robot_CloseDoor(void);
 

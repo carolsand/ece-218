@@ -140,7 +140,12 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                     ThisEvent.EventType = ES_NO_EVENT;
 
                     break;
-
+                case BUMP:
+                    bumperReading = ThisEvent.EventParam;
+                    if(bumperReading > 3){
+                        Robot_Reverse(BUMP_BACKUP_SPEED);
+                    }
+                    break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BACK_UP_TIMER) {
                         //we have finished backing up, so let's switch to Turn_Left state
@@ -176,14 +181,9 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
 
 
                     bumperReading = ThisEvent.EventParam;
-                    if (bumperReading && 0b1100) {
+                    if (bumperReading > 3) {
                         //if any of the front bumpers were hit, go in reverse
                         Robot_Reverse(BUMP_BACKUP_SPEED);
-                    //} 
-//                    else {
-//                        //if any of the rear bumpers were hit, go forward
-//                        Robot_Drive(BUMP_BACKUP_SPEED);
-//                    }
 
                     //start back up timer to determine how long robot backs up
                     ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
@@ -210,14 +210,10 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
 
 
                     bumperReading = ThisEvent.EventParam;
-                    if (bumperReading && 0b1100) {
+                    if (bumperReading > 3) {
                         //if any of the front bumpers were hit, go in reverse
                         Robot_Reverse(BUMP_BACKUP_SPEED);
-                    } else {
-                        //if any of the rear bumpers were hit, go forward
-                        Robot_Drive(BUMP_BACKUP_SPEED);
-                    }
-
+                    } 
                     //start back up timer to determine how long robot backs up
                     ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
                     //transition to back up state
@@ -266,12 +262,9 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                     //file and not the one from RobotHSM.c
 
                     bumperReading = ThisEvent.EventParam;
-                    if (bumperReading && 0b1100) {
+                    if (bumperReading > 3) {
                         //if any of the front bumpers were hit, go in reverse
                         Robot_Reverse(BUMP_BACKUP_SPEED);
-                    } else {
-                        //if any of the rear bumpers were hit, go forward
-                        Robot_Drive(BUMP_BACKUP_SPEED);
                     }
 
                     //start back up timer to determine how long robot backs up
@@ -309,13 +302,10 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                     //file and not the one from RobotHSM.c
 
                     bumperReading = ThisEvent.EventParam;
-                    if (bumperReading && 0b1100) {
+                    if (bumperReading > 3) {
                         //if any of the front bumpers were hit, go in reverse
                         Robot_Reverse(BUMP_BACKUP_SPEED);
-                    } else {
-                        //if any of the rear bumpers were hit, go forward
-                        Robot_Drive(BUMP_BACKUP_SPEED);
-                    }
+                    } 
 
                     //start back up timer to determine how long robot backs up
                     ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);

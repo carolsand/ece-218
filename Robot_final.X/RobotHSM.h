@@ -35,7 +35,7 @@
 #define HALF_SECOND         (500)               // half second in msec
 #define CHARGE_CHECK_TIME   (3*60*1000)         // 3 minutes in msec 
 
-#define NOMINAL_SPEED       55
+#define NOMINAL_SPEED       60
 #define BACK_UP_SPEED       50
 #define TURN_SPEED          60
 
@@ -43,7 +43,7 @@
 #define BUMP_BACKUP_SPEED   40
 
 #define TAPE_TURN_SPEED     40
-#define TAPE_BACKUP_SPEED   35
+#define TAPE_BACKUP_SPEED   40
 
 #define TIME_WAITING        2000
 #define TIME_BACKING_UP     500 
@@ -52,7 +52,7 @@
 #define TIME_BACKUP_BUMP    950 
 #define TIME_TURNING_WALL   400
 #define TIME_BACKUP_TAPE    1000
-#define TIME_TURNING_TAPE   1000
+#define TIME_TURNING_TAPE   900
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *
