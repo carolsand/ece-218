@@ -136,37 +136,50 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     //check IR and rear tape sensor status before anything else
+                        //if IR is low and rear tape is high then switch to
+                        // open door state
+                    
+                    //else,
+                    //reverse, start timer
                     break;
                 case ES_TIMEOUT:
+                    //switch to turn 90deg left state
                     break;
-                case WALL_DETECTED: //if rear tape are triggered, switch states
+                case WALL_DETECTED: //if rear tape are triggered, switch to open door state
                     break;
-                case FOUND_TAPE: //if the rear ones are triggered and IR is close to wall switch states
+                case FOUND_TAPE: //if the rear ones are triggered and IR is close to wall switch to open door state
                     break;
-                    // maybe we need bump event here too???
+                // maybe we need bump event here too???
             }
             break;
 
-
-
-
-        case Turn_90deg_Left: // 
+            
+            
+        case Turn_90deg_Left: // will definitely need more editing
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    //turn left, start turn timer
                     break;
                 case ES_TIMEOUT:
+                    //if turn timer
+                        //drive forward
+                    //if back up timer
+                        //turn left, start turn timer
                     break;
                 case BUMP:
+                    // if only the wall bumpers were hit
+                        //reverse, stop turn timer, start back up timer
                     break;
-                case WALL_DETECTED: //if rear tape are triggered, switch states
+                case WALL_DETECTED: 
+                    //if rear tape are triggered, switch to open door state
+                    //if rear tape are not triggered stop all timers, maybe slowly reverse? and start back up timer?
                     break;
-                case FOUND_TAPE: //if the rear ones are triggered and IR is close to wall switch states
+                case FOUND_TAPE: //is there a chance the front tape sensors will get hit ????
+                    //if the rear ones are triggered and IR is within range
+                        //switch to open door state
                     break;
             }
             break;
-
-
-
 
         case Open_Door: // 
             switch (ThisEvent.EventType) {
@@ -183,10 +196,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     break;
             }
             break;
-
-
-
-
+       
         case Close_Door: //
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
