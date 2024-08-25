@@ -60,6 +60,9 @@
 /* PINS FOR DETECTORS */
 #define TRACK_WIRE_DETECTOR     AD_PORTV8
 
+#define IR_DISTANCE_SENSOR      PORTZ10_BIT
+#define IR_DISTANCE_TRIS        PORTZ10_TRIS
+
 //#define TRACK_WIRE_DETECT_TRIS  PORTY07_BIT
 
 /* PINS FOR TAPE SENSORS */
@@ -151,6 +154,10 @@ static unsigned short int LED_bitsMap[] = {BIT_7, BIT_5, BIT_10, BIT_11, BIT_3, 
  * @author Max Dunne, 2012.01.06 */
 void Robot_Init(void) {
 
+    
+    //set up IR sensor
+    IR_DISTANCE_TRIS = INPUT;
+    
     // also set up bumpers (limit switches) as inputs
     BUMP_WALL_LEFT_TRIS = INPUT;
     BUMP_WALL_RIGHT_TRIS = INPUT;
@@ -522,6 +529,10 @@ unsigned char Robot_IsTrackwirePresent(void) {
     }
 }
 
+unsigned char Robot_IR_SensorStatus(void){
+    return IR_DISTANCE_SENSOR;
+}
+
 /**
  * @Function Robot_SetDoorServo(int position)
  * @param position (1000-2000)
@@ -549,10 +560,12 @@ unsigned char Robot_CloseDoor(void) {
     for (i=0; i < 1000; i++){
         ;
     }
-    RC_RemovePins(DOOR_SERVO);
     return (SUCCESS);
 }
 
+unsigned char Robot_RemoveServo(void){
+    return RC_RemovePins(DOOR_SERVO);
+}
 
 #ifdef ROBOT_TEST
 
@@ -566,6 +579,7 @@ void main(void) {
     //RC_RemovePins(DOOR_SERVO);
     printf("welcome to ece218 robot test harness \r\nenter a key to perform a test.\r\n\r\n");
     printf("w: print trackwire raw value\r\n");
+    printf("i: print IR Sensor Status \r\n");
     printf("t: tests all the tape sensors, reads them and prints out the response and its raw value \r\n");
     printf("l: moves the door servo inwards\r\nr: moves the door servo outwards\r\n\r\n");
     printf("press the bumpers to run the following actions. \r\nfront right bumper = close door \r\n");
@@ -622,9 +636,15 @@ void main(void) {
             printf("-------------------------------------\r\n\r\n");
 
         }
-        if (i == 'u') {
-            RC_AddPins(DOOR_SERVO);
-            RC_SetPulseTime(DOOR_SERVO, DOOR_CLOSED_VALUE);
+        
+        if (i == 'i') {
+            i = IR_DISTANCE_SENSOR;
+            if ( i == WITHIN_RANGE) {
+                printf("IR Sensor is WITHIN RANGE of the wall \r\n\r\n");
+            }
+            if( i == OUT_OF_RANGE) {
+                printf("IR Sensor is OUT OF RANGE of the wall \r\n\r\n"); 
+            }
         }
 
         if (i == 'd') {

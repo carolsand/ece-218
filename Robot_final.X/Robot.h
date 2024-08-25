@@ -33,6 +33,9 @@
 #define TRACKWIRE_PRESENT 1
 #define TRACKWIRE_NOT_PRESENT 0
 
+#define OUT_OF_RANGE 1 //these macros are for the IR sensor
+#define WITHIN_RANGE 0
+
 #define ROBOT_NOMINAL_SPEED 85
 #define ROBOT_MAX_SPEED 100 
 
@@ -225,7 +228,8 @@ unsigned char Robot_SetDoorServo(int newPosition);
 
 unsigned char Robot_OpenDoor(void);
 unsigned char Robot_CloseDoor(void);
-
+unsigned char Robot_RemoveServo(void);
+unsigned char Robot_IR_SensorStatus(void);
 unsigned char Robot_IsTrackwirePresent(void);
 
 #endif

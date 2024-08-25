@@ -41,7 +41,6 @@ typedef enum {
     InitPSubState,
     Back_Up,
     Turn_Left,
-    Turn_Right,
     Go_Forward,
 } FollowTapeSubHSMState_t;
 
@@ -49,7 +48,6 @@ static const char *StateNames[] = {
 	"InitPSubState",
 	"Back_Up",
 	"Turn_Left",
-	"Turn_Right",
 	"Go_Forward",
 };
 
@@ -136,33 +134,14 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
         case Back_Up:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-
-                    // if the tape event came from HSM, then grab the value from there
-                    if (!insideSubHSM_First) {
-                        tapeSensorReading = GrabTapeSensorValue();
-                    }
-
-                    //if the tape event came from this subHSM then
-                    //insideSubHSM_First will be 1 and it must be cleared
-                    insideSubHSM_First = 0; //clear flag
-
-                    //                    if (tapeSensorReading == 0b0100) { //if front right sensor hit
-                    //                        nextState = Turn_Left;
-                    //                        makeTransition = TRUE;
-                    //                        ThisEvent.EventType = ES_NO_EVENT;
-                    //                    } else {
-                    if (tapeSensorReading < 4) { //if rear sensors hit
-                        Robot_Drive(TAPE_BACKUP_SPEED);
-                    } else {
-                        //Robot_LEDSSet(1);
-                        Robot_Reverse(TAPE_BACKUP_SPEED);
-                    }
+                    Robot_Reverse(TAPE_BACKUP_SPEED);
                     ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_TAPE);
-                    //}
                     break;
+                
                 case FOUND_TAPE:
                     Robot_Reverse(TAPE_BACKUP_SPEED);
                     break;
+                
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BACK_UP_TIMER) {
                         //we have finished backing up, so let's switch to Turn_Left state
@@ -171,8 +150,6 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-
-                    // maybe we need FOUND_TAPE event case here too ???????
             }
             break;
 
@@ -188,34 +165,21 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == TURN_TIMER) {
                         //we have finished turning, so let's switch to Go_Forward state
-                        //Robot_LEDSSet(0b111);
                         nextState = Go_Forward;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
+                    if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                        //we have finished turning, so let's switch to Go_Forward state
+                        //turning left 
+                        Robot_Turn(-TAPE_TURN_SPEED, TAPE_TURN_SPEED);
+                        ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING_TAPE);
+                    }
                     break;
 
                 case FOUND_TAPE:
-                    //we ran into tape while we were turning, so let's transition
-                    //to back up state
-
-                    tapeSensorReading = ThisEvent.EventParam;
-                    insideSubHSM_First = 1;
-                    //                    if (tapeSensorReading == 0b0100) { //if front right
-                    //                        nextState = Go_Forward;
-                    //                        makeTransition = TRUE;
-                    //                        ThisEvent.EventType = ES_NO_EVENT;
-                    //                    }
-                    //                    //                    
-                    //                    
-                    if (tapeSensorReading && 0b1100) {
-                        //if any of the front tape sensors were hit, go in reverse
-                        Robot_Reverse(TAPE_BACKUP_SPEED);
-                    } else {
-                        //if any of the rear tape sensors were hit, go forward
-                        Robot_Reverse(TAPE_BACKUP_SPEED);
-                    }
-
+                    Robot_Reverse(TAPE_BACKUP_SPEED);
+                    //ES_Timer_StopTimer(TURN_TIMER);
                     //start back up timer to determine how long robot backs up
                     ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_TAPE);
                     //transition to back up state
@@ -223,41 +187,25 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
                     break;
-
             }
             break;
-
         case Go_Forward:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    //Robot_LEDSSet(0xF);
                     //go forward 
                     Robot_Drive(NOMINAL_SPEED);
-
                     break;
 
                 case FOUND_TAPE:
                     //we ran into tape while we were traveling, so let's transition
                     //to back up state
-                    //Robot_LEDSSet(0);
-                    tapeSensorReading = ThisEvent.EventParam;
-                    insideSubHSM_First = 1;
                     Robot_Reverse(TAPE_BACKUP_SPEED);
-                    //                    if (tapeSensorReading == 0b0100) { //if front right sensor hit inside go forward
-                    //                        nextState = Turn_Right;
-                    //                        makeTransition = TRUE;
-                    //                        ThisEvent.EventType = ES_NO_EVENT;
-                    //                        break;
-                    //                    }
                     nextState = Back_Up;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
-
                     break;
-
             }
             break;
-
         default: // all unhandled states fall into here
             break;
     } // end switch on Current State

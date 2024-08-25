@@ -30,10 +30,11 @@
       <itemPath>Robot.h</itemPath>
       <itemPath>RobotHSM.h</itemPath>
       <itemPath>../ES_Configure.h</itemPath>
-      <itemPath>../FinalEventChecker.h</itemPath>
       <itemPath>../FollowTapeSubHSM.h</itemPath>
       <itemPath>../FollowWallSubHSM.h</itemPath>
       <itemPath>../TapeBumpService.h</itemPath>
+      <itemPath>FinalEventChecker.h</itemPath>
+      <itemPath>DispenseSubHSM.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -67,11 +68,12 @@
       </logicalFolder>
       <itemPath>Robot.c</itemPath>
       <itemPath>RobotHSM.c</itemPath>
-      <itemPath>../FinalEventChecker.c</itemPath>
       <itemPath>../FollowTapeSubHSM.c</itemPath>
       <itemPath>../FollowWallSubHSM.c</itemPath>
       <itemPath>../TapeBumpService.c</itemPath>
       <itemPath>Final-ES_Main.c</itemPath>
+      <itemPath>FinalEventChecker.c</itemPath>
+      <itemPath>DispenseSubHSM.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -80,6 +82,7 @@
     <Elem>C:\ECE118_old\templates</Elem>
     <Elem>C:\devproj\MPLABX Projects\finalProject</Elem>
     <Elem>C:\Users\cfiguer7\Desktop\ECE218\ece118-2024</Elem>
+    <Elem>.</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -91,7 +94,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.40</languageToolchainVersion>
+        <languageToolchainVersion>4.35</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -411,7 +414,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.40</languageToolchainVersion>
+        <languageToolchainVersion>4.35</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -731,7 +734,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.40</languageToolchainVersion>
+        <languageToolchainVersion>4.35</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>

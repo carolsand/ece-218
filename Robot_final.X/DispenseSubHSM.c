@@ -1,5 +1,5 @@
 /*
- * File: TemplateSubHSM.c
+ * File: DispenseSubHSM.c
  * Author: J. Edward Carryer
  * Modified: Gabriel H Elkaim
  *
@@ -18,8 +18,8 @@
  * 09/13/13 15:17 ghe      added tattletail functionality and recursive calls
  * 01/15/12 11:12 jec      revisions for Gen2 framework
  * 11/07/11 11:26 jec      made the queue static
- * 10/30/11 17:59 jec      fixed references to CurrentEvent in RunTemplateSM()
- * 10/23/11 18:20 jec      began conversion from SMTemplate.c (02/20/07 rev)
+ * 10/30/11 17:59 jec      fixed references to CurrentEvent in RunDispenseSM()
+ * 10/23/11 18:20 jec      began conversion from SMDispense.c (02/20/07 rev)
  */
 
 
@@ -31,19 +31,26 @@
 #include "ES_Framework.h"
 #include "BOARD.h"
 #include "RobotHSM.h"
-#include "TemplateSubHSM.h"
+#include "DispenseSubHSM.h"
+#include "Robot.h"
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 typedef enum {
     InitPSubState,
-    SubFirstState,
-} TemplateSubHSMState_t;
+    Back_Up,
+    Turn_90deg_Left,
+    Open_Door,
+    Close_Door,
+} DispenseSubHSMState_t;
 
 static const char *StateNames[] = {
 	"InitPSubState",
-	"SubFirstState",
+	"Back_Up",
+	"Turn_90deg_Left",
+	"Open_Door",
+	"Close_Door",
 };
 
 
@@ -60,7 +67,7 @@ static const char *StateNames[] = {
 /* You will need MyPriority and the state variable; you may need others as well.
  * The type of state variable should match that of enum in header file. */
 
-static TemplateSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
+static DispenseSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
 
 
@@ -69,21 +76,20 @@ static uint8_t MyPriority;
  ******************************************************************************/
 
 /**
- * @Function InitTemplateSubHSM(uint8_t Priority)
+ * @Function InitDispenseSubHSM(uint8_t Priority)
  * @param Priority - internal variable to track which event queue to use
  * @return TRUE or FALSE
  * @brief This will get called by the framework at the beginning of the code
  *        execution. It will post an ES_INIT event to the appropriate event
- *        queue, which will be handled inside RunTemplateFSM function. Remember
+ *        queue, which will be handled inside RunDispenseFSM function. Remember
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitTemplateSubHSM(void)
-{
+uint8_t InitDispenseSubHSM(void) {
     ES_Event returnEvent;
 
     CurrentState = InitPSubState;
-    returnEvent = RunTemplateSubHSM(INIT_EVENT);
+    returnEvent = RunDispenseSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
         return TRUE;
     }
@@ -91,7 +97,7 @@ uint8_t InitTemplateSubHSM(void)
 }
 
 /**
- * @Function RunTemplateSubHSM(ES_Event ThisEvent)
+ * @Function RunDispenseSubHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the heirarchical state
@@ -105,45 +111,106 @@ uint8_t InitTemplateSubHSM(void)
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunTemplateSubHSM(ES_Event ThisEvent)
-{
+ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
-    TemplateSubHSMState_t nextState; // <- change type to correct enum
+    DispenseSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
 
     switch (CurrentState) {
-    case InitPSubState: // If current state is initial Psedudo State
-        if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
-        {
-            // this is where you would put any actions associated with the
-            // transition from the initial pseudo-state into the actual
-            // initial state
+        case InitPSubState: // If current state is initial Psedudo State
+            if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
+            {
+                // this is where you would put any actions associated with the
+                // transition from the initial pseudo-state into the actual
+                // initial state
 
-            // now put the machine into the actual initial state
-            nextState = SubFirstState;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
-        }
-        break;
-
-    case SubFirstState: // in the first state, replace this with correct names
-        switch (ThisEvent.EventType) {
-        case ES_NO_EVENT:
-        default: // all unhandled events pass the event back up to the next level
+                // now put the machine into the actual initial state
+                nextState = Back_Up;
+                makeTransition = TRUE;
+                ThisEvent.EventType = ES_NO_EVENT;
+            }
             break;
-        }
-        break;
-        
-    default: // all unhandled states fall into here
-        break;
+
+        case Back_Up: //
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    //check IR and rear tape sensor status before anything else
+                    break;
+                case ES_TIMEOUT:
+                    break;
+                case WALL_DETECTED: //if rear tape are triggered, switch states
+                    break;
+                case FOUND_TAPE: //if the rear ones are triggered and IR is close to wall switch states
+                    break;
+                    // maybe we need bump event here too???
+            }
+            break;
+
+
+
+
+        case Turn_90deg_Left: // 
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    break;
+                case ES_TIMEOUT:
+                    break;
+                case BUMP:
+                    break;
+                case WALL_DETECTED: //if rear tape are triggered, switch states
+                    break;
+                case FOUND_TAPE: //if the rear ones are triggered and IR is close to wall switch states
+                    break;
+            }
+            break;
+
+
+
+
+        case Open_Door: // 
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_OpenDoor();
+                    ES_Timer_InitTimer(WAIT_TIMER, TIME_WAITING);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == WAIT_TIMER) {
+                        nextState = Close_Door; //reset the subHSM
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+            }
+            break;
+
+
+
+
+        case Close_Door: //
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_CloseDoor();
+                    ES_Timer_InitTimer(DOOR_TIMER, TIME_FOR_DOOR);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == DOOR_TIMER) {
+                        nextState = Back_Up; //reset the subHSM
+                        makeTransition = TRUE;
+                    }
+                    break;
+            }
+            break;
+
+        default: // all unhandled states fall into here
+            break;
     } // end switch on Current State
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
         // recursively call the current state with an exit event
-        RunTemplateSubHSM(EXIT_EVENT); // <- rename to your own Run function
+        RunDispenseSubHSM(EXIT_EVENT); // <- rename to your own Run function
         CurrentState = nextState;
-        RunTemplateSubHSM(ENTRY_EVENT); // <- rename to your own Run function
+        RunDispenseSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 
     ES_Tail(); // trace call stack end

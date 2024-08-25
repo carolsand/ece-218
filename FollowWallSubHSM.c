@@ -42,8 +42,6 @@ typedef enum {
     Back_Up,
     Turn_Left,
     Go_Forward,
-    First_Edge_of_Wall,
-    Second_Edge_of_Wall,
 } FollowWallSubHSMState_t;
 
 static const char *StateNames[] = {
@@ -51,8 +49,6 @@ static const char *StateNames[] = {
 	"Back_Up",
 	"Turn_Left",
 	"Go_Forward",
-	"First_Edge_of_Wall",
-	"Second_Edge_of_Wall",
 };
 
 
@@ -133,16 +129,15 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             break;
-
         case Back_Up:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    ThisEvent.EventType = ES_NO_EVENT;
-
+                    Robot_Reverse(BUMP_BACKUP_SPEED);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
                     break;
                 case BUMP:
                     bumperReading = ThisEvent.EventParam;
-                    if(bumperReading > 3){
+                    if (bumperReading & 0b11 == 0) { //if only the wall bumpers were hit 
                         Robot_Reverse(BUMP_BACKUP_SPEED);
                     }
                     break;
@@ -154,10 +149,7 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-
-                    // maybe we need FOUND_TAPE event case here too ???????
             }
-
         case Turn_Left:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
@@ -178,22 +170,19 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                 case BUMP:
                     //we bumped into something while we were turning, so let's 
                     //transition to back up state
-
-
                     bumperReading = ThisEvent.EventParam;
-                    if (bumperReading > 3) {
-                        //if any of the front bumpers were hit, go in reverse
+                    if (bumperReading & 0b11 == 0) {
+                        //if any of the wall bumpers were hit, go in reverse
                         Robot_Reverse(BUMP_BACKUP_SPEED);
 
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
-                    //transition to back up state
-                    nextState = Back_Up;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
+                        //transition to back up state
+                        nextState = Back_Up;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-
             }
             break;
 
@@ -207,116 +196,20 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                 case BUMP:
                     //we bumped into something while we were traveling, so let's
                     //transition to back up state
-
-
                     bumperReading = ThisEvent.EventParam;
-                    if (bumperReading > 3) {
-                        //if any of the front bumpers were hit, go in reverse
+                    if (bumperReading & 0b11 == 0) {
+                        //if any of the wall bumpers were hit, go in reverse
                         Robot_Reverse(BUMP_BACKUP_SPEED);
-                    } 
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
-                    //transition to back up state
-                    nextState = Back_Up;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-
-                case FOUND_TAPE:
-                    //if BOTH front tape sensors are hit at the same time then
-                    //we can assume we are parallel with the wall, switch state
-                    if (ThisEvent.EventParam == 0b1100) {
-                        Robot_LEDSSet(0xA);
-                        //transition to first edge of wall state
-                        nextState = First_Edge_of_Wall;
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
+                        //transition to back up state
+                        nextState = Back_Up;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
             }
             break;
-
-        case First_Edge_of_Wall:
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    //go reverse
-                    Robot_Reverse(NOMINAL_SPEED);
-                    break;
-
-                case FOUND_TAPE:
-                    //if BOTH rear tape sensors are hit at the same time then
-                    //we reached the other end of wall, switch state
-                    if (ThisEvent.EventParam == 0b0011) {
-                        //transition to first edge of wall state
-                        nextState = Second_Edge_of_Wall;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    break;
-                case BUMP:
-                    //we bumped into something while we were traveling, so let's
-                    //transition to back up state
-
-                    //the bump event occurred inside this subHSM so raise this
-                    //flag so that the Back_Up state uses the reading from this
-                    //file and not the one from RobotHSM.c
-
-                    bumperReading = ThisEvent.EventParam;
-                    if (bumperReading > 3) {
-                        //if any of the front bumpers were hit, go in reverse
-                        Robot_Reverse(BUMP_BACKUP_SPEED);
-                    }
-
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
-                    //transition to back up state
-                    nextState = Back_Up;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-            }
-            break;
-
-        case Second_Edge_of_Wall:
-            switch (ThisEvent.EventType) {
-                case ES_ENTRY:
-                    //go forwards now
-                    Robot_Drive(NOMINAL_SPEED);
-                    break;
-                case FOUND_TAPE:
-                    //if BOTH front tape sensors are hit at the same time then
-                    //we reached the other end of wall, switch state
-                    if (ThisEvent.EventParam && 0b1100 == 0b1100) {
-                        //transition to first edge of wall state
-                        nextState = First_Edge_of_Wall;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
-                    }
-                    break;
-                case BUMP:
-                    //we bumped into something while we were traveling, so let's
-                    //transition to back up state
-
-                    //the bump event occurred inside this subHSM so raise this
-                    //flag so that the Back_Up state uses the reading from this
-                    //file and not the one from RobotHSM.c
-
-                    bumperReading = ThisEvent.EventParam;
-                    if (bumperReading > 3) {
-                        //if any of the front bumpers were hit, go in reverse
-                        Robot_Reverse(BUMP_BACKUP_SPEED);
-                    } 
-
-                    //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
-                    //transition to back up state
-                    nextState = Back_Up;
-                    makeTransition = TRUE;
-                    ThisEvent.EventType = ES_NO_EVENT;
-                    break;
-            }
-            break;
-
         default: // all unhandled states fall into here
             break;
     } // end switch on Current State

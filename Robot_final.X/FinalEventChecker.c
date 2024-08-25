@@ -138,6 +138,33 @@ uint8_t CheckTrackwire(void) {
 
 }
 
+uint8_t CheckIRSensor(void) {
+        static ES_EventTyp_t lastEvent = AWAY_FROM_WALL;
+
+    ES_EventTyp_t curEvent;
+    ES_Event thisEvent;
+    uint8_t returnVal = FALSE;
+    uint16_t IRSensorStatus = Robot_IR_SensorStatus(); // check the status of the trackwire
+    if (IRSensorStatus == WITHIN_RANGE) { // is battery connected?
+        curEvent = WALL_DETECTED;
+    } else {
+        curEvent = AWAY_FROM_WALL;
+    }
+    if (curEvent != lastEvent) { // check for change from last time
+        thisEvent.EventType = curEvent;
+        thisEvent.EventParam = IRSensorStatus;
+        returnVal = TRUE;
+        lastEvent = curEvent; // update history
+#ifndef EVENTCHECKER_TEST           // keep this as is for test harness
+        PostRobotHSM(thisEvent);
+#else
+        SaveEvent(thisEvent);
+#endif   
+    }
+    return (returnVal);
+
+}
+
 /* 
  * The Test Harness for the event checkers is conditionally compiled using
  * the EVENTCHECKER_TEST macro (defined either in the file or at the project level).
