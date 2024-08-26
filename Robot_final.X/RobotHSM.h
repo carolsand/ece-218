@@ -35,29 +35,37 @@
 #define HALF_SECOND         (500)               // half second in msec
 #define CHARGE_CHECK_TIME   (3*60*1000)         // 3 minutes in msec 
 
-#define NOMINAL_SPEED         60
+#define NOMINAL_SPEED          60
 
 
-#define OBSTACLE_TURN_SPEED   50
-#define OBSTACLE_BACKUP_SPEED 50
-#define TIME_BACKUP_OBSTACLE  500
-#define TIME_TURN_OBSTACLE    500
+#define OBSTACLE_TURN_SPEED    50
+#define OBSTACLE_BACKUP_SPEED  50
+#define TIME_BACKUP_OBSTACLE   500
+#define TIME_TURN_OBSTACLE     500
 
 
-#define BUMP_TURN_SPEED       45
-#define BUMP_BACKUP_SPEED     40
-#define TIME_BACKUP_BUMP      750 
-#define TIME_TURNING_WALL     300
+#define BUMP_TURN_SPEED        45
+#define BUMP_BACKUP_SPEED      40
+#define TIME_BACKUP_BUMP       750 
+#define TIME_TURNING_WALL      300
 
 
-#define TAPE_TURN_SPEED       40
-#define TAPE_BACKUP_SPEED     40
-#define TIME_BACKUP_TAPE      1000
-#define TIME_TURNING_TAPE     900
+#define TAPE_TURN_SPEED        40
+#define TAPE_BACKUP_SPEED      40
+#define TIME_BACKUP_TAPE       1000
+#define TIME_TURNING_TAPE      900
+
+#define DISPENSE_FWD_SPEED     25
+#define DISPENSE_BACKUP_SPEED  30
+#define DISPENSE_TURN_SPEED    40
+#define DISPENSE_BACKUP_TIME   250
+#define DISPENSE_TIMEOUT_TIME  1000
+#define DISPENSE_TIMEOUT_SPEED 30
+#define DISPENSE_TURN_TIME     250
 
 
-#define TIME_WAITING          2000
-#define TIME_FOR_DOOR         1000
+#define TIME_WAITING           2000
+#define TIME_FOR_DOOR          1000
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

@@ -103,7 +103,7 @@ static const char *EventNames[] = {
 #define TIMER4_RESP_FUNC PostTapeBumpService
 #define TIMER5_RESP_FUNC PostTapeBumpService
 #define TIMER6_RESP_FUNC PostRobotHSM
-#define TIMER7_RESP_FUNC TIMER_UNUSED
+#define TIMER7_RESP_FUNC PostRobotHSM
 #define TIMER8_RESP_FUNC TIMER_UNUSED
 #define TIMER9_RESP_FUNC TIMER_UNUSED
 #define TIMER10_RESP_FUNC TIMER_UNUSED
@@ -120,12 +120,13 @@ static const char *EventNames[] = {
 // definitions for the response functions to make it easire to check that
 // the timer number matches where the timer event will be routed
 
-#define WAIT_TIMER 1
-#define BACK_UP_TIMER 2 /*make sure this is enabled above and posting to the correct state machine*/
-#define TURN_TIMER 3
-#define BUMPER_TIMER 4
+#define WAIT_TIMER        1
+#define BACK_UP_TIMER     2 /*make sure this is enabled above and posting to the correct state machine*/
+#define TURN_TIMER        3
+#define BUMPER_TIMER      4
 #define TAPE_SENSOR_TIMER 5
-#define DOOR_TIMER 6
+#define DOOR_TIMER        6
+#define TIMEOUT_TIMER     7
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 

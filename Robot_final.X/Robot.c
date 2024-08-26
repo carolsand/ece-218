@@ -154,10 +154,10 @@ static unsigned short int LED_bitsMap[] = {BIT_7, BIT_5, BIT_10, BIT_11, BIT_3, 
  * @author Max Dunne, 2012.01.06 */
 void Robot_Init(void) {
 
-    
+
     //set up IR sensor
     IR_DISTANCE_TRIS = INPUT;
-    
+
     // also set up bumpers (limit switches) as inputs
     BUMP_WALL_LEFT_TRIS = INPUT;
     BUMP_WALL_RIGHT_TRIS = INPUT;
@@ -196,7 +196,7 @@ void Robot_Init(void) {
 
     LED_Init();
     LED_AddBanks(LED_BANK1 || LED_BANK2 || LED_BANK3);
-    
+
     RC_RemovePins(DOOR_SERVO);
 }
 
@@ -529,7 +529,7 @@ unsigned char Robot_IsTrackwirePresent(void) {
     }
 }
 
-unsigned char Robot_IR_SensorStatus(void){
+unsigned char Robot_IR_SensorStatus(void) {
     return IR_DISTANCE_SENSOR;
 }
 
@@ -544,26 +544,19 @@ unsigned char Robot_SetDoorServo(int newPosition) {
     if (newPosition > 2500 || newPosition < 500) {
         return (ERROR);
     }
-    RC_SetPulseTime(DOOR_SERVO, newPosition);
-    return (SUCCESS);
+    return RC_SetPulseTime(DOOR_SERVO, newPosition);
 }
 
 unsigned char Robot_OpenDoor(void) {
     RC_AddPins(DOOR_SERVO);
-    RC_SetPulseTime(DOOR_SERVO, DOOR_OPEN_VALUE);
-    return (SUCCESS);
+    return RC_SetPulseTime(DOOR_SERVO, DOOR_OPEN_VALUE);
 }
 
 unsigned char Robot_CloseDoor(void) {
-    int i;
-    RC_SetPulseTime(DOOR_SERVO, DOOR_CLOSED_VALUE);
-    for (i=0; i < 1000; i++){
-        ;
-    }
-    return (SUCCESS);
+    return RC_SetPulseTime(DOOR_SERVO, DOOR_CLOSED_VALUE);
 }
 
-unsigned char Robot_RemoveServo(void){
+unsigned char Robot_RemoveServo(void) {
     return RC_RemovePins(DOOR_SERVO);
 }
 
@@ -573,6 +566,10 @@ void main(void) {
     BOARD_Init();
     SERIAL_Init();
     Robot_Init();
+    LED_OffBank(LED_BANK1, 0xF);
+    LED_OffBank(LED_BANK2, 0xF);
+    LED_OffBank(LED_BANK3, 0xF);
+
     static char i = 0;
     static unsigned int doorPulse = DOOR_CLOSED_VALUE;
     static unsigned char tapeStatus = TAPE_NOT_PRESENT;
@@ -587,6 +584,17 @@ void main(void) {
     printf("rear left bumper = stop both motors\r\n\r\n");
 
     while (1) {
+
+        if (IR_DISTANCE_SENSOR == WITHIN_RANGE) {
+            LED_OnBank(LED_BANK1, 0xF);
+            LED_OnBank(LED_BANK2, 0xF);
+            LED_OnBank(LED_BANK3, 0xF);
+        } else {
+            LED_OffBank(LED_BANK1, 0xF);
+            LED_OffBank(LED_BANK2, 0xF);
+            LED_OffBank(LED_BANK3, 0xF);
+        }
+
         if (Robot_ReadWallLeftBumper() == BUMPER_TRIPPED) {
             Robot_OpenDoor();
         }
@@ -636,14 +644,14 @@ void main(void) {
             printf("-------------------------------------\r\n\r\n");
 
         }
-        
+
         if (i == 'i') {
             i = IR_DISTANCE_SENSOR;
-            if ( i == WITHIN_RANGE) {
+            if (i == WITHIN_RANGE) {
                 printf("IR Sensor is WITHIN RANGE of the wall \r\n\r\n");
             }
-            if( i == OUT_OF_RANGE) {
-                printf("IR Sensor is OUT OF RANGE of the wall \r\n\r\n"); 
+            if (i == OUT_OF_RANGE) {
+                printf("IR Sensor is OUT OF RANGE of the wall \r\n\r\n");
             }
         }
 

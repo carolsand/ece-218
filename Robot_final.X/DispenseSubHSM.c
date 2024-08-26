@@ -116,6 +116,8 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
     DispenseSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
+    static unsigned char IRSensor, RearRightCorner, bumperValue;
+
 
     switch (CurrentState) {
         case InitPSubState: // If current state is initial Psedudo State
@@ -136,47 +138,142 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     //check IR and rear tape sensor status before anything else
-                        //if IR is low and rear tape is high then switch to
-                        // open door state
-                    
-                    //else,
+                    //if IR is low and rear tape is high then switch to
+                    // open door state
+                    IRSensor = Robot_IR_SensorStatus();
+                    RearRightCorner = Robot_ReadRearRightTape();
+                    if (IRSensor == WITHIN_RANGE && RearRightCorner == TAPE_PRESENT) {
+                        Robot_Drive(0);
+                        nextState = Open_Door;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    } //else,
                     //reverse, start timer
+                    Robot_Reverse(DISPENSE_BACKUP_SPEED);
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, DISPENSE_BACKUP_TIME);
                     break;
+
                 case ES_TIMEOUT:
                     //switch to turn 90deg left state
+                    if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                        //we have finished backing up, so let's switch state
+                        nextState = Turn_90deg_Left;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
+
                 case WALL_DETECTED: //if rear tape are triggered, switch to open door state
+                    if (Robot_ReadRearRightTape() == TAPE_PRESENT) {
+                        Robot_Drive(0);
+                        nextState = Open_Door;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    }
                     break;
                 case FOUND_TAPE: //if the rear ones are triggered and IR is close to wall switch to open door state
+                    IRSensor = Robot_IR_SensorStatus();
+                    RearRightCorner = Robot_ReadRearRightTape();
+                    if (IRSensor == WITHIN_RANGE && RearRightCorner == TAPE_PRESENT) {
+                        Robot_Drive(0);
+                        nextState = Open_Door;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    }
                     break;
-                // maybe we need bump event here too???
+
+                    // maybe we need bump event here too???
+                case BUMP:
+                    bumperValue = ThisEvent.EventParam;
+                    if (bumperValue & 0b11 == 0) {
+                        //if any of the wall bumpers were hit, go in reverse
+                        Robot_Reverse(DISPENSE_BACKUP_SPEED);
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BACK_UP_TIMER, DISPENSE_BACKUP_TIME);
+                    }
+                    break;
             }
             break;
 
-            
-            
+
+
         case Turn_90deg_Left: // will definitely need more editing
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     //turn left, start turn timer
+                    //turning left 
+                    Robot_Turn(-DISPENSE_TURN_SPEED, DISPENSE_TURN_SPEED);
+                    ES_Timer_InitTimer(TURN_TIMER, DISPENSE_TURN_TIME);
                     break;
                 case ES_TIMEOUT:
                     //if turn timer
+                    if (ThisEvent.EventParam == TURN_TIMER) {
                         //drive forward
-                    //if back up timer
-                        //turn left, start turn timer
+                        Robot_Drive(DISPENSE_FWD_SPEED);
+                    }
+                    if (ThisEvent.EventParam == TIMEOUT_TIMER) {
+                        //safety measure so the robot doesn't fall off the field                        
+                        if (Robot_ReadRearRightTape() == TAPE_PRESENT) {
+                            //if rear tape are triggered, switch to open door state                            
+                            Robot_Drive(0);
+                            nextState = Open_Door;
+                            makeTransition = TRUE;
+                            ThisEvent.EventType = ES_NO_EVENT;
+                            break;
+                        }
+                        //i guess start over go back to running state in HSM                     
+                    }
                     break;
+
                 case BUMP:
                     // if only the wall bumpers were hit
-                        //reverse, stop turn timer, start back up timer
+                    //reverse, start back up timer change state
+                    bumperValue = ThisEvent.EventParam;
+                    if (bumperValue & 0b11 == 0) {
+                        //if any of the wall bumpers were hit, go in reverse
+                        Robot_Reverse(DISPENSE_BACKUP_SPEED);
+
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BACK_UP_TIMER, DISPENSE_BACKUP_TIME);
+                        //transition to back up state
+                        nextState = Back_Up;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
-                case WALL_DETECTED: 
+
+                case WALL_DETECTED:
                     //if rear tape are triggered, switch to open door state
-                    //if rear tape are not triggered stop all timers, maybe slowly reverse? and start back up timer?
+                    if (Robot_ReadRearRightTape() == TAPE_PRESENT) {
+                        Robot_Drive(0);
+                        nextState = Open_Door;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    }
+                    //if tape sensors are not triggered stop all timers, maybe slowly reverse? and start back up timer?
+                    if (Robot_ReadTapeSensors() == 0) {
+                        Robot_Reverse(DISPENSE_TIMEOUT_SPEED);
+                        //safety measure so the robot doesn't fall off the field
+                        ES_Timer_InitTimer(TIMEOUT_TIMER, DISPENSE_TIMEOUT_TIME);
+                    }
                     break;
                 case FOUND_TAPE: //is there a chance the front tape sensors will get hit ????
                     //if the rear ones are triggered and IR is within range
-                        //switch to open door state
+                    //switch to open door state
+                    IRSensor = Robot_IR_SensorStatus();
+                    RearRightCorner = Robot_ReadRearRightTape();
+                    if (IRSensor == WITHIN_RANGE && RearRightCorner == TAPE_PRESENT) {
+                        Robot_Drive(0);
+                        nextState = Open_Door;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    }
                     break;
             }
             break;
@@ -184,6 +281,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
         case Open_Door: // 
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    Robot_Drive(0);
                     Robot_OpenDoor();
                     ES_Timer_InitTimer(WAIT_TIMER, TIME_WAITING);
                     break;
@@ -196,7 +294,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     break;
             }
             break;
-       
+
         case Close_Door: //
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
