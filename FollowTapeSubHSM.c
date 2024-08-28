@@ -109,6 +109,7 @@ uint8_t InitFollowTapeSubHSM(void) {
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
+
 ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     FollowTapeSubHSMState_t nextState; // <- change type to correct enum
@@ -123,7 +124,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                 // this is where you would put any actions associated with the
                 // transition from the initial pseudo-state into the actual
                 // initial state
-
+                
                 // now put the machine into the actual initial state
                 nextState = Back_Up;
                 makeTransition = TRUE;
@@ -135,7 +136,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     Robot_Reverse(TAPE_BACKUP_SPEED);
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_TAPE);
+                    ES_Timer_InitTimer(BU_TAPE_TIMER, TIME_BACKUP_TAPE);
                     break;
                 
                 case FOUND_TAPE:
@@ -143,7 +144,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     break;
                 
                 case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                    if (ThisEvent.EventParam == BU_TAPE_TIMER) {
                         //we have finished backing up, so let's switch to Turn_Left state
                         nextState = Turn_Left;
                         makeTransition = TRUE;
@@ -156,32 +157,30 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
         case Turn_Left:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
-                    //Robot_LEDSSet(3);
                     //turning left 
                     Robot_Turn(-TAPE_TURN_SPEED, TAPE_TURN_SPEED);
-                    ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING_TAPE);
+                    ES_Timer_InitTimer(TURN_TAPE_TIMER, TIME_TURNING_TAPE);
                     break;
 
                 case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == TURN_TIMER) {
+                    if (ThisEvent.EventParam == TURN_TAPE_TIMER) {
                         //we have finished turning, so let's switch to Go_Forward state
                         nextState = Go_Forward;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
-                    if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                    if (ThisEvent.EventParam == BU_TAPE_TIMER) {
                         //we have finished turning, so let's switch to Go_Forward state
                         //turning left 
                         Robot_Turn(-TAPE_TURN_SPEED, TAPE_TURN_SPEED);
-                        ES_Timer_InitTimer(TURN_TIMER, TIME_TURNING_TAPE);
+                        ES_Timer_InitTimer(TURN_TAPE_TIMER, TIME_TURNING_TAPE);
                     }
                     break;
 
                 case FOUND_TAPE:
                     Robot_Reverse(TAPE_BACKUP_SPEED);
-                    //ES_Timer_StopTimer(TURN_TIMER);
                     //start back up timer to determine how long robot backs up
-                    ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_TAPE);
+                    ES_Timer_InitTimer(BU_TAPE_TIMER, TIME_BACKUP_TAPE);
                     //transition to back up state
                     nextState = Back_Up;
                     makeTransition = TRUE;
@@ -189,6 +188,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     break;
             }
             break;
+            
         case Go_Forward:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:

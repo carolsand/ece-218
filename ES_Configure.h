@@ -104,13 +104,13 @@ static const char *EventNames[] = {
 #define TIMER5_RESP_FUNC PostTapeBumpService
 #define TIMER6_RESP_FUNC PostRobotHSM
 #define TIMER7_RESP_FUNC PostRobotHSM
-#define TIMER8_RESP_FUNC PostTapeBumpService
-#define TIMER9_RESP_FUNC TIMER_UNUSED
-#define TIMER10_RESP_FUNC TIMER_UNUSED
-#define TIMER11_RESP_FUNC TIMER_UNUSED
-#define TIMER12_RESP_FUNC TIMER_UNUSED
-#define TIMER13_RESP_FUNC TIMER_UNUSED
-#define TIMER14_RESP_FUNC TIMER_UNUSED
+#define TIMER8_RESP_FUNC PostIRService
+#define TIMER9_RESP_FUNC PostRobotHSM
+#define TIMER10_RESP_FUNC PostRobotHSM
+#define TIMER11_RESP_FUNC PostRobotHSM
+#define TIMER12_RESP_FUNC PostRobotHSM
+#define TIMER13_RESP_FUNC PostRobotHSM
+#define TIMER14_RESP_FUNC PostRobotHSM
 #define TIMER15_RESP_FUNC TIMER_UNUSED
 
 
@@ -128,6 +128,13 @@ static const char *EventNames[] = {
 #define DOOR_TIMER        6
 #define TIMEOUT_TIMER     7
 #define IR_TIMER          8
+#define BU_BUMP_TIMER     9
+#define TURN_BUMP_TIMER   0xA
+#define BU_TAPE_TIMER     0xB
+#define TURN_TAPE_TIMER   0xC
+#define BU_OBST_TIMER     0xD
+#define TURN_OBST_TIMER   0xE
+
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 
 // services that the framework will handle. Reasonable values are 8 and 16
@@ -137,7 +144,7 @@ static const char *EventNames[] = {
 /****************************************************************************/
 // This macro determines that nuber of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 3
+#define NUM_SERVICES 4
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service
@@ -184,11 +191,11 @@ static const char *EventNames[] = {
 // These are the definitions for Service 3
 #if NUM_SERVICES > 3
 // the header file with the public fuction prototypes
-#define SERV_3_HEADER "UnloadScoopService.h"
+#define SERV_3_HEADER "IRService.h"
 // the name of the Init function
-#define SERV_3_INIT InitUnloadScoopService
+#define SERV_3_INIT InitIRService
 // the name of the run function
-#define SERV_3_RUN RunUnloadScoopService
+#define SERV_3_RUN RunIRService
 // How big should this services Queue be?
 #define SERV_3_QUEUE_SIZE 3
 #endif

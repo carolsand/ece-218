@@ -24,6 +24,7 @@
 #include "ES_Framework.h"
 #include "TapeBumpService.h"
 #include "Robot.h"
+#include "LED.h"
 #include <stdio.h>
 
 /*******************************************************************************
@@ -32,6 +33,7 @@
 
 #define BATTERY_DISCONNECT_THRESHOLD 175
 #define SAMPLING_PERIOD 200 //frequency is 5Hz
+
 
 /*******************************************************************************
  * PRIVATE FUNCTION PROTOTYPES                                                 *
@@ -52,9 +54,6 @@ static unsigned char lastBumperValue = 0;
 
 static ES_EventTyp_t lastTapeSensorState = LOST_TAPE;
 static unsigned char lastTapeSensorValue = 0;
-
-static ES_EventTyp_t lastIRState = AWAY_FROM_WALL;
-static unsigned char lastIRValue = OUT_OF_RANGE;
 
 /*******************************************************************************
  * PUBLIC FUNCTIONS                                                            *
@@ -84,6 +83,7 @@ uint8_t InitTapeBumpService(uint8_t Priority) {
     ES_Timer_InitTimer(BUMPER_TIMER, SAMPLING_PERIOD);
     ES_Timer_InitTimer(TAPE_SENSOR_TIMER, SAMPLING_PERIOD);
 
+    
     // post the initial transition event
     ThisEvent.EventType = ES_INIT;
     if (ES_PostToService(MyPriority, ThisEvent) == TRUE) {
@@ -128,11 +128,11 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
 
     static ES_EventTyp_t currentBumperState = NO_BUMP;
     static ES_EventTyp_t currentTapeSensorState = LOST_TAPE;
-    static ES_EventTyp_t currentIRState = AWAY_FROM_WALL;
+
 
     static unsigned char currentBumperValue = 0;
     static unsigned char currentTapeSensorValue = 0;
-    static unsigned char currentIRValue = 0;
+
 
     switch (ThisEvent.EventType) {
         case ES_INIT:
@@ -205,31 +205,7 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
                 ES_Timer_InitTimer(TAPE_SENSOR_TIMER, SAMPLING_PERIOD);
 
             }
-
-            if (ThisEvent.EventParam == IR_TIMER) {
-
-                //read the current IR value 
-                currentIRValue = Robot_IR_SensorStatus();
-             
-                if (currentIRValue != OUT_OF_RANGE) {          
-                    currentIRState = WALL_DETECTED; 
-                    lastIRValue = currentIRValue;                 
-                } else {
-                    currentIRState = AWAY_FROM_WALL; 
-                }
-
-                if (currentBumperState == WALL_DETECTED) { //event detected
-
-                    // update ReturnEvent with the information of this event
-                    ReturnEvent.EventType = currentIRState;
-                    ReturnEvent.EventParam = currentIRValue;
-
-                    //post the event i.e. tell the framework an event has occurred
-                    PostRobotHSM(ReturnEvent);
-                }
-                // since the timer has timed out, then we want to restart it
-                ES_Timer_InitTimer(IR_TIMER, SAMPLING_PERIOD);
-            }                        
+                   
             break;
 
     }

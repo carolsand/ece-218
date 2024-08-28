@@ -35,6 +35,7 @@
       <itemPath>../TapeBumpService.h</itemPath>
       <itemPath>FinalEventChecker.h</itemPath>
       <itemPath>DispenseSubHSM.h</itemPath>
+      <itemPath>IRService.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -74,6 +75,7 @@
       <itemPath>Final-ES_Main.c</itemPath>
       <itemPath>FinalEventChecker.c</itemPath>
       <itemPath>DispenseSubHSM.c</itemPath>
+      <itemPath>IRService.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

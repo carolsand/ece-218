@@ -36,7 +36,7 @@
 #define CHARGE_CHECK_TIME   (3*60*1000)         // 3 minutes in msec 
 
 #define NOMINAL_SPEED          60
-
+#define WALL_SPEED             45
 
 #define OBSTACLE_TURN_SPEED    50
 #define OBSTACLE_BACKUP_SPEED  50
@@ -44,16 +44,16 @@
 #define TIME_TURN_OBSTACLE     500
 
 
-#define BUMP_TURN_SPEED        45
+#define BUMP_TURN_SPEED        40
 #define BUMP_BACKUP_SPEED      40
-#define TIME_BACKUP_BUMP       750 
-#define TIME_TURNING_WALL      300
+#define TIME_BACKUP_BUMP       275 
+#define TIME_TURNING_WALL      150
 
 
 #define TAPE_TURN_SPEED        40
-#define TAPE_BACKUP_SPEED      40
+#define TAPE_BACKUP_SPEED      45
 #define TIME_BACKUP_TAPE       1000
-#define TIME_TURNING_TAPE      900
+#define TIME_TURNING_TAPE      800
 
 #define DISPENSE_FWD_SPEED     25
 #define DISPENSE_BACKUP_SPEED  30

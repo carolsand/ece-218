@@ -111,6 +111,7 @@ uint8_t InitDispenseSubHSM(void) {
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
+
 ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     DispenseSubHSMState_t nextState; // <- change type to correct enum
