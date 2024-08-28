@@ -1,5 +1,6 @@
 build/MAIN/production/_ext/1975241074/ES_Timers.o: \
- C:/ECE118/src/ES_Timers.c C:/ECE118/include/BOARD.h ../ES_Configure.h \
+ C:/ECE118/src/ES_Timers.c C:/ECE118/include/BOARD.h \
+ C:/ECE118/include/GenericTypeDefs.h ../ES_Configure.h \
  C:/ECE118/include/ES_Framework.h C:/ECE118/include/ES_Events.h \
  C:/ECE118/include/ES_Timers.h C:/ECE118/include/ES_CheckEvents.h \
  C:/ECE118/include/ES_General.h C:/ECE118/include/ES_KeyboardInput.h \
@@ -12,6 +13,8 @@ build/MAIN/production/_ext/1975241074/ES_Timers.o: \
  C:/ECE118/include/ES_Timers.h
 
 C:/ECE118/include/BOARD.h:
+
+C:/ECE118/include/GenericTypeDefs.h:
 
 ../ES_Configure.h:
 

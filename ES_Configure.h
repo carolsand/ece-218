@@ -89,7 +89,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST CheckBattery, CheckTrackwire, CheckIRSensor
+#define EVENT_CHECK_LIST CheckBattery, CheckTrackwire
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the
@@ -104,7 +104,7 @@ static const char *EventNames[] = {
 #define TIMER5_RESP_FUNC PostTapeBumpService
 #define TIMER6_RESP_FUNC PostRobotHSM
 #define TIMER7_RESP_FUNC PostRobotHSM
-#define TIMER8_RESP_FUNC TIMER_UNUSED
+#define TIMER8_RESP_FUNC PostTapeBumpService
 #define TIMER9_RESP_FUNC TIMER_UNUSED
 #define TIMER10_RESP_FUNC TIMER_UNUSED
 #define TIMER11_RESP_FUNC TIMER_UNUSED
@@ -127,7 +127,7 @@ static const char *EventNames[] = {
 #define TAPE_SENSOR_TIMER 5
 #define DOOR_TIMER        6
 #define TIMEOUT_TIMER     7
-
+#define IR_TIMER          8
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 
 // services that the framework will handle. Reasonable values are 8 and 16

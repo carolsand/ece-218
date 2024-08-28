@@ -172,6 +172,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         if (bumperValue & 0b11 > 0) {
                             //if any of the obstacle bumpers were hit, go in reverse
                             Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                            //start back up timer to determine how long robot backs up
+                            ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_OBSTACLE);
                             //transition to avoid dead bot state
                             // now put the machine into the actual initial state
                             nextState = AvoidDeadBot;
@@ -181,6 +183,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             //if any of the wall bumpers were hit, go forward
                             Robot_Reverse(BUMP_BACKUP_SPEED);
                             // might need to add back in ES_InitTimer....
+                            //start back up timer to determine how long robot backs up
+                            ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
                             //transition to follow wall state
                             // now put the machine into the actual initial state
                             nextState = FollowWall;
@@ -230,6 +234,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         } else {
                             //if only the wall bumpers were hit, go forward
                             Robot_Reverse(BUMP_BACKUP_SPEED);
+                            //start back up timer to determine how long robot backs up
+                            ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
                             //transition to follow wall state
                             // now put the machine into the actual initial state
                             nextState = FollowWall;
@@ -289,6 +295,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         if (bumperValue & 0b11 > 0) {
                             //if any of the obstacle bumpers were hit, go in reverse
                             Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                            //start back up timer to determine how long robot backs up
+                            ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_OBSTACLE);
                             //transition to avoid dead bot state
                             // now put the machine into the actual initial state
                             nextState = AvoidDeadBot;
@@ -350,7 +358,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             //if any of the obstacle bumpers were hit, go in reverse
                             Robot_Reverse(OBSTACLE_BACKUP_SPEED);
                             //start back up timer to determine how long robot backs up
-                            //ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_OBSTACLE);
+                            ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_OBSTACLE);
                             //transition to avoid dead bot state
                             // now put the machine into the actual initial state
                             nextState = AvoidDeadBot;
@@ -364,7 +372,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             //if somehow the front tape sensors are triggered
                             Robot_Reverse(TAPE_BACKUP_SPEED);
                             //start back up timer to determine how long robot backs up
-                            //ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_TAPE);
+                            ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_TAPE);
                             nextState = FollowTape;
                             makeTransition = TRUE;
                             ThisEvent.EventType = ES_NO_EVENT;
@@ -388,7 +396,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             //if any of the obstacle bumpers were hit, go in reverse
                             Robot_Reverse(OBSTACLE_BACKUP_SPEED);
                             //start back up timer to determine how long robot backs up
-                            //ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_OBSTACLE);
+                            ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_OBSTACLE);
                             //transition to avoid dead bot state
                             // now put the machine into the actual initial state
                             nextState = AvoidDeadBot;
@@ -397,6 +405,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         } else {
                             //if any of the wall bumpers were hit, go forward
                             Robot_Reverse(BUMP_BACKUP_SPEED);
+                            //start back up timer to determine how long robot backs up
+                            ES_Timer_InitTimer(BACK_UP_TIMER, TIME_BACKUP_BUMP);
                             //transition to follow wall state
                             // now put the machine into the actual initial state
                             nextState = FollowWall;
