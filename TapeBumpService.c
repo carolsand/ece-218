@@ -83,7 +83,7 @@ uint8_t InitTapeBumpService(uint8_t Priority) {
     ES_Timer_InitTimer(BUMPER_TIMER, SAMPLING_PERIOD);
     ES_Timer_InitTimer(TAPE_SENSOR_TIMER, SAMPLING_PERIOD);
 
-    
+
     // post the initial transition event
     ThisEvent.EventType = ES_INIT;
     if (ES_PostToService(MyPriority, ThisEvent) == TRUE) {
@@ -148,10 +148,13 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
                 //read the current bumper value 
                 currentBumperValue = Robot_ReadBumpers();
 
-//                if (currentBumperValue != lastBumperValue && currentBumperValue!=0) { //compare current bumper value with last bumper value                  
-                if (currentBumperValue!=0) { //compare current bumper value with last bumper value                  
-                currentBumperState = BUMP; //if they don't match then update the state event to BUMP
-                    lastBumperValue = currentBumperValue; //update lastBumperValue with the current value                   
+                //                if (currentBumperValue != lastBumperValue && currentBumperValue!=0) { //compare current bumper value with last bumper value                  
+                if (currentBumperValue != 0) { //compare current bumper value with last bumper value                  
+                    if (currentBumperValue != lastBumperValue) {
+                        currentBumperState = BUMP; //if they don't match then update the state event to BUMP  } 
+                    } else {
+                        currentBumperState = NO_BUMP;
+                    }
                 } else { //if the current bumper value has not changed from last bumper
                     currentBumperState = NO_BUMP; //value then we can assume that the state is now NO_BUMP
                 }
@@ -163,12 +166,13 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
                     ReturnEvent.EventParam = currentBumperValue;
 
                     // update lastBumperState to the new state
-//                    lastBumperState = currentBumperState;
+                    //                    lastBumperState = currentBumperState;
 
                     //post the event i.e. tell the framework an event has occurred
                     PostRobotHSM(ReturnEvent);
                 }
 
+                lastBumperValue = currentBumperValue;
                 // since the timer has timed out, then we want to restart it
                 ES_Timer_InitTimer(BUMPER_TIMER, SAMPLING_PERIOD);
 
@@ -179,11 +183,13 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
                 //read the current bumper value 
                 currentTapeSensorValue = Robot_ReadTapeSensors();
 
-//                if (currentTapeSensorValue != lastTapeSensorValue && currentTapeSensorValue != 0) { //compare current tape sensors value with last tape sensors value                  
+                //                if (currentTapeSensorValue != lastTapeSensorValue && currentTapeSensorValue != 0) { //compare current tape sensors value with last tape sensors value                  
                 if (currentTapeSensorValue != 0) { //compare current tape sensors value with last tape sensors value 
-                    // Which tape sensor?
-                currentTapeSensorState = FOUND_TAPE; //if they don't match then update the state event to FOUND_TAPE
-                    lastTapeSensorValue = currentTapeSensorValue; //update lastTapeSensorValue with the current value                   
+                    if (currentTapeSensorValue != lastTapeSensorValue) {
+                        currentTapeSensorState = FOUND_TAPE; //if they don't match then update the state event to FOUND_TAPE
+                    } else {
+                        currentTapeSensorState = LOST_TAPE;
+                    }
                 } else { //if the current tape sensor value has not changed from last bumper
                     currentTapeSensorState = LOST_TAPE; //value then we can assume that the state is now LOST_TAPE
                 }
@@ -201,11 +207,12 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
                     PostRobotHSM(ReturnEvent);
                 }
 
+                lastTapeSensorValue = currentTapeSensorValue; //update lastTapeSensorValue with the current value                   
                 // since the timer has timed out, then we want to restart it
                 ES_Timer_InitTimer(TAPE_SENSOR_TIMER, SAMPLING_PERIOD);
 
             }
-                   
+
             break;
 
     }

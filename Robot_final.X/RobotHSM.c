@@ -288,7 +288,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             }
                             Robot_Drive(NOMINAL_SPEED);
                         } else {
-                            LED_SetBank(LED_BANK1, 0xF);
+//                            LED_SetBank(LED_BANK1, 0xF);
                             Robot_Reverse(TAPE_BACKUP_SPEED);
                         }
                         //start back up timer to determine how long robot backs up
@@ -314,16 +314,18 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case WALL_DETECTED:
-
-                        if (Robot_ReadRearRightTape() == TAPE_PRESENT) {
-                            //if we are next to the wall and the rear tape 
-                            //sensors are on the tape then we are by the slot
-                            nextState = DispenseBalls;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        } else {
-                            Robot_Reverse(BUMP_BACKUP_SPEED);
-                        }
+                        nextState = DispenseBalls;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+//                        if (Robot_ReadRearRightTape() == TAPE_PRESENT) {
+//                            //if we are next to the wall and the rear tape 
+//                            //sensors are on the tape then we are by the slot
+//                            nextState = DispenseBalls;
+//                            makeTransition = TRUE;
+//                            ThisEvent.EventType = ES_NO_EVENT;
+//                        } else {
+//                            Robot_Reverse(BUMP_BACKUP_SPEED);
+//                        }
                         break;
 
                     case FOUND_TRACKWIRE:

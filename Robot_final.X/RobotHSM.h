@@ -53,12 +53,12 @@
 #define TAPE_TURN_SPEED        40
 #define TAPE_BACKUP_SPEED      45
 #define TIME_BACKUP_TAPE       1000
-#define TIME_TURNING_TAPE      800
+#define TIME_TURNING_TAPE      700
 
 #define DISPENSE_FWD_SPEED     25
-#define DISPENSE_BACKUP_SPEED  30
+#define DISPENSE_BACKUP_SPEED  40
 #define DISPENSE_TURN_SPEED    40
-#define DISPENSE_BACKUP_TIME   250
+#define DISPENSE_BACKUP_TIME   275
 #define DISPENSE_TIMEOUT_TIME  1000
 #define DISPENSE_TIMEOUT_SPEED 30
 #define DISPENSE_TURN_TIME     250
@@ -66,6 +66,11 @@
 
 #define TIME_WAITING           2000
 #define TIME_FOR_DOOR          1000
+
+
+#define ADJUST_LEFTSPEED       0
+#define ADJUST_RIGHTSPEED      45
+#define ADJUST_TIME            300
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *
