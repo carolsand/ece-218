@@ -202,6 +202,12 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
+                                                
+                    case WALL_DETECTED_RIGHT:
+                        nextState = DispenseBalls;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                 }
             }
             break;
@@ -276,7 +282,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         if (tapeCompare > 0) { //if the rear tape sensors were triggered
                             Robot_Drive(0);
                             //lets check IR sensor
-                            IRSensor = Robot_IR_SensorStatus();
+                            IRSensor = Robot_Right_IR_SensorStatus();
                             RearRightCorner = Robot_ReadRearRightTape();
                             if (IRSensor == WITHIN_RANGE && RearRightCorner == TAPE_PRESENT) {
                                 //we are next to the slot
@@ -313,7 +319,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         }
                         break;
 
-                    case WALL_DETECTED:
+                    case WALL_DETECTED_RIGHT:
                         nextState = DispenseBalls;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
@@ -339,6 +345,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                 }
             }
             break; // End of FollowWall state
+            
         case DispenseBalls:
             ThisEvent = RunDispenseSubHSM(ThisEvent); // run sub-state machine or this state
             if (ThisEvent.EventType != ES_NO_EVENT) {

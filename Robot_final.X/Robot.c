@@ -60,8 +60,11 @@
 /* PINS FOR DETECTORS */
 #define TRACK_WIRE_DETECTOR     AD_PORTV8
 
-#define IR_DISTANCE_SENSOR      PORTZ08_BIT
-#define IR_DISTANCE_TRIS        PORTZ08_TRIS
+#define IR_RIGHT_SENSOR      PORTZ08_BIT
+#define IR_RIGHT_TRIS        PORTZ08_TRIS
+
+#define IR_LEFT_SENSOR      PORTY07_BIT
+#define IR_LEFT_TRIS        PORTY07_TRIS
 
 //#define TRACK_WIRE_DETECT_TRIS  PORTY07_BIT
 
@@ -156,8 +159,9 @@ void Robot_Init(void) {
 
 
     //set up IR sensor
-    IR_DISTANCE_TRIS = INPUT;
-
+    IR_RIGHT_TRIS = INPUT;
+    IR_LEFT_TRIS = INPUT;
+    
     // also set up bumpers (limit switches) as inputs
     BUMP_WALL_LEFT_TRIS = INPUT;
     BUMP_WALL_RIGHT_TRIS = INPUT;
@@ -529,8 +533,12 @@ unsigned char Robot_IsTrackwirePresent(void) {
     }
 }
 
-unsigned char Robot_IR_SensorStatus(void) {
-    return IR_DISTANCE_SENSOR;
+unsigned char Robot_Right_IR_SensorStatus(void) {
+    return IR_RIGHT_SENSOR;
+}
+
+unsigned char Robot_Left_IR_SensorStatus(void) {
+    return IR_LEFT_SENSOR;
 }
 
 /**
@@ -576,7 +584,7 @@ void main(void) {
     //RC_RemovePins(DOOR_SERVO);
     printf("welcome to ece218 robot test harness \r\nenter a key to perform a test.\r\n\r\n");
     printf("w: print trackwire raw value\r\n");
-    printf("i: print IR Sensor Status \r\n");
+    printf("i: print both IR Sensor Status \r\n");
     printf("t: tests all the tape sensors, reads them and prints out the response and its raw value \r\n");
     printf("l: moves the door servo inwards\r\nr: moves the door servo outwards\r\n\r\n");
     printf("press the bumpers to run the following actions. \r\nfront right bumper = close door \r\n");
@@ -585,7 +593,7 @@ void main(void) {
 
     while (1) {
 
-        if (IR_DISTANCE_SENSOR == WITHIN_RANGE) {
+        if (IR_RIGHT_SENSOR == WITHIN_RANGE) {
             LED_OnBank(LED_BANK1, 0xF);
             LED_OnBank(LED_BANK2, 0xF);
             LED_OnBank(LED_BANK3, 0xF);
@@ -594,6 +602,17 @@ void main(void) {
             LED_OffBank(LED_BANK2, 0xF);
             LED_OffBank(LED_BANK3, 0xF);
         }
+        
+        if (IR_LEFT_SENSOR == WITHIN_RANGE) {
+            LED_OnBank(LED_BANK1, 0xA);
+            LED_OnBank(LED_BANK2, 0xA);
+            LED_OnBank(LED_BANK3, 0xA);
+        } else {
+            LED_OffBank(LED_BANK1, 0xA);
+            LED_OffBank(LED_BANK2, 0xA);
+            LED_OffBank(LED_BANK3, 0xA);
+        }
+        
 
         if (Robot_ReadWallLeftBumper() == BUMPER_TRIPPED) {
             Robot_OpenDoor();
@@ -646,12 +665,20 @@ void main(void) {
         }
 
         if (i == 'i') {
-            i = IR_DISTANCE_SENSOR;
+            i = IR_RIGHT_SENSOR;
             if (i == WITHIN_RANGE) {
-                printf("IR Sensor is WITHIN RANGE of the wall \r\n\r\n");
+                printf("Right IR Sensor is WITHIN RANGE of the wall \r\n\r\n");
             }
             if (i == OUT_OF_RANGE) {
-                printf("IR Sensor is OUT OF RANGE of the wall \r\n\r\n");
+                printf("Right IR Sensor is OUT OF RANGE of the wall \r\n\r\n");
+            }
+            
+            i = IR_LEFT_SENSOR;
+            if (i == WITHIN_RANGE) {
+                printf("Left IR Sensor is WITHIN RANGE of the wall \r\n\r\n");
+            }
+            if (i == OUT_OF_RANGE) {
+                printf("Left IR Sensor is OUT OF RANGE of the wall \r\n\r\n");
             }
         }
 

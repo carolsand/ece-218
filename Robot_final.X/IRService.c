@@ -44,7 +44,8 @@
 
 static uint8_t MyPriority;
 
-static ES_EventTyp_t lastIRState = AWAY_FROM_WALL;
+static ES_EventTyp_t lastIRState_right = AWAY_FROM_WALL_RIGHT;
+static ES_EventTyp_t lastIRState_left = AWAY_FROM_WALL_LEFT;
 
 /*******************************************************************************
  * PUBLIC FUNCTIONS                                                            *
@@ -68,7 +69,8 @@ uint8_t InitIRService(uint8_t Priority) {
     // in here you write your initialization code
     // this includes all hardware and software initialization
     // that needs to occur.
-    ES_Timer_InitTimer(IR_TIMER, IR_SAMPLING_PERIOD);
+    ES_Timer_InitTimer(RIGHT_IR_TIMER, IR_SAMPLING_PERIOD);
+    ES_Timer_InitTimer(LEFT_IR_TIMER, IR_SAMPLING_PERIOD);
 
     // post the initial transition event
     ThisEvent.EventType = ES_INIT;
@@ -109,8 +111,11 @@ ES_Event RunIRService(ES_Event ThisEvent) {
      in here you write your service code
      *******************************************/
 
-    static ES_EventTyp_t currentIRState = AWAY_FROM_WALL;
-    static unsigned char currentIRValue = OUT_OF_RANGE;
+    static ES_EventTyp_t currentIRState_right = AWAY_FROM_WALL_RIGHT;
+    static unsigned char currentIRValue_right = OUT_OF_RANGE;
+    
+    static ES_EventTyp_t currentIRState_left = AWAY_FROM_WALL_LEFT;
+    static unsigned char currentIRValue_left = OUT_OF_RANGE;
 
     switch (ThisEvent.EventType) {
         case ES_INIT:
@@ -121,39 +126,65 @@ ES_Event RunIRService(ES_Event ThisEvent) {
             break;
 
         case ES_TIMEOUT:
-            if (ThisEvent.EventParam == IR_TIMER) {
+            if (ThisEvent.EventParam == RIGHT_IR_TIMER) {
 
                 //read the current IR value 
-                currentIRValue = Robot_IR_SensorStatus();
-                
-                if (currentIRValue == OUT_OF_RANGE) {
-                    currentIRState = AWAY_FROM_WALL;
+                currentIRValue_right = Robot_Right_IR_SensorStatus();
+
+                if (currentIRValue_right == OUT_OF_RANGE) {
+                    currentIRState_right = AWAY_FROM_WALL_RIGHT;
                 } else {
-                    currentIRState = WALL_DETECTED;
+                    currentIRState_right = WALL_DETECTED_RIGHT;
                 }
 
-                if (currentIRState != lastIRState) { //event detected
+                if (currentIRState_right != lastIRState_right) { //event detected
 
                     // update ReturnEvent with the information of this event
-                    ReturnEvent.EventType = currentIRState;
-                    ReturnEvent.EventParam = currentIRValue;
+                    ReturnEvent.EventType = currentIRState_right;
+                    ReturnEvent.EventParam = currentIRValue_right;
 
                     //post the event i.e. tell the framework an event has occurred
                     PostRobotHSM(ReturnEvent);
                 }
-                
-                lastIRState = currentIRState;
+
+                lastIRState_right = currentIRState_right;
                 // since the timer has timed out, then we want to restart it
-                ES_Timer_InitTimer(IR_TIMER, IR_SAMPLING_PERIOD);
+                ES_Timer_InitTimer(RIGHT_IR_TIMER, IR_SAMPLING_PERIOD);
             }
             
+            if (ThisEvent.EventParam == LEFT_IR_TIMER) {
+
+                //read the current IR value 
+                currentIRValue_left = Robot_Right_IR_SensorStatus();
+
+                if (currentIRValue_left == OUT_OF_RANGE) {
+                    currentIRState_left = AWAY_FROM_WALL_LEFT;
+                } else {
+                    currentIRState_left = WALL_DETECTED_LEFT;
+                }
+
+                if (currentIRState_left != lastIRState_left) { //event detected
+
+                    // update ReturnEvent with the information of this event
+                    ReturnEvent.EventType = currentIRState_left;
+                    ReturnEvent.EventParam = currentIRValue_left;
+
+                    //post the event i.e. tell the framework an event has occurred
+                    PostRobotHSM(ReturnEvent);
+                }
+
+                lastIRState_left = currentIRState_left;
+                // since the timer has timed out, then we want to restart it
+                ES_Timer_InitTimer(LEFT_IR_TIMER, IR_SAMPLING_PERIOD);
+            }
+
             break;
     }
-            
-            return ReturnEvent;
+
+    return ReturnEvent;
 }
 
-    /*******************************************************************************
-     * PRIVATE FUNCTIONs                                                           *
-     ******************************************************************************/
+/*******************************************************************************
+ * PRIVATE FUNCTIONs                                                           *
+ ******************************************************************************/
 

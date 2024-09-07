@@ -229,7 +229,8 @@ unsigned char Robot_SetDoorServo(int newPosition);
 unsigned char Robot_OpenDoor(void);
 unsigned char Robot_CloseDoor(void);
 unsigned char Robot_RemoveServo(void);
-unsigned char Robot_IR_SensorStatus(void);
+unsigned char Robot_Right_IR_SensorStatus(void);
+unsigned char Robot_Left_IR_SensorStatus(void);
 unsigned char Robot_IsTrackwirePresent(void);
 
 #endif

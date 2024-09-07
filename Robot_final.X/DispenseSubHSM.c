@@ -142,7 +142,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     //check IR and rear tape sensor status before anything else
                     //if IR is low and rear tape is high then switch to
                     // open door state
-                    IRSensor = Robot_IR_SensorStatus();
+                    IRSensor = Robot_Right_IR_SensorStatus();
                     RearRightCorner = Robot_ReadRearRightTape();
                     if (IRSensor == WITHIN_RANGE && RearRightCorner == TAPE_PRESENT) {
                         Robot_Drive(0);
@@ -172,7 +172,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     }
                     break;
 
-                case WALL_DETECTED: //if rear tape are triggered, switch to open door state
+                case WALL_DETECTED_RIGHT: //if rear tape are triggered, switch to open door state
                     if (Robot_ReadRearRightTape() == TAPE_PRESENT) {
                         Robot_Drive(0);
                         nextState = Open_Door;
@@ -182,7 +182,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     }
                     break;
 
-                case AWAY_FROM_WALL: //we got misaligned trying to find the slot
+                case AWAY_FROM_WALL_RIGHT: //we got misaligned trying to find the slot
                     //lets adjust
                     nextState = Adjusting;
                     makeTransition = TRUE;
@@ -190,7 +190,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     break;
 
                 case FOUND_TAPE: //if the rear ones are triggered and IR is close to wall switch to open door state
-                    IRSensor = Robot_IR_SensorStatus();
+                    IRSensor = Robot_Right_IR_SensorStatus();
                     RearRightCorner = Robot_ReadRearRightTape();
                     if (IRSensor == WITHIN_RANGE && RearRightCorner == TAPE_PRESENT) {
                         Robot_Drive(0);
@@ -230,7 +230,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                     }
                     break;
-                case WALL_DETECTED:
+                case WALL_DETECTED_RIGHT:
                     nextState = Back_Up;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;

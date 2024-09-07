@@ -50,8 +50,10 @@ typedef enum {
     NO_BUMP,
     FOUND_TRACKWIRE,
     LOST_TRACKWIRE,
-    WALL_DETECTED,
-    AWAY_FROM_WALL,
+    WALL_DETECTED_RIGHT,
+    AWAY_FROM_WALL_RIGHT,
+    WALL_DETECTED_LEFT,
+    AWAY_FROM_WALL_LEFT,
     /* User-defined events end here */
     NUMBEROFEVENTS,
 } ES_EventTyp_t;
@@ -75,8 +77,10 @@ static const char *EventNames[] = {
 	"NO_BUMP",
 	"FOUND_TRACKWIRE",
 	"LOST_TRACKWIRE",
-	"WALL_DETECTED",
-	"AWAY_FROM_WALL",
+	"WALL_DETECTED_RIGHT",
+	"AWAY_FROM_WALL_RIGHT",
+	"WALL_DETECTED_LEFT",
+	"AWAY_FROM_WALL_LEFT",
 	"NUMBEROFEVENTS",
 };
 
@@ -111,7 +115,7 @@ static const char *EventNames[] = {
 #define TIMER12_RESP_FUNC PostRobotHSM
 #define TIMER13_RESP_FUNC PostRobotHSM
 #define TIMER14_RESP_FUNC PostRobotHSM
-#define TIMER15_RESP_FUNC TIMER_UNUSED
+#define TIMER15_RESP_FUNC PostIRService
 
 
 /****************************************************************************/
@@ -127,13 +131,14 @@ static const char *EventNames[] = {
 #define TAPE_SENSOR_TIMER 5
 #define DOOR_TIMER        6
 #define TIMEOUT_TIMER     7
-#define IR_TIMER          8
+#define RIGHT_IR_TIMER    8
 #define BU_BUMP_TIMER     9
 #define TURN_BUMP_TIMER   0xA
 #define BU_TAPE_TIMER     0xB
 #define TURN_TAPE_TIMER   0xC
 #define BU_OBST_TIMER     0xD
 #define TURN_OBST_TIMER   0xE
+#define LEFT_IR_TIMER     0xF
 
 /****************************************************************************/
 // The maximum number of services sets an upper bound on the number of 
