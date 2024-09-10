@@ -118,7 +118,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
     DispenseSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
-    static unsigned char IRSensor, RearRightCorner, bumperValue;
+    static unsigned char IRSensor, RearRightCorner, bumperValue, compValue;
 
 
     switch (CurrentState) {
@@ -200,13 +200,14 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                         break;
                     }
                     LED_SetBank(LED_BANK1, 0xA);
-                    Robot_Drive(DISPENSE_FWD_SPEED);
+                    //Robot_Drive(DISPENSE_FWD_SPEED);
                     break;
 
                     // maybe we need bump event here too???
                 case BUMP:
                     bumperValue = ThisEvent.EventParam;
-                    if (bumperValue & 0b11 == 0) {
+                    compValue = bumperValue >> 2;
+                    if (compValue > 0) {
                         //if any of the wall bumpers were hit, go in reverse
                         Robot_Reverse(DISPENSE_BACKUP_SPEED);
                         //start back up timer to determine how long robot backs up

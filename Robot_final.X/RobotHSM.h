@@ -35,42 +35,41 @@
 #define HALF_SECOND         (500)               // half second in msec
 #define CHARGE_CHECK_TIME   (3*60*1000)         // 3 minutes in msec 
 
-#define NOMINAL_SPEED          60
-#define WALL_SPEED             45
+#define NOMINAL_SPEED          80
+#define WALL_SPEED             65
 
-#define OBSTACLE_TURN_SPEED    50
-#define OBSTACLE_BACKUP_SPEED  50
+#define OBSTACLE_TURN_SPEED    70
+#define OBSTACLE_BACKUP_SPEED  70
 #define TIME_BACKUP_OBSTACLE   500
 #define TIME_TURN_OBSTACLE     500
 
+#define CORRECT_TURN_SPEED     70
+#define TIME_CORRECT_TURN      1000
 
-#define BUMP_TURN_SPEED        40
-#define BUMP_BACKUP_SPEED      40
-#define TIME_BACKUP_BUMP       275 
-#define TIME_TURNING_WALL      150
+#define BUMP_TURN_SPEED        65
+#define BUMP_BACKUP_SPEED      65
+#define TIME_BACKUP_BUMP       250 
+#define TIME_TURNING_WALL      200
 
+#define TAPE_TURN_SPEED        70
+#define TAPE_BACKUP_SPEED      75
+#define TIME_BACKUP_TAPE       800
+#define TIME_TURNING_TAPE      500
 
-#define TAPE_TURN_SPEED        40
-#define TAPE_BACKUP_SPEED      45
-#define TIME_BACKUP_TAPE       1000
-#define TIME_TURNING_TAPE      700
-
-#define DISPENSE_FWD_SPEED     25
-#define DISPENSE_BACKUP_SPEED  40
-#define DISPENSE_TURN_SPEED    40
+#define DISPENSE_FWD_SPEED     65
+#define DISPENSE_BACKUP_SPEED  70
+#define DISPENSE_TURN_SPEED    70
 #define DISPENSE_BACKUP_TIME   275
 #define DISPENSE_TIMEOUT_TIME  1000
-#define DISPENSE_TIMEOUT_SPEED 30
+#define DISPENSE_TIMEOUT_SPEED 60
 #define DISPENSE_TURN_TIME     250
-
 
 #define TIME_WAITING           2000
 #define TIME_FOR_DOOR          1000
 
-
 #define ADJUST_LEFTSPEED       0
-#define ADJUST_RIGHTSPEED      45
-#define ADJUST_TIME            300
+#define ADJUST_RIGHTSPEED      65
+#define ADJUST_TIME            350
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *

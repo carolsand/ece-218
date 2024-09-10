@@ -53,6 +53,7 @@ typedef enum {
     FollowWall,
     FollowTape,
     AvoidDeadBot,
+    CorrectRobot, //when the robot is next to the wall the wrong way, turn right
     DispenseBalls,
 } RobotHSMState_t;
 
@@ -62,6 +63,7 @@ static const char *StateNames[] = {
 	"FollowWall",
 	"FollowTape",
 	"AvoidDeadBot",
+	"CorrectRobot",
 	"DispenseBalls",
 };
 
@@ -202,9 +204,73 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
-                                                
+
+//                    case WALL_DETECTED_RIGHT:
+//                        nextState = DispenseBalls;
+//                        makeTransition = TRUE;
+//                        ThisEvent.EventType = ES_NO_EVENT;
+//                        break;
+
+//                    case WALL_DETECTED_LEFT: //the robot is facing the wrong way
+//                        nextState = CorrectRobot;
+//                        makeTransition = TRUE;
+//                        ThisEvent.EventType = ES_NO_EVENT;
+//                        break;
+                }
+            }
+            break;
+
+        case CorrectRobot:
+            if (ThisEvent.EventType != ES_NO_EVENT) {
+                switch (ThisEvent.EventType) {
+                    case ES_ENTRY:
+                        Robot_Turn(CORRECT_TURN_SPEED, -CORRECT_TURN_SPEED);
+                        //ES_Timer_InitTimer(TURN_OBST_TIMER, TIME_CORRECT_TURN);
+                        break;
+
+                    case ES_TIMEOUT:
+                        if (ThisEvent.EventParam == TURN_OBST_TIMER) {
+                            nextState = Running;
+                            makeTransition = TRUE;
+                            ThisEvent.EventType = ES_NO_EVENT;
+                        }
+                        break;
+
                     case WALL_DETECTED_RIGHT:
                         nextState = DispenseBalls;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+
+                    case BUMP:
+                        bumperValue = ThisEvent.EventParam; //save bumper value
+                        if (bumperValue & 0b11 > 0) {
+                            //if any of the obstacle bumpers were hit, go in reverse
+                            Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                            //start back up timer to determine how long robot backs up
+                            ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
+                            //transition to avoid dead bot state
+                            // now put the machine into the actual initial state
+                            nextState = AvoidDeadBot;
+                            makeTransition = TRUE;
+                            ThisEvent.EventType = ES_NO_EVENT;
+                        } else {
+                            //if any of the wall bumpers were hit, go forward
+                            Robot_Reverse(BUMP_BACKUP_SPEED);
+                            // might need to add back in ES_InitTimer....
+                            //start back up timer to determine how long robot backs up
+                            ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
+                            //transition to follow wall state
+                            // now put the machine into the actual initial state
+                            nextState = FollowWall;
+                            makeTransition = TRUE;
+                            ThisEvent.EventType = ES_NO_EVENT;
+                        }
+                        break;
+
+                    case FOUND_TAPE:
+                        tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
+                        nextState = FollowTape;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
@@ -261,6 +327,11 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
 
+//                    case WALL_DETECTED_LEFT: //the robot is facing the wrong way
+//                        nextState = CorrectRobot;
+//                        makeTransition = TRUE;
+//                        ThisEvent.EventType = ES_NO_EVENT;
+//                        break;
                     default:
                         break;
                 }
@@ -272,7 +343,11 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                 switch (ThisEvent.EventType) {
                     case ES_ENTRY:
                         break;
-
+//                    case WALL_DETECTED_LEFT: //the robot is facing the wrong way
+//                        nextState = CorrectRobot;
+//                        makeTransition = TRUE;
+//                        ThisEvent.EventType = ES_NO_EVENT;
+//                        break;
                     case FOUND_TAPE:
                         //if we are here, it means that we hit the tape while
                         //"following the wall" and if it was the front sensors
@@ -294,7 +369,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             }
                             Robot_Drive(NOMINAL_SPEED);
                         } else {
-//                            LED_SetBank(LED_BANK1, 0xF);
+                            //                            LED_SetBank(LED_BANK1, 0xF);
                             Robot_Reverse(TAPE_BACKUP_SPEED);
                         }
                         //start back up timer to determine how long robot backs up
@@ -323,21 +398,15 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         nextState = DispenseBalls;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
-//                        if (Robot_ReadRearRightTape() == TAPE_PRESENT) {
-//                            //if we are next to the wall and the rear tape 
-//                            //sensors are on the tape then we are by the slot
-//                            nextState = DispenseBalls;
-//                            makeTransition = TRUE;
-//                            ThisEvent.EventType = ES_NO_EVENT;
-//                        } else {
-//                            Robot_Reverse(BUMP_BACKUP_SPEED);
-//                        }
-                        break;
-
-                    case FOUND_TRACKWIRE:
-                        nextState = DispenseBalls;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        //                        if (Robot_ReadRearRightTape() == TAPE_PRESENT) {
+                        //                            //if we are next to the wall and the rear tape 
+                        //                            //sensors are on the tape then we are by the slot
+                        //                            nextState = DispenseBalls;
+                        //                            makeTransition = TRUE;
+                        //                            ThisEvent.EventType = ES_NO_EVENT;
+                        //                        } else {
+                        //                            Robot_Reverse(BUMP_BACKUP_SPEED);
+                        //                        }
                         break;
 
                     default:
@@ -345,7 +414,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                 }
             }
             break; // End of FollowWall state
-            
+
         case DispenseBalls:
             ThisEvent = RunDispenseSubHSM(ThisEvent); // run sub-state machine or this state
             if (ThisEvent.EventType != ES_NO_EVENT) {
@@ -388,7 +457,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case FOUND_TAPE:
-                        if (ThisEvent.EventParam & 0b11 == 0) {
+                        //if (ThisEvent.EventParam & 0b11 == 0) {
                             //if somehow the front tape sensors are triggered
                             Robot_Reverse(TAPE_BACKUP_SPEED);
                             //start back up timer to determine how long robot backs up
@@ -396,7 +465,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             nextState = FollowTape;
                             makeTransition = TRUE;
                             ThisEvent.EventType = ES_NO_EVENT;
-                        }
+                        //}
                         break;
                     default:
                         break;

@@ -82,7 +82,7 @@ FIXDEPS=fixDeps
 _/_=\\
 ShExtension=.bat
 Device=PIC32MX320F128H
-ProjectDir="C:\Users\crisvasquez\Desktop\ECE118_2024\ece118-2024\Robot_final.X"
+ProjectDir="C:\Users\cryst\Desktop\ece118-2024\Robot_final.X"
 ProjectName=Robot_final
 ConfName=ROBOT_TEST
 ImagePath="dist\ROBOT_TEST\${IMAGE_TYPE}\Robot_final.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}"
@@ -207,49 +207,49 @@ ${OBJECTDIR}/_ext/1975241074/timers.o: C:/ECE118/src/timers.c  .generated_files/
 	@${RM} ${OBJECTDIR}/_ext/1975241074/timers.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/_ext/1975241074/timers.o.d" -o ${OBJECTDIR}/_ext/1975241074/timers.o C:/ECE118/src/timers.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/Robot.o: Robot.c  .generated_files/flags/ROBOT_TEST/7d29391ff484d3fb5b7254972d1b913143943e9d .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/Robot.o: Robot.c  .generated_files/flags/ROBOT_TEST/e21133eaa7986a8429efba48b247e085f2b55b69 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Robot.o.d 
 	@${RM} ${OBJECTDIR}/Robot.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/Robot.o.d" -o ${OBJECTDIR}/Robot.o Robot.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/RobotHSM.o: RobotHSM.c  .generated_files/flags/ROBOT_TEST/ddaba2c4eac54f1012bf19a14ca3d8e836d08b7f .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/RobotHSM.o: RobotHSM.c  .generated_files/flags/ROBOT_TEST/c115537877a47157e6f66a63b81c171a81c03b6b .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/RobotHSM.o.d 
 	@${RM} ${OBJECTDIR}/RobotHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/RobotHSM.o.d" -o ${OBJECTDIR}/RobotHSM.o RobotHSM.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o: ../FollowTapeSubHSM.c  .generated_files/flags/ROBOT_TEST/90fe0ae89dbb1cb075a25f3c38b4f18f0c155879 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o: ../FollowTapeSubHSM.c  .generated_files/flags/ROBOT_TEST/4ed6e90205e645b67938d4a225bd1298ae99ef65 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o.d" -o ${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o ../FollowTapeSubHSM.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o: ../FollowWallSubHSM.c  .generated_files/flags/ROBOT_TEST/b4e32cc2acae8f616cc5d97ca5053e21f92b45fc .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o: ../FollowWallSubHSM.c  .generated_files/flags/ROBOT_TEST/e3432c1e770f93530e8636d6aa090b5686bdc184 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o.d" -o ${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o ../FollowWallSubHSM.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1472/TapeBumpService.o: ../TapeBumpService.c  .generated_files/flags/ROBOT_TEST/295bffc38959741e27f267c108e6646003d0d69f .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1472/TapeBumpService.o: ../TapeBumpService.c  .generated_files/flags/ROBOT_TEST/76b9f43d020b2e21c4bc8ccd405352a749d0cfdb .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/TapeBumpService.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/TapeBumpService.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/_ext/1472/TapeBumpService.o.d" -o ${OBJECTDIR}/_ext/1472/TapeBumpService.o ../TapeBumpService.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/FinalEventChecker.o: FinalEventChecker.c  .generated_files/flags/ROBOT_TEST/91a9c7edc4b176546253fdef59fc4a49ecd36382 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/FinalEventChecker.o: FinalEventChecker.c  .generated_files/flags/ROBOT_TEST/d473618cf981eb09f9646187cb29f844a2e43168 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/FinalEventChecker.o.d 
 	@${RM} ${OBJECTDIR}/FinalEventChecker.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/FinalEventChecker.o.d" -o ${OBJECTDIR}/FinalEventChecker.o FinalEventChecker.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/DispenseSubHSM.o: DispenseSubHSM.c  .generated_files/flags/ROBOT_TEST/2f97b39ebec332f2bdbfa0562069fcf5ae280acf .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/DispenseSubHSM.o: DispenseSubHSM.c  .generated_files/flags/ROBOT_TEST/7377540674d4ab33932e15e6884967f110961d3d .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/DispenseSubHSM.o.d 
 	@${RM} ${OBJECTDIR}/DispenseSubHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/DispenseSubHSM.o.d" -o ${OBJECTDIR}/DispenseSubHSM.o DispenseSubHSM.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/IRService.o: IRService.c  .generated_files/flags/ROBOT_TEST/bcf0110766cdd33b1cc1d771478c42bdad84d04 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/IRService.o: IRService.c  .generated_files/flags/ROBOT_TEST/8624eca3382a9098c322a6dc973adfb40a585a84 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/IRService.o.d 
 	@${RM} ${OBJECTDIR}/IRService.o 
@@ -346,49 +346,49 @@ ${OBJECTDIR}/_ext/1975241074/timers.o: C:/ECE118/src/timers.c  .generated_files/
 	@${RM} ${OBJECTDIR}/_ext/1975241074/timers.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/_ext/1975241074/timers.o.d" -o ${OBJECTDIR}/_ext/1975241074/timers.o C:/ECE118/src/timers.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/Robot.o: Robot.c  .generated_files/flags/ROBOT_TEST/6b9192a164234ea432d5523f3bdc2f88e786f432 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/Robot.o: Robot.c  .generated_files/flags/ROBOT_TEST/4008324f3cb63f4424246596ae050c6fb62c31ec .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/Robot.o.d 
 	@${RM} ${OBJECTDIR}/Robot.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/Robot.o.d" -o ${OBJECTDIR}/Robot.o Robot.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/RobotHSM.o: RobotHSM.c  .generated_files/flags/ROBOT_TEST/a77676c36768e4916faad188daa037da60ade52 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/RobotHSM.o: RobotHSM.c  .generated_files/flags/ROBOT_TEST/2812eb2ad8e141b1d0aa39f682aea4f857f7b3c1 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/RobotHSM.o.d 
 	@${RM} ${OBJECTDIR}/RobotHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/RobotHSM.o.d" -o ${OBJECTDIR}/RobotHSM.o RobotHSM.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o: ../FollowTapeSubHSM.c  .generated_files/flags/ROBOT_TEST/47930f16033c6a719d7cb8710e7d85abf51d2ac .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o: ../FollowTapeSubHSM.c  .generated_files/flags/ROBOT_TEST/a8244bf4aa991b675eac7b05cf38927d59d342c3 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o.d" -o ${OBJECTDIR}/_ext/1472/FollowTapeSubHSM.o ../FollowTapeSubHSM.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o: ../FollowWallSubHSM.c  .generated_files/flags/ROBOT_TEST/6bf617c518e942b197529c31cead268950d97b9a .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o: ../FollowWallSubHSM.c  .generated_files/flags/ROBOT_TEST/27bdeecd6aad818735c6995e4304f712c03aa357 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o.d" -o ${OBJECTDIR}/_ext/1472/FollowWallSubHSM.o ../FollowWallSubHSM.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/_ext/1472/TapeBumpService.o: ../TapeBumpService.c  .generated_files/flags/ROBOT_TEST/21fa9d367caf328055163fc0c97aeeccdaf993e1 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/1472/TapeBumpService.o: ../TapeBumpService.c  .generated_files/flags/ROBOT_TEST/ff6bd1293f5c0e90d91e0c2beb918aab9eb31771 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/1472" 
 	@${RM} ${OBJECTDIR}/_ext/1472/TapeBumpService.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/TapeBumpService.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/_ext/1472/TapeBumpService.o.d" -o ${OBJECTDIR}/_ext/1472/TapeBumpService.o ../TapeBumpService.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/FinalEventChecker.o: FinalEventChecker.c  .generated_files/flags/ROBOT_TEST/94a223de5cbd17ca7b69371fdf135bc1b11ae363 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/FinalEventChecker.o: FinalEventChecker.c  .generated_files/flags/ROBOT_TEST/99ff872843061537d706b3e2a6eefef3bc249ac .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/FinalEventChecker.o.d 
 	@${RM} ${OBJECTDIR}/FinalEventChecker.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/FinalEventChecker.o.d" -o ${OBJECTDIR}/FinalEventChecker.o FinalEventChecker.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/DispenseSubHSM.o: DispenseSubHSM.c  .generated_files/flags/ROBOT_TEST/7c2693d086464641da6129f4c89be8a6024de449 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/DispenseSubHSM.o: DispenseSubHSM.c  .generated_files/flags/ROBOT_TEST/d8879e15e4ade8891f536834d7938efe1710c9a7 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/DispenseSubHSM.o.d 
 	@${RM} ${OBJECTDIR}/DispenseSubHSM.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -DROBOT_TEST -I"." -I"../" -I"C:/ECE118/include" -MP -MMD -MF "${OBJECTDIR}/DispenseSubHSM.o.d" -o ${OBJECTDIR}/DispenseSubHSM.o DispenseSubHSM.c    -DXPRJ_ROBOT_TEST=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/IRService.o: IRService.c  .generated_files/flags/ROBOT_TEST/2f6229b81615d04d043126f2549d24dc6780e9b9 .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/IRService.o: IRService.c  .generated_files/flags/ROBOT_TEST/e0e43e6c6817d9ccb6b63b2108156131b644dc0c .generated_files/flags/ROBOT_TEST/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/IRService.o.d 
 	@${RM} ${OBJECTDIR}/IRService.o 
