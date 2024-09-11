@@ -36,7 +36,7 @@
 #define CHARGE_CHECK_TIME   (3*60*1000)         // 3 minutes in msec 
 
 #define NOMINAL_SPEED          80
-#define WALL_SPEED             65
+#define WALL_SPEED             70
 
 #define OBSTACLE_TURN_SPEED    70
 #define OBSTACLE_BACKUP_SPEED  70
@@ -54,22 +54,22 @@
 #define TAPE_TURN_SPEED        70
 #define TAPE_BACKUP_SPEED      75
 #define TIME_BACKUP_TAPE       800
-#define TIME_TURNING_TAPE      500
+#define TIME_TURNING_TAPE      450
 
 #define DISPENSE_FWD_SPEED     65
 #define DISPENSE_BACKUP_SPEED  70
 #define DISPENSE_TURN_SPEED    70
 #define DISPENSE_BACKUP_TIME   275
-#define DISPENSE_TIMEOUT_TIME  1000
+#define DISPENSE_TIMEOUT_TIME  8000
 #define DISPENSE_TIMEOUT_SPEED 60
 #define DISPENSE_TURN_TIME     250
 
-#define TIME_WAITING           2000
-#define TIME_FOR_DOOR          1000
+#define TIME_WAITING           5000
+#define TIME_FOR_DOOR          5000
 
 #define ADJUST_LEFTSPEED       0
 #define ADJUST_RIGHTSPEED      65
-#define ADJUST_TIME            350
+#define ADJUST_TIME            340
 
 /*******************************************************************************
  * PUBLIC TYPEDEFS                                                             *
@@ -79,7 +79,8 @@
 /*******************************************************************************
  * PUBLIC FUNCTION PROTOTYPES                                                  *
  ******************************************************************************/
-
+int amIByTheSlot(void);
+void leavingTheSlot(void);
 /**
  * @Function InitRobotHSM(uint8_t Priority)
  * @param Priority - internal variable to track which event queue to use

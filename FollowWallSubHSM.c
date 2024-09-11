@@ -117,6 +117,7 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
     ES_Tattle(); // trace call stack
     unsigned char bumperReading = 0;
     static unsigned char obst_bumpReading = 0;
+    static int initFlag = 0;
     switch (CurrentState) {
         case InitPSubState: // If current state is initial Psedudo State
             if (ThisEvent.EventType == ES_INIT)// only respond to ES_Init
@@ -124,20 +125,24 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                 // this is where you would put any actions associated with the
                 // transition from the initial pseudo-state into the actual
                 // initial state
-
+                initFlag = 0;
                 // now put the machine into the actual initial state
                 nextState = Back_Up;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             break;
-            
+
         case Back_Up:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    //                    if (initFlag == 0) {
+                    //                        initFlag = 1;
                     ThisEvent.EventType = ES_NO_EVENT;
-//                    Robot_Reverse(BUMP_BACKUP_SPEED);
-//                    ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
+                    //                    } else {
+                    //                        Robot_Reverse(BUMP_BACKUP_SPEED);
+                    //                        ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
+                    //                    }
                     break;
                 case BUMP:
                     bumperReading = ThisEvent.EventParam;
@@ -159,7 +164,7 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                         Robot_Reverse(BUMP_BACKUP_SPEED);
                     }
                     break;
-            }                    
+            }
         case Turn_Left:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:

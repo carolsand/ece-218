@@ -11,7 +11,7 @@ void main(void)
 
     BOARD_Init();
     
-    printf("Starting ES Framework Template\r\n");
+    printf("\r\n\r\n Starting ES Framework Template\r\n");
     printf("using the 2nd Generation Events & Services Framework\r\n");
 
 

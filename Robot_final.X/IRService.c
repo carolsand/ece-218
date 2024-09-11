@@ -44,8 +44,8 @@
 
 static uint8_t MyPriority;
 
-static ES_EventTyp_t lastIRState_right = AWAY_FROM_WALL_RIGHT;
-static ES_EventTyp_t lastIRState_left = AWAY_FROM_WALL_LEFT;
+static ES_EventTyp_t lastIRState_right = WALL_DETECTED_RIGHT;
+static ES_EventTyp_t lastIRState_left = WALL_DETECTED_LEFT;
 
 /*******************************************************************************
  * PUBLIC FUNCTIONS                                                            *

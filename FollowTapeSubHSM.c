@@ -116,6 +116,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
 
     ES_Tattle(); // trace call stack
     unsigned char tapeSensorReading = 0;
+    static int initFlag = 0;
 
     switch (CurrentState) {
         case InitPSubState: // If current state is initial Psedudo State
@@ -124,7 +125,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                 // this is where you would put any actions associated with the
                 // transition from the initial pseudo-state into the actual
                 // initial state
-                
+                initFlag = 0;
                 // now put the machine into the actual initial state
                 nextState = Back_Up;
                 makeTransition = TRUE;
@@ -135,14 +136,20 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
         case Back_Up:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    //                    if (amIByTheSlot()) {
+                    //                        Robot_Drive(TAPE_BACKUP_SPEED);
+                    //                        leavingTheSlot();
+                    //                    } else {
                     Robot_Reverse(TAPE_BACKUP_SPEED);
+                    //                    }
                     ES_Timer_InitTimer(BU_TAPE_TIMER, TIME_BACKUP_TAPE);
+
                     break;
-                
+
                 case FOUND_TAPE:
                     Robot_Reverse(TAPE_BACKUP_SPEED);
                     break;
-                
+
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BU_TAPE_TIMER) {
                         //we have finished backing up, so let's switch to Turn_Left state
@@ -188,7 +195,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     break;
             }
             break;
-            
+
         case Go_Forward:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
