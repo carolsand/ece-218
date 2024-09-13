@@ -245,17 +245,17 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         }
                         break;
 
-                        //                    case WALL_DETECTED_RIGHT:
-                        //                        nextState = DispenseBalls;
-                        //                        makeTransition = TRUE;
-                        //                        ThisEvent.EventType = ES_NO_EVENT;
-                        //                        break;
+                    case WALL_DETECTED_RIGHT:
+                        nextState = DispenseBalls;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
 
-                        //                    case WALL_DETECTED_LEFT: //the robot is facing the wrong way
-                        //                        nextState = CorrectRobot;
-                        //                        makeTransition = TRUE;
-                        //                        ThisEvent.EventType = ES_NO_EVENT;
-                        //                        break;
+                        //                                            case WALL_DETECTED_LEFT: //the robot is facing the wrong way
+                        //                                                nextState = CorrectRobot;
+                        //                                                makeTransition = TRUE;
+                        //                                                ThisEvent.EventType = ES_NO_EVENT;
+                        //                                                break;
                 }
             }
             break;
@@ -265,7 +265,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                 switch (ThisEvent.EventType) {
                     case ES_ENTRY:
                         Robot_Turn(CORRECT_TURN_SPEED, -CORRECT_TURN_SPEED);
-                        //ES_Timer_InitTimer(TURN_OBST_TIMER, TIME_CORRECT_TURN);
+                        ES_Timer_InitTimer(TURN_OBST_TIMER, TIME_CORRECT_TURN);
                         break;
 
                     case ES_TIMEOUT:
@@ -277,12 +277,14 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case WALL_DETECTED_RIGHT:
+                        ES_Timer_StopTimer(TURN_OBST_TIMER);
                         nextState = DispenseBalls;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
 
                     case OBSTCL_BUMP:
+                        ES_Timer_StopTimer(TURN_OBST_TIMER);
                         //if any of the obstacle bumpers were hit, go in reverse
                         Robot_Reverse(OBSTACLE_BACKUP_SPEED);
                         //start back up timer to determine how long robot backs up
@@ -294,6 +296,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
                     case WALL_BUMP:
+                        ES_Timer_StopTimer(TURN_OBST_TIMER);
                         //if any of the wall bumpers were hit, go forward
                         Robot_Reverse(BUMP_BACKUP_SPEED);
                         // might need to add back in ES_InitTimer....
@@ -306,6 +309,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
                     case FOUND_TAPE:
+                        ES_Timer_StopTimer(TURN_OBST_TIMER);
                         tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
                         nextState = FollowTape;
                         makeTransition = TRUE;
@@ -388,11 +392,11 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                 switch (ThisEvent.EventType) {
                     case ES_ENTRY:
                         break;
-                        //                    case WALL_DETECTED_LEFT: //the robot is facing the wrong way
-                        //                        nextState = CorrectRobot;
-                        //                        makeTransition = TRUE;
-                        //                        ThisEvent.EventType = ES_NO_EVENT;
-                        //                        break;
+                    case WALL_DETECTED_LEFT: //the robot is facing the wrong way
+                        nextState = CorrectRobot;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     case FOUND_TAPE:
                         //if we are here, it means that we hit the tape while
                         //"following the wall" and if it was the front sensors
@@ -566,7 +570,11 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
-
+                    case WALL_DETECTED_LEFT: //the robot is facing the wrong way
+                        nextState = CorrectRobot;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     default:
                         break;
                 }

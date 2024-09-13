@@ -166,6 +166,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                 case ES_TIMEOUT:
                     //switch to turn 90deg left state
                     if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                        ES_Timer_StopTimer(TIMEOUT_TIMER);
                         Robot_Drive(0);
                         LED_SetBank(LED_BANK1, 0xF);
                         nextState = Adjusting;
@@ -186,6 +187,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     break;
 
                 case AWAY_FROM_WALL_RIGHT: //we got misaligned trying to find the slot
+                    ES_Timer_StopTimer(TIMEOUT_TIMER);
                     ES_Timer_StopTimer(BACK_UP_TIMER);
                     //lets adjust
                     nextState = Adjusting;
@@ -221,7 +223,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case Adjusting: // 
+        case Adjusting: //
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     ES_Timer_StopTimer(TIMEOUT_TIMER);

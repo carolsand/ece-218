@@ -221,7 +221,7 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
         // recursively call the current state with an exit event
-        RunFollowWallSubHSM(EXIT_EVENT); // <- rename to your own Run function
+        //RunFollowWallSubHSM(EXIT_EVENT); // <- rename to your own Run function
         CurrentState = nextState;
         RunFollowWallSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }

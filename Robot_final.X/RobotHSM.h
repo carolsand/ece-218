@@ -30,10 +30,10 @@
 /*******************************************************************************
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
-#define TRAVEL_BACKUP_SPEED     65
+#define TRAVEL_BACKUP_SPEED     70
 #define TRAVEL_TURN_SPEED       70
-#define TRAVEL_BACKUP_TIME      650
-#define TRAVEL_TURN_TIME        500
+#define TRAVEL_BACKUP_TIME      1100
+#define TRAVEL_TURN_TIME        1000
 #define TRAVEL_TIME             5000
 
 #define EVADE_WALL_BU_SPEED 70
@@ -78,7 +78,7 @@
 #define DISPENSE_BACKUP_SPEED  70
 #define DISPENSE_TURN_SPEED    70
 #define DISPENSE_BACKUP_TIME   275
-#define DISPENSE_TIMEOUT_TIME  8000
+#define DISPENSE_TIMEOUT_TIME  5000
 #define DISPENSE_TIMEOUT_SPEED 60
 #define DISPENSE_TURN_TIME     250
 

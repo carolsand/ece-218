@@ -114,7 +114,7 @@ uint8_t InitLapSubSubHSM(void) {
 ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
     uint8_t makeTransition = FALSE; // use to flag transition
     LapSubSubHSMState_t nextState; // <- change type to correct enum
-
+    static unsigned char FrontRightTapeValue = TAPE_NOT_PRESENT;
     ES_Tattle(); // trace call stack
 
     switch (CurrentState) {
@@ -138,6 +138,7 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
                     Robot_Drive(TRAVEL_SPEED);
                     break;
                 case FOUND_TAPE:
+                    FrontRightTapeValue = (ThisEvent.EventParam & 0b100) >> 2;
                     ES_Timer_StopTimer(BU_TAPE_TIMER);
                     ES_Timer_StopTimer(TURN_TAPE_TIMER);
                     //might need to get more specific with which tape sensor
@@ -147,7 +148,12 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BU_TAPE_TIMER) {
-                        Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        if (FrontRightTapeValue == TAPE_PRESENT) {
+                            Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        } else {
+                            Robot_Turn(-TRAVEL_TURN_SPEED, TRAVEL_TURN_SPEED);
+                        }
+                        
                         ES_Timer_InitTimer(TURN_TAPE_TIMER, TRAVEL_TURN_TIME);
                     }
                     if (ThisEvent.EventParam == TURN_TAPE_TIMER) {
@@ -167,6 +173,7 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
                     Robot_Drive(TRAVEL_SPEED);
                     break;
                 case FOUND_TAPE:
+                    FrontRightTapeValue = (ThisEvent.EventParam & 0b100) >> 2;
                     ES_Timer_StopTimer(BU_TAPE_TIMER);
                     ES_Timer_StopTimer(TURN_TAPE_TIMER);
                     //might need to get more specific with which tape sensor
@@ -176,7 +183,11 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BU_TAPE_TIMER) {
-                        Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        if (FrontRightTapeValue == TAPE_PRESENT) {
+                            Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        } else {
+                            Robot_Turn(-TRAVEL_TURN_SPEED, TRAVEL_TURN_SPEED);
+                        }
                         ES_Timer_InitTimer(TURN_TAPE_TIMER, TRAVEL_TURN_TIME);
                     }
                     if (ThisEvent.EventParam == TURN_TAPE_TIMER) {
@@ -196,6 +207,7 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
                     Robot_Drive(TRAVEL_SPEED);
                     break;
                 case FOUND_TAPE:
+                    FrontRightTapeValue = (ThisEvent.EventParam & 0b100) >> 2;
                     ES_Timer_StopTimer(BU_TAPE_TIMER);
                     ES_Timer_StopTimer(TURN_TAPE_TIMER);
                     //might need to get more specific with which tape sensor
@@ -205,7 +217,11 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BU_TAPE_TIMER) {
-                        Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        if (FrontRightTapeValue == TAPE_PRESENT) {
+                            Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        } else {
+                            Robot_Turn(-TRAVEL_TURN_SPEED, TRAVEL_TURN_SPEED);
+                        }
                         ES_Timer_InitTimer(TURN_TAPE_TIMER, TRAVEL_TURN_TIME);
                     }
                     if (ThisEvent.EventParam == TURN_TAPE_TIMER) {
@@ -223,9 +239,10 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
                     Robot_Drive(TRAVEL_SPEED);
-                    ES_Timer_InitTimer(TIMEOUT_TIMER, TRAVEL_TIME);
+                    ES_Timer_InitTimer(DOOR_TIMER, TRAVEL_TIME);
                     break;
                 case FOUND_TAPE:
+                    FrontRightTapeValue = (ThisEvent.EventParam & 0b100) >> 2;
                     //might need to get more specific with which tape sensor
                     //found tape, back up and turn
                     ES_Timer_StopTimer(BU_TAPE_TIMER);
@@ -235,7 +252,11 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
                     break;
                 case ES_TIMEOUT:
                     if (ThisEvent.EventParam == BU_TAPE_TIMER) {
-                        Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        if (FrontRightTapeValue == TAPE_PRESENT) {
+                            Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        } else {
+                            Robot_Turn(-TRAVEL_TURN_SPEED, TRAVEL_TURN_SPEED);
+                        }
                         ES_Timer_InitTimer(TURN_TAPE_TIMER, TRAVEL_TURN_TIME);
                     }
                     

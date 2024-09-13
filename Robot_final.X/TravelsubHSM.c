@@ -168,7 +168,7 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
                     Robot_Drive(TRAVEL_SPEED);
                     break;
                 case ES_TIMEOUT:
-                    if (ThisEvent.EventParam == TIMEOUT_TIMER) {
+                    if (ThisEvent.EventParam == DOOR_TIMER) {
                         ES_Timer_StopTimer(WAIT_TIMER);
                         //transition back to running i guess 
                         nextState = End_Lap;
@@ -177,7 +177,7 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
 
                     }
                     if (ThisEvent.EventParam == WAIT_TIMER) {
-                        ES_Timer_StopTimer(TIMEOUT_TIMER);
+                        ES_Timer_StopTimer(DOOR_TIMER);
                         //transition back to running i guess 
                         nextState = End_Lap;
                         makeTransition = TRUE;
@@ -429,6 +429,7 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
                     Robot_Drive(0); //stop
                     ES_Timer_InitTimer(TIMEOUT_TIMER, HALF_SECOND);
                     CurrentState = Start_Lap;
+                    ThisEvent.EventType = ES_NO_EVENT;
                     break;
             }
             break;
