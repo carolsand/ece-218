@@ -125,8 +125,8 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
                 // initial state
 
                 // now put the machine into the actual initial state
-                nextState = First_Lap;
-                makeTransition = TRUE;
+                CurrentState = First_Lap;
+                //makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             break;

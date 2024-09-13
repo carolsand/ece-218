@@ -33,6 +33,8 @@
 #include "BOARD.h"
 #include "RobotHSM.h"
 #include "TravelsubHSM.h" //#include all sub state machines called
+#include "LapSubSubHSM.h"
+#include "Robot.h"
 /*******************************************************************************
  * PRIVATE #DEFINES                                                            *
  ******************************************************************************/
@@ -46,16 +48,20 @@
 typedef enum {
     InitPSubState,
     Start_Lap,
-    Evade_Wall,
-    Evade_Obstacle,
+    Evade_Wall_CW,
+    Evade_Wall_CCW,
+    Evade_Obstacle_CW,
+    Evade_Obstacle_CCW,
     End_Lap,
 } TravelHSMState_t;
 
 static const char *StateNames[] = {
 	"InitPSubState",
 	"Start_Lap",
-	"Evade_Wall",
-	"Evade_Obstacle",
+	"Evade_Wall_CW",
+	"Evade_Wall_CCW",
+	"Evade_Obstacle_CW",
+	"Evade_Obstacle_CCW",
 	"End_Lap",
 };
 
@@ -90,10 +96,8 @@ static uint8_t MyPriority;
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitTravelSubHSM(uint8_t Priority) {
+uint8_t InitTravelSubHSM(void) {
     ES_Event returnEvent;
-
-    MyPriority = Priority;
     // put us into the Initial PseudoState
     CurrentState = InitPSubState;
     returnEvent = RunTravelSubHSM(INIT_EVENT);
@@ -145,7 +149,7 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
                 // transition from the initial pseudo-state into the actual
                 // initial state
                 // Initialize all sub-state machines
-                //InitTravelSubHSM();
+                InitLapSubSubHSM();
                 // now put the machine into the actual initial state
                 nextState = Start_Lap;
                 makeTransition = TRUE;
@@ -158,13 +162,251 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
             // run sub-state machine for this state
             //NOTE: the SubState Machine runs and responds to events before anything in the this
             //state machine does
-            ThisEvent = RunTravelSubHSM(ThisEvent);
+            ThisEvent = RunLapSubSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
-                case ES_NO_EVENT:
-                default:
+                case ES_ENTRY:
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == WAIT_TIMER) {
+                        //transition back to running i guess 
+                        nextState = End_Lap;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
+                    break;
+
+                case WALL_BUMP:
+                    if (ThisEvent.EventParam > 1) { //if left bumper is hit at all
+                        nextState = Evade_Wall_CW; //turn clockwise
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else {
+                        nextState = Evade_Wall_CCW;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+
+                case OBSTCL_BUMP:
+                    if (ThisEvent.EventParam > 1) { //if left bumper is hit at all
+                        nextState = Evade_Obstacle_CW; //turn clockwise
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else {
+                        nextState = Evade_Obstacle_CCW;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
                     break;
             }
             break;
+
+        case Evade_Wall_CW:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_Reverse(EVADE_WALL_BU_SPEED);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_WALL_BU_TIME);
+                    break;
+                case WALL_BUMP:
+                    Robot_Reverse(EVADE_WALL_BU_SPEED);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_WALL_BU_TIME);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                        Robot_Turn(EVADE_WALL_TURN_SPEED, -EVADE_WALL_TURN_SPEED);
+                        ES_Timer_InitTimer(TURN_TIMER, EVADE_WALL_TURN_TIME);
+                    }
+
+                    if (ThisEvent.EventParam == TURN_TIMER) {
+                        //transition back to running i guess 
+                        nextState = Start_Lap;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
+                    break;
+                case WALL_DETECTED_LEFT:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
+                    //we r parallel so lets goo
+                    nextState = Start_Lap;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+                case OBSTCL_BUMP:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
+                    if (ThisEvent.EventParam > 1) { //if left bumper is hit at all
+                        nextState = Evade_Obstacle_CW; //turn clockwise
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else {
+                        nextState = Evade_Obstacle_CCW;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+            }
+            break;
+
+        case Evade_Wall_CCW:
+
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_Reverse(EVADE_WALL_BU_SPEED);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_WALL_BU_TIME);
+                    break;
+                case WALL_BUMP:
+                    Robot_Reverse(EVADE_WALL_BU_SPEED);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_WALL_BU_TIME);
+                    break;
+
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                        Robot_Turn(-EVADE_WALL_TURN_SPEED, EVADE_WALL_TURN_SPEED);
+                        ES_Timer_InitTimer(TURN_TIMER, EVADE_WALL_TURN_TIME);
+                    }
+                    if (ThisEvent.EventParam == TURN_TIMER) {
+                        //transition back to running i guess 
+                        nextState = Start_Lap;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
+                    break;
+                case OBSTCL_BUMP:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
+                    if (ThisEvent.EventParam > 1) { //if left bumper is hit at all
+                        nextState = Evade_Obstacle_CW; //turn clockwise
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else {
+                        nextState = Evade_Obstacle_CCW;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case WALL_DETECTED_RIGHT:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
+                    //we r parallel so lets goo
+                    nextState = Start_Lap;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+            }
+            break;
+
+        case Evade_Obstacle_CW:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_Reverse(EVADE_OBSTCL_BU_SPEED);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_OBSTCL_BU_TIME);
+                    break;
+                case OBSTCL_BUMP:
+                    Robot_Reverse(EVADE_OBSTCL_BU_SPEED);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_OBSTCL_BU_TIME);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                        Robot_Turn(EVADE_OBSTCL_TURN_SPEED, -EVADE_OBSTCL_TURN_SPEED);
+                        ES_Timer_InitTimer(TURN_TIMER, EVADE_OBSTCL_TURN_TIME);
+                    }
+
+                    if (ThisEvent.EventParam == TURN_TIMER) {
+                        //transition back to running i guess 
+                        nextState = Start_Lap;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
+                    break;
+                case WALL_BUMP:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
+                    if (ThisEvent.EventParam > 1) { //if left bumper is hit at all
+                        nextState = Evade_Wall_CW; //turn clockwise
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else {
+                        nextState = Evade_Wall_CCW;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case WALL_DETECTED_LEFT:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
+                    //we r parallel so lets goo
+                    nextState = Start_Lap;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+
+            }
+            break;
+
+        case Evade_Obstacle_CCW:
+
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_Reverse(EVADE_OBSTCL_BU_SPEED);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_OBSTCL_BU_TIME);
+                    break;
+                case OBSTCL_BUMP:
+                    Robot_Reverse(EVADE_OBSTCL_BU_SPEED);
+                    ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_OBSTCL_BU_TIME);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == BACK_UP_TIMER) {
+                        Robot_Turn(-EVADE_OBSTCL_TURN_SPEED, EVADE_OBSTCL_TURN_SPEED);
+                        ES_Timer_InitTimer(TURN_TIMER, EVADE_OBSTCL_TURN_TIME);
+                    }
+                    if (ThisEvent.EventParam == TURN_TIMER) {
+                        //transition back to running i guess 
+                        nextState = Start_Lap;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
+                    break;
+                case WALL_BUMP:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
+                    if (ThisEvent.EventParam > 1) { //if left bumper is hit at all
+                        nextState = Evade_Wall_CW; //turn clockwise
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    } else {
+                        nextState = Evade_Wall_CCW;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                    }
+                    break;
+                case WALL_DETECTED_RIGHT:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
+                    //we r parallel so lets goo
+                    nextState = Start_Lap;
+                    makeTransition = TRUE;
+                    ThisEvent.EventType = ES_NO_EVENT;
+                    break;
+
+            }
+            break;
+
+        case End_Lap:
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_Drive(0); //stop
+                    ES_Timer_InitTimer(TIMEOUT_TIMER, HALF_SECOND);
+                    break;
+            }
+            break;
+
+
         default: // all unhandled states fall into here
             break;
     } // end switch on Current State

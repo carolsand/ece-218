@@ -37,6 +37,8 @@
 #include "FollowTapeSubHSM.h" //#include all sub state machines 
 #include "DispenseSubHSM.h"
 #include "LED.h"
+#include "TravelsubHSM.h"
+#include "LapSubSubHSM.h"
 /*******************************************************************************
  * PRIVATE #DEFINES                                                            *
  ******************************************************************************/
@@ -49,6 +51,7 @@
 
 typedef enum {
     InitPState,
+    Traveling,
     Running,
     FollowWall,
     FollowTape,
@@ -59,6 +62,7 @@ typedef enum {
 
 static const char *StateNames[] = {
 	"InitPState",
+	"Traveling",
 	"Running",
 	"FollowWall",
 	"FollowTape",
@@ -163,17 +167,39 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                 // transition from the initial pseudo-state into the actual
                 // initial state
                 // Initialize all sub-state machines
+                InitTravelSubHSM();
                 InitFollowWallSubHSM();
                 InitFollowTapeSubHSM();
                 InitDispenseSubHSM();
                 LED_SetBank(LED_BANK1, 0);
                 // now put the machine into the actual initial state
-                nextState = Running;
+                nextState = Traveling;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
 
             }
             break;
+
+        case Traveling:
+            ThisEvent = RunTravelSubHSM(ThisEvent); // run sub-state machine or this state
+            if (ThisEvent.EventType != ES_NO_EVENT) {
+                switch (ThisEvent.EventType) {
+                    case ES_ENTRY:
+                        break;
+                    case ES_TIMEOUT:
+                        //we finished traveling, hopefully we collected good amount idk
+                        if (ThisEvent.EventParam == TIMEOUT_TIMER) {
+                            //transition back to running i guess 
+                            nextState = Running;
+                            makeTransition = TRUE;
+                            ThisEvent.EventType = ES_NO_EVENT;
+
+                        }
+                        break;
+                }
+            }
+            break;
+
         case Running: // in the first state, replace this with correct names
             if (ThisEvent.EventType != ES_NO_EVENT) {
                 switch (ThisEvent.EventType) {
@@ -440,20 +466,18 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             Robot_Drive(NOMINAL_SPEED); // start motors
                             //we have completed task of dispensing
                             //transition back to running i guess 
-                            nextState = Running;
+                            nextState = Traveling;
                             makeTransition = TRUE;
                             ThisEvent.EventType = ES_NO_EVENT;
                         }
 
                         //we were unable to locate the slot so lets do another lap
                         if (ThisEvent.EventParam == TIMEOUT_TIMER) {
-                            if (cancelTimerFlag()) {
-                                iAmByTheSlot = 1;
-                                //transition back to running i guess 
-                                nextState = Running;
-                                makeTransition = TRUE;
-                                ThisEvent.EventType = ES_NO_EVENT;
-                            }
+                            //transition back to running i guess 
+                            nextState = Traveling;
+                            makeTransition = TRUE;
+                            ThisEvent.EventType = ES_NO_EVENT;
+
                         }
                         break;
 

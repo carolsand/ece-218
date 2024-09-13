@@ -70,7 +70,5 @@ uint8_t InitDispenseSubHSM(void);
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
 ES_Event RunDispenseSubHSM(ES_Event ThisEvent);
 
-int cancelTimerFlag(void);
-
 #endif /* SUB_HSM_Dispense_H */
 

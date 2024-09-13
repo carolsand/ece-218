@@ -30,6 +30,17 @@
 /*******************************************************************************
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
+#define EVADE_WALL_BU_SPEED 70
+#define EVADE_OBSTCL_BU_SPEED 70
+#define EVADE_WALL_BU_TIME     500
+#define EVADE_OBSTCL_BU_TIME   500
+
+#define EVADE_WALL_TURN_SPEED    65
+#define EVADE_OBSTCL_TURN_SPEED  65
+#define EVADE_WALL_TURN_TIME     400
+#define EVADE_OBSTCL_TURN_TIME   400
+
+
 #define TWO_MINUTES         (2*60*1000)         // 2 minutes in msec
 #define THIRTY_SECONDS      (30*1000)           // 30 seconds in msec
 #define HALF_SECOND         (500)               // half second in msec

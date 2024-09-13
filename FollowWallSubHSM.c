@@ -127,8 +127,8 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                 // initial state
                 initFlag = 0;
                 // now put the machine into the actual initial state
-                nextState = Back_Up;
-                makeTransition = TRUE;
+                CurrentState = Back_Up;
+                //makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             break;
