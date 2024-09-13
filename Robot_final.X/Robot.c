@@ -161,7 +161,7 @@ void Robot_Init(void) {
     //set up IR sensor
     IR_RIGHT_TRIS = INPUT;
     IR_LEFT_TRIS = INPUT;
-    
+
     // also set up bumpers (limit switches) as inputs
     BUMP_WALL_LEFT_TRIS = INPUT;
     BUMP_WALL_RIGHT_TRIS = INPUT;
@@ -432,10 +432,16 @@ char Robot_BarGraph(uint8_t Number) {
 }
 
 unsigned char Robot_ReadFrontLeftTape(void) {
-    int tapeSensorValue = 0;
+    unsigned int tapeSensorValue = 0;
 
-    if (AD_IsNewDataReady) {
+    if (AD_IsNewDataReady()) {
         tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT);
+
+//#ifdef ROBOT_TEST
+//        printf("FL Value: %u \r\n", tapeSensorValue);
+//#endif
+
+
         if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
             FL_tapeSensorStatus = TAPE_PRESENT;
             return TAPE_PRESENT;
@@ -446,13 +452,20 @@ unsigned char Robot_ReadFrontLeftTape(void) {
     } else {
         return FL_tapeSensorStatus;
     }
+
 }
 
 unsigned char Robot_ReadFrontRightTape(void) {
-    int tapeSensorValue = 0;
+    unsigned int tapeSensorValue = 0;
 
-    if (AD_IsNewDataReady) {
+    if (AD_IsNewDataReady()) {
         tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT);
+
+//#ifdef ROBOT_TEST
+//        printf("FR Value: %u \r\n", tapeSensorValue);
+//#endif
+
+
         if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
             FR_tapeSensorStatus = TAPE_PRESENT;
             return TAPE_PRESENT;
@@ -466,10 +479,15 @@ unsigned char Robot_ReadFrontRightTape(void) {
 }
 
 unsigned char Robot_ReadRearLeftTape(void) {
-    int tapeSensorValue = 0;
+    unsigned int tapeSensorValue = 0;
 
-    if (AD_IsNewDataReady) {
+    if (AD_IsNewDataReady()) {
         tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_REAR_LEFT);
+
+//#ifdef ROBOT_TEST
+//        printf("RL Value: %u \r\n", tapeSensorValue);
+//#endif
+
         if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
             RL_tapeSensorStatus = TAPE_PRESENT;
             return TAPE_PRESENT;
@@ -477,16 +495,22 @@ unsigned char Robot_ReadRearLeftTape(void) {
             RL_tapeSensorStatus = TAPE_NOT_PRESENT;
             return TAPE_NOT_PRESENT;
         }
+
     } else {
         return RL_tapeSensorStatus;
     }
 }
 
 unsigned char Robot_ReadRearRightTape(void) {
-    int tapeSensorValue = 0;
+    unsigned int tapeSensorValue = 0;
 
-    if (AD_IsNewDataReady) {
+    if (AD_IsNewDataReady()) {
         tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT);
+
+//#ifdef ROBOT_TEST
+//        printf("RR Value: %u \r\n", tapeSensorValue);
+//#endif
+
         if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
             RR_tapeSensorStatus = TAPE_PRESENT;
             return TAPE_PRESENT;
@@ -507,19 +531,55 @@ unsigned char Robot_ReadRearRightTape(void) {
  * @brief  Returns the state of all 4 tape sensors
  * @author Dyamic Duo, 2024.06.14*/
 unsigned char Robot_ReadTapeSensors(void) {
-    unsigned char frontLeft = Robot_ReadFrontLeftTape();
-    unsigned char frontRight = Robot_ReadFrontRightTape();
-    unsigned char rearLeft = Robot_ReadRearLeftTape();
-    unsigned char rearRight = Robot_ReadRearRightTape();
+    static unsigned char FL, FR, RL, RR;
+    unsigned int tapeSensorValue = 0;
 
-    return ((frontLeft << 3) | (frontRight << 2) | (rearLeft << 1) | rearRight);
+    if (AD_IsNewDataReady()) {
+
+        tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT);
+        if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
+            FL = TAPE_PRESENT;
+        } else {
+            FL = TAPE_NOT_PRESENT;
+        }
+
+        tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT);
+        if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
+            FR = TAPE_PRESENT;
+        } else {
+            FR = TAPE_NOT_PRESENT;
+        }
+
+        tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_REAR_LEFT);
+        if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
+            RL = TAPE_PRESENT;
+        } else {
+            RL = TAPE_NOT_PRESENT;
+        }
+
+        tapeSensorValue = AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT);
+        if (tapeSensorValue > TAPE_SENSOR_THRESHOLD) {
+            RR = TAPE_PRESENT;
+        } else {
+            RR = TAPE_NOT_PRESENT;
+        }
+
+    }
+
+    return ((FL << 3) | (FR << 2) | (RL << 1) | RR);
+    //    unsigned char frontLeft = Robot_ReadFrontLeftTape();
+    //    unsigned char frontRight = Robot_ReadFrontRightTape();
+    //    unsigned char rearLeft = Robot_ReadRearLeftTape();
+    //    unsigned char rearRight = Robot_ReadRearRightTape();
+    //
+    //    return ((frontLeft << 3) | (frontRight << 2) | (rearLeft << 1) | rearRight);
 
 }
 
 unsigned char Robot_IsTrackwirePresent(void) {
     int trackwireValue = 0;
 
-    if (AD_IsNewDataReady) {
+    if (AD_IsNewDataReady()) {
         trackwireValue = AD_ReadADPin(TRACK_WIRE_DETECTOR);
         if (trackwireValue < TRACKWIRE_THRESHOLD) {
             trackwireStatus = TRACKWIRE_NOT_PRESENT;
@@ -580,7 +640,11 @@ void main(void) {
 
     static char i = 0;
     static unsigned int doorPulse = DOOR_CLOSED_VALUE;
-    static unsigned char tapeStatus = TAPE_NOT_PRESENT;
+    static unsigned int tapeStatus = TAPE_NOT_PRESENT;
+    static unsigned int FLtapeStatus = TAPE_NOT_PRESENT;
+    static unsigned int FRtapeStatus = TAPE_NOT_PRESENT;
+    static unsigned int RLtapeStatus = TAPE_NOT_PRESENT;
+    static unsigned int RRtapeStatus = TAPE_NOT_PRESENT;
     //RC_RemovePins(DOOR_SERVO);
     printf("welcome to ece218 robot test harness \r\nenter a key to perform a test.\r\n\r\n");
     printf("w: print trackwire raw value\r\n");
@@ -602,7 +666,7 @@ void main(void) {
             LED_OffBank(LED_BANK2, 0xF);
             LED_OffBank(LED_BANK3, 0xF);
         }
-        
+
         if (IR_LEFT_SENSOR == WITHIN_RANGE) {
             LED_OnBank(LED_BANK1, 0xA);
             LED_OnBank(LED_BANK2, 0xA);
@@ -612,7 +676,7 @@ void main(void) {
             LED_OffBank(LED_BANK2, 0xA);
             LED_OffBank(LED_BANK3, 0xA);
         }
-        
+
 
         if (Robot_ReadWallLeftBumper() == BUMPER_TRIPPED) {
             Robot_OpenDoor();
@@ -630,35 +694,39 @@ void main(void) {
         i = GetChar();
 
         if (i == 'w') {
-            printf("value: %d, trackwire value\r\n\r\n", AD_ReadADPin(TRACK_WIRE_DETECTOR));
+            printf("value: %u, trackwire value\r\n\r\n", AD_ReadADPin(TRACK_WIRE_DETECTOR));
         }
         if (i == 't') { //test tape sensors
-            tapeStatus = Robot_ReadFrontLeftTape();
-            if (tapeStatus == TAPE_PRESENT) {
-                printf("value: %d, FL tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT));
+
+            tapeStatus = Robot_ReadTapeSensors();
+            printf("All Tape Sensors Value: %u \r\n\r\n", tapeStatus);
+
+            FLtapeStatus = Robot_ReadFrontLeftTape();
+            if (FLtapeStatus == TAPE_PRESENT) {
+                printf("value: %u, FL tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT));
             } else {
-                printf("value: %d, FL tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT));
+                printf("value: %u, FL tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_LEFT));
             }
 
-            tapeStatus = Robot_ReadFrontRightTape();
-            if (tapeStatus == TAPE_PRESENT) {
-                printf("value: %d, FR tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT));
+            FRtapeStatus = Robot_ReadFrontRightTape();
+            if (FRtapeStatus == TAPE_PRESENT) {
+                printf("value: %u, FR tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT));
             } else {
-                printf("value: %d, FR tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT));
+                printf("value: %u, FR tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_FRONT_RIGHT));
             }
 
-            tapeStatus = Robot_ReadRearLeftTape();
-            if (tapeStatus == TAPE_PRESENT) {
-                printf("value: %d, RL tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_REAR_LEFT));
+            RLtapeStatus = Robot_ReadRearLeftTape();
+            if (RLtapeStatus == TAPE_PRESENT) {
+                printf("value: %u, RL tape is present\r\n", AD_ReadADPin(TAPE_SENSOR_REAR_LEFT));
             } else {
-                printf("value: %d, RL tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_REAR_LEFT));
+                printf("value: %u, RL tape is NOT present\r\n", AD_ReadADPin(TAPE_SENSOR_REAR_LEFT));
             }
 
-            tapeStatus = Robot_ReadRearRightTape();
-            if (tapeStatus == TAPE_PRESENT) {
-                printf("value: %d, RR tape is present \r\n", AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT));
+            RRtapeStatus = Robot_ReadRearRightTape();
+            if (RRtapeStatus == TAPE_PRESENT) {
+                printf("value: %u, RR tape is present \r\n", AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT));
             } else {
-                printf("value: %d, RR tape is NOT present \r\n", AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT));
+                printf("value: %u, RR tape is NOT present \r\n", AD_ReadADPin(TAPE_SENSOR_REAR_RIGHT));
             }
             printf("-------------------------------------\r\n\r\n");
 
@@ -672,7 +740,7 @@ void main(void) {
             if (i == OUT_OF_RANGE) {
                 printf("Right IR Sensor is OUT OF RANGE of the wall \r\n\r\n");
             }
-            
+
             i = IR_LEFT_SENSOR;
             if (i == WITHIN_RANGE) {
                 printf("Left IR Sensor is WITHIN RANGE of the wall \r\n\r\n");
@@ -694,7 +762,7 @@ void main(void) {
                 doorPulse = doorPulse + 50;
                 Robot_SetDoorServo(doorPulse);
             }
-            printf("door servo value: %d \r\n\r\n", doorPulse);
+            printf("door servo value: %u \r\n\r\n", doorPulse);
         }
 
         if (i == 'r') {
@@ -702,7 +770,7 @@ void main(void) {
                 doorPulse = doorPulse - 50;
                 Robot_SetDoorServo(doorPulse);
             }
-            printf("door servo value: %d \r\n\r\n", doorPulse);
+            printf("door servo value: %u \r\n\r\n", doorPulse);
         }
 
     }
