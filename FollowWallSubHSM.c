@@ -179,6 +179,7 @@ ES_Event RunFollowWallSubHSM(ES_Event ThisEvent) {
                     break;
 
                 case WALL_BUMP:
+                    ES_Timer_StopTimer(TURN_BUMP_TIMER);
                     //if any of the wall bumpers were hit, go in reverse
                     Robot_Reverse(BUMP_BACKUP_SPEED);
 

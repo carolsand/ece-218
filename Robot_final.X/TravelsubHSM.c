@@ -165,9 +165,19 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
             ThisEvent = RunLapSubSubHSM(ThisEvent);
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    Robot_Drive(TRAVEL_SPEED);
                     break;
                 case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == TIMEOUT_TIMER) {
+                        ES_Timer_StopTimer(WAIT_TIMER);
+                        //transition back to running i guess 
+                        nextState = End_Lap;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
                     if (ThisEvent.EventParam == WAIT_TIMER) {
+                        ES_Timer_StopTimer(TIMEOUT_TIMER);
                         //transition back to running i guess 
                         nextState = End_Lap;
                         makeTransition = TRUE;
@@ -205,10 +215,14 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
         case Evade_Wall_CW:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
                     Robot_Reverse(EVADE_WALL_BU_SPEED);
                     ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_WALL_BU_TIME);
                     break;
                 case WALL_BUMP:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
                     Robot_Reverse(EVADE_WALL_BU_SPEED);
                     ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_WALL_BU_TIME);
                     break;
@@ -254,10 +268,14 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
 
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
                     Robot_Reverse(EVADE_WALL_BU_SPEED);
                     ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_WALL_BU_TIME);
                     break;
                 case WALL_BUMP:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
                     Robot_Reverse(EVADE_WALL_BU_SPEED);
                     ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_WALL_BU_TIME);
                     break;
@@ -302,10 +320,14 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
         case Evade_Obstacle_CW:
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
                     Robot_Reverse(EVADE_OBSTCL_BU_SPEED);
                     ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_OBSTCL_BU_TIME);
                     break;
                 case OBSTCL_BUMP:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
                     Robot_Reverse(EVADE_OBSTCL_BU_SPEED);
                     ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_OBSTCL_BU_TIME);
                     break;
@@ -352,10 +374,14 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
 
             switch (ThisEvent.EventType) {
                 case ES_ENTRY:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
                     Robot_Reverse(EVADE_OBSTCL_BU_SPEED);
                     ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_OBSTCL_BU_TIME);
                     break;
                 case OBSTCL_BUMP:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
                     Robot_Reverse(EVADE_OBSTCL_BU_SPEED);
                     ES_Timer_InitTimer(BACK_UP_TIMER, EVADE_OBSTCL_BU_TIME);
                     break;
@@ -402,6 +428,7 @@ ES_Event RunTravelSubHSM(ES_Event ThisEvent) {
                 case ES_ENTRY:
                     Robot_Drive(0); //stop
                     ES_Timer_InitTimer(TIMEOUT_TIMER, HALF_SECOND);
+                    CurrentState = Start_Lap;
                     break;
             }
             break;

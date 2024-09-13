@@ -32,6 +32,7 @@
 #include "BOARD.h"
 #include "TravelsubHSM.h"
 #include "LapSubSubHSM.h"
+#include "Robot.h"
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
@@ -131,16 +132,126 @@ ES_Event RunLapSubSubHSM(ES_Event ThisEvent) {
             }
             break;
 
-        case First_Lap: // in the first state, replace this with correct names
+        case First_Lap: // first lap across
             switch (ThisEvent.EventType) {
-                case ES_NO_EVENT:
-                default: // all unhandled events pass the event back up to the next level
+                case ES_ENTRY:
+                    Robot_Drive(TRAVEL_SPEED);
+                    break;
+                case FOUND_TAPE:
+                    ES_Timer_StopTimer(BU_TAPE_TIMER);
+                    ES_Timer_StopTimer(TURN_TAPE_TIMER);
+                    //might need to get more specific with which tape sensor
+                    //found tape, back up and turn
+                    Robot_Reverse(TRAVEL_BACKUP_SPEED);
+                    ES_Timer_InitTimer(BU_TAPE_TIMER, TRAVEL_BACKUP_TIME);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == BU_TAPE_TIMER) {
+                        Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        ES_Timer_InitTimer(TURN_TAPE_TIMER, TRAVEL_TURN_TIME);
+                    }
+                    if (ThisEvent.EventParam == TURN_TAPE_TIMER) {
+                        //transition back to running i guess 
+                        nextState = Second_Lap;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
                     break;
             }
             break;
 
-        default: // all unhandled states fall into here
+        case Second_Lap: // first lap across
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_Drive(TRAVEL_SPEED);
+                    break;
+                case FOUND_TAPE:
+                    ES_Timer_StopTimer(BU_TAPE_TIMER);
+                    ES_Timer_StopTimer(TURN_TAPE_TIMER);
+                    //might need to get more specific with which tape sensor
+                    //found tape, back up and turn
+                    Robot_Reverse(TRAVEL_BACKUP_SPEED);
+                    ES_Timer_InitTimer(BU_TAPE_TIMER, TRAVEL_BACKUP_TIME);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == BU_TAPE_TIMER) {
+                        Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        ES_Timer_InitTimer(TURN_TAPE_TIMER, TRAVEL_TURN_TIME);
+                    }
+                    if (ThisEvent.EventParam == TURN_TAPE_TIMER) {
+                        //transition back to running i guess 
+                        nextState = Third_Lap;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
+                    break;
+            }
             break;
+
+        case Third_Lap: // first lap across
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_Drive(TRAVEL_SPEED);
+                    break;
+                case FOUND_TAPE:
+                    ES_Timer_StopTimer(BU_TAPE_TIMER);
+                    ES_Timer_StopTimer(TURN_TAPE_TIMER);
+                    //might need to get more specific with which tape sensor
+                    //found tape, back up and turn
+                    Robot_Reverse(TRAVEL_BACKUP_SPEED);
+                    ES_Timer_InitTimer(BU_TAPE_TIMER, TRAVEL_BACKUP_TIME);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == BU_TAPE_TIMER) {
+                        Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        ES_Timer_InitTimer(TURN_TAPE_TIMER, TRAVEL_TURN_TIME);
+                    }
+                    if (ThisEvent.EventParam == TURN_TAPE_TIMER) {
+                        //transition back to running i guess 
+                        nextState = Fourth_Lap;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
+                    break;
+            }
+            break;
+            
+            case Fourth_Lap: // first lap across
+            switch (ThisEvent.EventType) {
+                case ES_ENTRY:
+                    Robot_Drive(TRAVEL_SPEED);
+                    ES_Timer_InitTimer(TIMEOUT_TIMER, TRAVEL_TIME);
+                    break;
+                case FOUND_TAPE:
+                    //might need to get more specific with which tape sensor
+                    //found tape, back up and turn
+                    ES_Timer_StopTimer(BU_TAPE_TIMER);
+                    ES_Timer_StopTimer(TURN_TAPE_TIMER);
+                    Robot_Reverse(TRAVEL_BACKUP_SPEED);
+                    ES_Timer_InitTimer(BU_TAPE_TIMER, TRAVEL_BACKUP_TIME);
+                    break;
+                case ES_TIMEOUT:
+                    if (ThisEvent.EventParam == BU_TAPE_TIMER) {
+                        Robot_Turn(TRAVEL_TURN_SPEED, -TRAVEL_TURN_SPEED);
+                        ES_Timer_InitTimer(TURN_TAPE_TIMER, TRAVEL_TURN_TIME);
+                    }
+                    
+                    if (ThisEvent.EventParam == TURN_TAPE_TIMER) {
+                        Robot_Drive(0);
+                        ES_Timer_InitTimer(WAIT_TIMER, HALF_SECOND);
+                        //transition back to running i guess 
+                        CurrentState = First_Lap;
+                        //makeTransition = TRUE;
+                        //ThisEvent.EventType = ES_NO_EVENT;
+
+                    }
+                    break;
+            }
+            break;
+
     } // end switch on Current State
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY

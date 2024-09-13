@@ -338,6 +338,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case OBSTCL_BUMP:
+                        ES_Timer_StopTimer(TURN_OBST_TIMER);
+                        ES_Timer_StopTimer(BU_OBST_TIMER);
                         //if any of the obstacle bumpers were hit, go in reverse
                         Robot_Reverse(OBSTACLE_BACKUP_SPEED);
                         //start back up timer to determine how long robot backs up
@@ -347,6 +349,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case WALL_BUMP:
+                        ES_Timer_StopTimer(TURN_OBST_TIMER);
+                        ES_Timer_StopTimer(BU_OBST_TIMER);
                         //if any of the wall bumpers were hit, go forward
                         Robot_Reverse(BUMP_BACKUP_SPEED);
                         // might need to add back in ES_InitTimer....
@@ -360,6 +364,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case FOUND_TAPE:
+                        ES_Timer_StopTimer(TURN_OBST_TIMER);
+                        ES_Timer_StopTimer(BU_OBST_TIMER);
                         tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
                         nextState = FollowTape;
                         makeTransition = TRUE;
@@ -419,6 +425,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case OBSTCL_BUMP:
+                        ES_Timer_StopTimer(TURN_BUMP_TIMER);
+                        ES_Timer_StopTimer(BU_BUMP_TIMER);
                         //if any of the obstacle bumpers were hit, go in reverse
                         Robot_Reverse(OBSTACLE_BACKUP_SPEED);
                         //start back up timer to determine how long robot backs up
@@ -432,6 +440,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case WALL_DETECTED_RIGHT:
+                        ES_Timer_StopTimer(TURN_BUMP_TIMER);
+                        ES_Timer_StopTimer(BU_BUMP_TIMER);
                         nextState = DispenseBalls;
                         makeTransition = TRUE;
                         ThisEvent.EventType = ES_NO_EVENT;
@@ -461,6 +471,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
 
                     case ES_TIMEOUT:
                         if (ThisEvent.EventParam == DOOR_TIMER) {
+                            ES_Timer_StopTimer(TIMEOUT_TIMER);
                             iAmByTheSlot = 1;
                             //Robot_RemoveServo(); //to lower current consumption
                             Robot_Drive(NOMINAL_SPEED); // start motors
@@ -473,6 +484,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
 
                         //we were unable to locate the slot so lets do another lap
                         if (ThisEvent.EventParam == TIMEOUT_TIMER) {
+                            //ES_Timer_StopTimer(DOOR_TIMER);
                             //transition back to running i guess 
                             nextState = Traveling;
                             makeTransition = TRUE;
@@ -482,6 +494,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case OBSTCL_BUMP:
+                        ES_Timer_StopTimer(TIMEOUT_TIMER);
+                        ES_Timer_StopTimer(DOOR_TIMER);
                         //if any of the obstacle bumpers were hit, go in reverse
                         Robot_Reverse(OBSTACLE_BACKUP_SPEED);
                         //start back up timer to determine how long robot backs up
@@ -494,6 +508,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case FOUND_TAPE:
+                        ES_Timer_StopTimer(TIMEOUT_TIMER);
+                        ES_Timer_StopTimer(DOOR_TIMER);
                         Robot_CloseDoor();
                         tapeCompare = ThisEvent.EventParam & 0b11;
                         if (tapeCompare == 0) {
@@ -524,6 +540,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         break;
 
                     case OBSTCL_BUMP:
+                        ES_Timer_StopTimer(BU_TAPE_TIMER);
+                        ES_Timer_StopTimer(TURN_TAPE_TIMER);
                         //if any of the obstacle bumpers were hit, go in reverse
                         Robot_Reverse(OBSTACLE_BACKUP_SPEED);
                         //start back up timer to determine how long robot backs up
@@ -535,6 +553,8 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
                     case WALL_BUMP:
+                        ES_Timer_StopTimer(BU_TAPE_TIMER);
+                        ES_Timer_StopTimer(TURN_TAPE_TIMER);
                         //if any of the wall bumpers were hit, go forward
                         Robot_Reverse(BUMP_BACKUP_SPEED);
                         // might need to add back in ES_InitTimer....

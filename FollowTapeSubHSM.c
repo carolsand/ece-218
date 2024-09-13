@@ -148,6 +148,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
 
                 case FOUND_TAPE:
                     Robot_Reverse(TAPE_BACKUP_SPEED);
+                    ES_Timer_InitTimer(BU_TAPE_TIMER, TIME_BACKUP_TAPE);
                     break;
 
                 case ES_TIMEOUT:
@@ -185,6 +186,7 @@ ES_Event RunFollowTapeSubHSM(ES_Event ThisEvent) {
                     break;
 
                 case FOUND_TAPE:
+                    ES_Timer_StopTimer(TURN_TAPE_TIMER);
                     Robot_Reverse(TAPE_BACKUP_SPEED);
                     //start back up timer to determine how long robot backs up
                     ES_Timer_InitTimer(BU_TAPE_TIMER, TIME_BACKUP_TAPE);

@@ -30,6 +30,12 @@
 /*******************************************************************************
  * PUBLIC #DEFINES                                                             *
  ******************************************************************************/
+#define TRAVEL_BACKUP_SPEED     65
+#define TRAVEL_TURN_SPEED       70
+#define TRAVEL_BACKUP_TIME      650
+#define TRAVEL_TURN_TIME        500
+#define TRAVEL_TIME             5000
+
 #define EVADE_WALL_BU_SPEED 70
 #define EVADE_OBSTCL_BU_SPEED 70
 #define EVADE_WALL_BU_TIME     500
@@ -46,6 +52,7 @@
 #define HALF_SECOND         (500)               // half second in msec
 #define CHARGE_CHECK_TIME   (3*60*1000)         // 3 minutes in msec 
 
+#define TRAVEL_SPEED           85
 #define NOMINAL_SPEED          80
 #define WALL_SPEED             70
 

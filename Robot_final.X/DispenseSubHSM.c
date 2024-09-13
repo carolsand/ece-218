@@ -167,7 +167,6 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     //switch to turn 90deg left state
                     if (ThisEvent.EventParam == BACK_UP_TIMER) {
                         Robot_Drive(0);
-                        //                        cancelTimer = 0;
                         LED_SetBank(LED_BANK1, 0xF);
                         nextState = Adjusting;
                         makeTransition = TRUE;
@@ -187,6 +186,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     break;
 
                 case AWAY_FROM_WALL_RIGHT: //we got misaligned trying to find the slot
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
                     //lets adjust
                     nextState = Adjusting;
                     makeTransition = TRUE;
@@ -194,6 +194,7 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     break;
 
                 case FOUND_TAPE: //if the rear ones are triggered and IR is close to wall switch to open door state
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
                     Robot_Drive(0);
                     ES_Timer_StopTimer(TIMEOUT_TIMER);
                     IRSensor = Robot_Right_IR_SensorStatus();
@@ -236,6 +237,8 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     }
                     break;
                 case WALL_DETECTED_RIGHT:
+                    ES_Timer_StopTimer(BACK_UP_TIMER);
+                    ES_Timer_StopTimer(TURN_TIMER);
                     nextState = Back_Up;
                     makeTransition = TRUE;
                     ThisEvent.EventType = ES_NO_EVENT;
@@ -277,8 +280,8 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     if (ThisEvent.EventParam == DOOR_TIMER) {
                         ES_Timer_StopTimer(TIMEOUT_TIMER);
                         Robot_CloseDoor();
-                        nextState = Back_Up; //reset the subHSM
-                        makeTransition = TRUE;
+                        CurrentState = Back_Up; //reset the subHSM
+                        //makeTransition = TRUE;
                     }
                     break;
                 case FOUND_TAPE:
