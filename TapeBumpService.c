@@ -32,7 +32,7 @@
  ******************************************************************************/
 
 #define BATTERY_DISCONNECT_THRESHOLD 175
-#define SAMPLING_PERIOD 200 //frequency is 5Hz
+#define SAMPLING_PERIOD 210 //frequency is 5Hz
 
 
 /*******************************************************************************
@@ -132,7 +132,9 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
 
     static unsigned char currentBumperValue = 0;
     static unsigned char currentTapeSensorValue = 0;
-
+    static unsigned char wallValue = 0;
+    static unsigned char obstclValue = 0;
+    static unsigned char returnValue = 0;
 
     switch (ThisEvent.EventType) {
         case ES_INIT:
@@ -148,22 +150,36 @@ ES_Event RunTapeBumpService(ES_Event ThisEvent) {
                 //read the current bumper value 
                 currentBumperValue = Robot_ReadBumpers();
 
+                wallValue = currentBumperValue >> 2;
+                obstclValue = currentBumperValue & 0b11;
                 //                if (currentBumperValue != lastBumperValue && currentBumperValue!=0) { //compare current bumper value with last bumper value                  
+
                 if (currentBumperValue != 0) { //compare current bumper value with last bumper value                  
+                    
                     if (currentBumperValue != lastBumperValue) {
-                        currentBumperState = BUMP; //if they don't match then update the state event to BUMP  } 
+                        
+                        if (obstclValue > 0) {
+                            currentBumperState = OBSTCL_BUMP;
+                            returnValue = obstclValue;
+                        } else {
+                            currentBumperState = WALL_BUMP; //if they don't match then update the state event to BUMP  } 
+                            returnValue = wallValue;
+                        }
+                        
                     } else {
                         currentBumperState = NO_BUMP;
                     }
+                    
                 } else { //if the current bumper value has not changed from last bumper
                     currentBumperState = NO_BUMP; //value then we can assume that the state is now NO_BUMP
                 }
 
-                if (currentBumperState == BUMP) { //event detected
+                
+                if (currentBumperState != NO_BUMP) { //event detected
 
                     // update ReturnEvent with the information of this event
                     ReturnEvent.EventType = currentBumperState;
-                    ReturnEvent.EventParam = currentBumperValue;
+                    ReturnEvent.EventParam = returnValue;
 
                     // update lastBumperState to the new state
                     //                    lastBumperState = currentBumperState;

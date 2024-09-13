@@ -28,7 +28,6 @@
         <itemPath>C:/ECE118/include/timers.h</itemPath>
       </logicalFolder>
       <itemPath>Robot.h</itemPath>
-      <itemPath>RobotHSM.h</itemPath>
       <itemPath>../ES_Configure.h</itemPath>
       <itemPath>../FollowTapeSubHSM.h</itemPath>
       <itemPath>../FollowWallSubHSM.h</itemPath>
@@ -36,6 +35,9 @@
       <itemPath>FinalEventChecker.h</itemPath>
       <itemPath>DispenseSubHSM.h</itemPath>
       <itemPath>IRService.h</itemPath>
+      <itemPath>TravelsubHSM.h</itemPath>
+      <itemPath>LapSubSubHSM.h</itemPath>
+      <itemPath>RobotHSM.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -76,6 +78,8 @@
       <itemPath>FinalEventChecker.c</itemPath>
       <itemPath>DispenseSubHSM.c</itemPath>
       <itemPath>IRService.c</itemPath>
+      <itemPath>TravelsubHSM.c</itemPath>
+      <itemPath>LapSubSubHSM.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

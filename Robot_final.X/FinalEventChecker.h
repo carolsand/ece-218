@@ -57,7 +57,6 @@
  * @author Gabriel H Elkaim, 2013.09.27 09:18
  * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
 uint8_t CheckBattery(void);
-uint8_t CheckTrackwire(void);
 
 
 //the bottom two refer to the tape sensors that would be on the side of the robot

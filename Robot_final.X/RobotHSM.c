@@ -182,31 +182,29 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         Robot_Drive(NOMINAL_SPEED); // start motors
                         break;
 
-                    case BUMP:
-                        bumperValue = ThisEvent.EventParam; //save bumper value
-                        bumpCompare = bumperValue & 0b11;
-                        if (bumpCompare > 0) {
-                            //if any of the obstacle bumpers were hit, go in reverse
-                            Robot_Reverse(OBSTACLE_BACKUP_SPEED);
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
-                            //transition to avoid dead bot state
-                            // now put the machine into the actual initial state
-                            nextState = AvoidDeadBot;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        } else {
-                            //if any of the wall bumpers were hit, go forward
-                            Robot_Reverse(BUMP_BACKUP_SPEED);
-                            // might need to add back in ES_InitTimer....
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
-                            //transition to follow wall state
-                            // now put the machine into the actual initial state
-                            nextState = FollowWall;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        }
+                    case OBSTCL_BUMP:
+                        //if any of the obstacle bumpers were hit, go in reverse
+                        Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
+                        //transition to avoid dead bot state
+                        // now put the machine into the actual initial state
+                        nextState = AvoidDeadBot;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+
+                    case WALL_BUMP:
+                        //if any of the wall bumpers were hit, go forward
+                        Robot_Reverse(BUMP_BACKUP_SPEED);
+                        // might need to add back in ES_InitTimer....
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
+                        //transition to follow wall state
+                        // now put the machine into the actual initial state
+                        nextState = FollowWall;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
                         break;
 
                     case FOUND_TAPE:
@@ -258,32 +256,29 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
 
-                    case BUMP:
-                        bumperValue = ThisEvent.EventParam; //save bumper value
-                        if (bumperValue & 0b11 > 0) {
-                            //if any of the obstacle bumpers were hit, go in reverse
-                            Robot_Reverse(OBSTACLE_BACKUP_SPEED);
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
-                            //transition to avoid dead bot state
-                            // now put the machine into the actual initial state
-                            nextState = AvoidDeadBot;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        } else {
-                            //if any of the wall bumpers were hit, go forward
-                            Robot_Reverse(BUMP_BACKUP_SPEED);
-                            // might need to add back in ES_InitTimer....
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
-                            //transition to follow wall state
-                            // now put the machine into the actual initial state
-                            nextState = FollowWall;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        }
+                    case OBSTCL_BUMP:
+                        //if any of the obstacle bumpers were hit, go in reverse
+                        Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
+                        //transition to avoid dead bot state
+                        // now put the machine into the actual initial state
+                        nextState = AvoidDeadBot;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
                         break;
-
+                    case WALL_BUMP:
+                        //if any of the wall bumpers were hit, go forward
+                        Robot_Reverse(BUMP_BACKUP_SPEED);
+                        // might need to add back in ES_InitTimer....
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
+                        //transition to follow wall state
+                        // now put the machine into the actual initial state
+                        nextState = FollowWall;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
                     case FOUND_TAPE:
                         tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
                         nextState = FollowTape;
@@ -316,25 +311,26 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         }
                         break;
 
-                    case BUMP:
-                        bumperValue = ThisEvent.EventParam; //save bumper value
-                        bumpCompare = bumperValue & 0b11;
-                        if (bumpCompare > 0) {
-                            //if any of the obstacle bumpers were hit, go in reverse
-                            Robot_Reverse(OBSTACLE_BACKUP_SPEED);
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
-                        } else {
-                            //if only the wall bumpers were hit, go forward
-                            Robot_Reverse(BUMP_BACKUP_SPEED);
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
-                            //transition to follow wall state
-                            // now put the machine into the actual initial state
-                            nextState = FollowWall;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        }
+                    case OBSTCL_BUMP:
+                        //if any of the obstacle bumpers were hit, go in reverse
+                        Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
+                        //transition to avoid dead bot state
+                        // now put the machine into the actual initial state
+                        break;
+
+                    case WALL_BUMP:
+                        //if any of the wall bumpers were hit, go forward
+                        Robot_Reverse(BUMP_BACKUP_SPEED);
+                        // might need to add back in ES_InitTimer....
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
+                        //transition to follow wall state
+                        // now put the machine into the actual initial state
+                        nextState = FollowWall;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
                         break;
 
                     case FOUND_TAPE:
@@ -396,20 +392,17 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ThisEvent.EventType = ES_NO_EVENT;
                         break;
 
-                    case BUMP:
-                        bumperValue = ThisEvent.EventParam; //save bumper value
-                        bumpCompare = bumperValue & 0b11;
-                        if (bumpCompare > 0) {
-                            //if any of the obstacle bumpers were hit, go in reverse
-                            Robot_Reverse(OBSTACLE_BACKUP_SPEED);
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
-                            //transition to avoid dead bot state
-                            // now put the machine into the actual initial state
-                            nextState = AvoidDeadBot;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        }
+                    case OBSTCL_BUMP:
+                        //if any of the obstacle bumpers were hit, go in reverse
+                        Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
+                        //transition to avoid dead bot state
+                        // now put the machine into the actual initial state
+                        nextState = AvoidDeadBot;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+
                         break;
 
                     case WALL_DETECTED_RIGHT:
@@ -464,20 +457,16 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         }
                         break;
 
-                    case BUMP:
-                        bumperValue = ThisEvent.EventParam;
-                        bumpCompare = bumperValue & 0b11;
-                        if (bumpCompare > 0) {
-                            //if any of the obstacle bumpers were hit, go in reverse
-                            Robot_Reverse(OBSTACLE_BACKUP_SPEED);
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
-                            //transition to avoid dead bot state
-                            // now put the machine into the actual initial state
-                            nextState = AvoidDeadBot;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        }
+                    case OBSTCL_BUMP:
+                        //if any of the obstacle bumpers were hit, go in reverse
+                        Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
+                        //transition to avoid dead bot state
+                        // now put the machine into the actual initial state
+                        nextState = AvoidDeadBot;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
                         break;
 
                     case FOUND_TAPE:
@@ -510,30 +499,28 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                     case ES_ENTRY:
                         break;
 
-                    case BUMP:
-                        bumperValue = ThisEvent.EventParam; //save bumper value
-                        bumpCompare = bumperValue & 0b11;
-                        if (bumpCompare > 0) {
-                            //if any of the obstacle bumpers were hit, go in reverse
-                            Robot_Reverse(OBSTACLE_BACKUP_SPEED);
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
-                            //transition to avoid dead bot state
-                            // now put the machine into the actual initial state
-                            nextState = AvoidDeadBot;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        } else {
-                            //if any of the wall bumpers were hit, go forward
-                            Robot_Reverse(BUMP_BACKUP_SPEED);
-                            //start back up timer to determine how long robot backs up
-                            ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
-                            //transition to follow wall state
-                            // now put the machine into the actual initial state
-                            nextState = FollowWall;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
-                        }
+                    case OBSTCL_BUMP:
+                        //if any of the obstacle bumpers were hit, go in reverse
+                        Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
+                        //transition to avoid dead bot state
+                        // now put the machine into the actual initial state
+                        nextState = AvoidDeadBot;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
+                        break;
+                    case WALL_BUMP:
+                        //if any of the wall bumpers were hit, go forward
+                        Robot_Reverse(BUMP_BACKUP_SPEED);
+                        // might need to add back in ES_InitTimer....
+                        //start back up timer to determine how long robot backs up
+                        ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
+                        //transition to follow wall state
+                        // now put the machine into the actual initial state
+                        nextState = FollowWall;
+                        makeTransition = TRUE;
+                        ThisEvent.EventType = ES_NO_EVENT;
                         break;
 
                     default:

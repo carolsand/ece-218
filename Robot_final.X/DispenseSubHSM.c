@@ -215,15 +215,12 @@ ES_Event RunDispenseSubHSM(ES_Event ThisEvent) {
                     break;
 
                     // maybe we need bump event here too???
-                case BUMP:
-                    bumperValue = ThisEvent.EventParam;
-                    compValue = bumperValue >> 2;
-                    if (compValue > 0) {
-                        //if any of the wall bumpers were hit, go in reverse
-                        Robot_Reverse(DISPENSE_BACKUP_SPEED);
-                        //start back up timer to determine how long robot backs up
-                        ES_Timer_InitTimer(BACK_UP_TIMER, DISPENSE_BACKUP_TIME);
-                    }
+                case WALL_BUMP:
+                    //if any of the wall bumpers were hit, go in reverse
+                    Robot_Reverse(DISPENSE_BACKUP_SPEED);
+                    //start back up timer to determine how long robot backs up
+                    ES_Timer_InitTimer(BACK_UP_TIMER, DISPENSE_BACKUP_TIME);
+
                     break;
             }
             break;

@@ -46,10 +46,9 @@ typedef enum {
     BATTERY_DISCONNECTED,
     FOUND_TAPE,
     LOST_TAPE,
-    BUMP,
+    WALL_BUMP,
+    OBSTCL_BUMP,
     NO_BUMP,
-    FOUND_TRACKWIRE,
-    LOST_TRACKWIRE,
     WALL_DETECTED_RIGHT,
     AWAY_FROM_WALL_RIGHT,
     WALL_DETECTED_LEFT,
@@ -73,10 +72,9 @@ static const char *EventNames[] = {
 	"BATTERY_DISCONNECTED",
 	"FOUND_TAPE",
 	"LOST_TAPE",
-	"BUMP",
+	"WALL_BUMP",
+	"OBSTCL_BUMP",
 	"NO_BUMP",
-	"FOUND_TRACKWIRE",
-	"LOST_TRACKWIRE",
 	"WALL_DETECTED_RIGHT",
 	"AWAY_FROM_WALL_RIGHT",
 	"WALL_DETECTED_LEFT",
@@ -93,7 +91,7 @@ static const char *EventNames[] = {
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST CheckBattery, CheckTrackwire
+#define EVENT_CHECK_LIST CheckBattery
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the
