@@ -175,9 +175,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                 InitDispenseSubHSM();
                 LED_SetBank(LED_BANK1, 0);
                 // now put the machine into the actual initial state
-                nextState = Traveling;
-                makeTransition = TRUE;
-                ThisEvent.EventType = ES_NO_EVENT;
+                setNextState(Traveling);
 
             }
             break;
@@ -192,9 +190,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         //we finished traveling, hopefully we collected good amount idk
                         if (ThisEvent.EventParam == TIMEOUT_TIMER) {
                             //transition back to running i guess 
-                            nextState = Running;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
+                            setNextState(Running);
 
                         }
                         break;
@@ -216,9 +212,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
 
                     case ES_TIMEOUT:
                         if (ThisEvent.EventParam == TURN_OBST_TIMER) {
-                            nextState = Running;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
+                            setNextState(Running);
                         }
                         break;
 
@@ -273,9 +267,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             ES_Timer_InitTimer(TURN_OBST_TIMER, TIME_TURN_OBSTACLE);
                         }
                         if (ThisEvent.EventParam == TURN_OBST_TIMER) {
-                            nextState = Running;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
+                            setNextState(Running);
                         }
                         break;
 
@@ -300,18 +292,14 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
                         //transition to follow wall state
                         // now put the machine into the actual initial state
-                        nextState = FollowWall;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(FollowWall);
                         break;
 
                     case FOUND_TAPE:
                         ES_Timer_StopTimer(TURN_OBST_TIMER);
                         ES_Timer_StopTimer(BU_OBST_TIMER);
                         tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
-                        nextState = FollowTape;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(FollowTape);
                         break;
 
                         //                    case WALL_DETECTED_LEFT: //the robot is facing the wrong way
@@ -331,9 +319,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                     case ES_ENTRY:
                         break;
                     case WALL_DETECTED_LEFT: //the robot is facing the wrong way
-                        nextState = CorrectRobot;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(CorrectRobot);
                         break;
                     case FOUND_TAPE:
                         //if we are here, it means that we hit the tape while
@@ -349,9 +335,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             if (IRSensor == WITHIN_RANGE && RearRightCorner == TAPE_PRESENT) {
                                 //we are next to the slot
                                 Robot_Drive(0);
-                                nextState = DispenseBalls;
-                                makeTransition = TRUE;
-                                ThisEvent.EventType = ES_NO_EVENT;
+                                setNextState(DispenseBalls);
                                 break;
                             }
                             Robot_Drive(NOMINAL_SPEED);
@@ -361,9 +345,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             //start back up timer to determine how long robot backs up
                             ES_Timer_InitTimer(BU_TAPE_TIMER, TIME_BACKUP_TAPE);
                         }
-                        nextState = FollowTape;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(FollowTape);
                         break;
 
                     case OBSTCL_BUMP:
@@ -375,18 +357,14 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
                         //transition to avoid dead bot state
                         // now put the machine into the actual initial state
-                        nextState = AvoidDeadBot;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(AvoidDeadBot);
 
                         break;
 
                     case WALL_DETECTED_RIGHT:
                         ES_Timer_StopTimer(TURN_BUMP_TIMER);
                         ES_Timer_StopTimer(BU_BUMP_TIMER);
-                        nextState = DispenseBalls;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(DispenseBalls);
                         //                        if (Robot_ReadRearRightTape() == TAPE_PRESENT) {
                         //                            //if we are next to the wall and the rear tape 
                         //                            //sensors are on the tape then we are by the slot
@@ -419,18 +397,14 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                             Robot_Drive(NOMINAL_SPEED); // start motors
                             //we have completed task of dispensing
                             //transition back to running i guess 
-                            nextState = Traveling;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
+                            setNextState(Traveling);
                         }
 
                         //we were unable to locate the slot so lets do another lap
                         if (ThisEvent.EventParam == TIMEOUT_TIMER) {
                             //ES_Timer_StopTimer(DOOR_TIMER);
                             //transition back to running i guess 
-                            nextState = Traveling;
-                            makeTransition = TRUE;
-                            ThisEvent.EventType = ES_NO_EVENT;
+                            setNextState(Traveling);
 
                         }
                         break;
@@ -444,9 +418,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
                         //transition to avoid dead bot state
                         // now put the machine into the actual initial state
-                        nextState = AvoidDeadBot;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(AvoidDeadBot);
                         break;
 
                     case FOUND_TAPE:
@@ -463,9 +435,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         //start back up timer to determine how long robot backs up
                         ES_Timer_InitTimer(BU_TAPE_TIMER, TIME_BACKUP_TAPE);
                         iAmByTheSlot = 1;
-                        nextState = FollowTape;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(FollowTape);
                         //}
                         break;
                     default:
@@ -490,9 +460,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
                         //transition to avoid dead bot state
                         // now put the machine into the actual initial state
-                        nextState = AvoidDeadBot;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(AvoidDeadBot);
                         break;
                     case WALL_BUMP:
                         ES_Timer_StopTimer(BU_TAPE_TIMER);
@@ -504,14 +472,10 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
                         ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
                         //transition to follow wall state
                         // now put the machine into the actual initial state
-                        nextState = FollowWall;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(FollowWall);
                         break;
                     case WALL_DETECTED_LEFT: //the robot is facing the wrong way
-                        nextState = CorrectRobot;
-                        makeTransition = TRUE;
-                        ThisEvent.EventType = ES_NO_EVENT;
+                        setNextState(CorrectRobot);
                         break;
                     default:
                         break;
@@ -583,9 +547,7 @@ void doStateRunning(ES_Event ThisEvent) {
             ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
             //transition to avoid dead bot state
             // now put the machine into the actual initial state
-            nextState = AvoidDeadBot;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+            setNextState(AvoidDeadBot);
             break;
 
         case WALL_BUMP:
@@ -596,9 +558,7 @@ void doStateRunning(ES_Event ThisEvent) {
             ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
             //transition to follow wall state
             // now put the machine into the actual initial state
-            nextState = FollowWall;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+            setNextState(FollowWall);
             break;
 
         case FOUND_TAPE:
@@ -607,16 +567,12 @@ void doStateRunning(ES_Event ThisEvent) {
                 iAmByTheSlot = 0;
             } else {
                 tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
-                nextState = FollowTape;
-                makeTransition = TRUE;
-                ThisEvent.EventType = ES_NO_EVENT;
+                setNextState(FollowTape);
             }
             break;
 
         case WALL_DETECTED_RIGHT:
-            nextState = DispenseBalls;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+            setNextState(DispenseBalls);
             break;
 
             //                                            case WALL_DETECTED_LEFT: //the robot is facing the wrong way
@@ -627,6 +583,9 @@ void doStateRunning(ES_Event ThisEvent) {
     }
 }
 
+/*
+ * Update to the next state.
+ */
 void setNextState(ES_STATE newState) {
     nextState = newState;
     makeTransition = TRUE;
