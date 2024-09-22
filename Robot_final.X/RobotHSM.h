@@ -25,6 +25,7 @@
  * PUBLIC #INCLUDES                                                            *
  ******************************************************************************/
 
+#include "ES_Framework" // This is the header for the Events and Services Framework
 #include "ES_Configure.h"   // defines ES_Event, INIT_EVENT, ENTRY_EVENT, and EXIT_EVENT
 
 /*******************************************************************************
@@ -111,7 +112,6 @@ void leavingTheSlot(void);
  * @author J. Edward Carryer, 2011.10.23 19:25 */
 uint8_t InitRobotHSM(uint8_t Priority);
 
-
 /**
  * @Function PostRobotHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be posted to queue
@@ -122,9 +122,6 @@ uint8_t InitRobotHSM(uint8_t Priority);
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
 uint8_t PostRobotHSM(ES_Event ThisEvent);
-
-
-
 
 /**
  * @Function RunRobotHSM(ES_Event ThisEvent)
@@ -164,6 +161,53 @@ unsigned char GrabTapeSensorValue(void);
  *        so that it can be passed to the subHSMs
  * @author cris vasquez, 2024.06.14 */
 unsigned char GrabBumperValue(void);
+
+/**
+ * @Function GrabObstacleSensorValue(void)
+ * @param none
+ * @return 4 bit value representing all obstacle sensors value reading
+ * 1 means obstacle is present and 0 means obstacle is not present
+ * from MSB to LSB - front left, front right, rear left, rear right
+ * @brief returns the reading of all the obstacle sensors from event parameter
+ *  so that it can be passed to the subHSMs
+ * 
+ * */
+ 
+ /**
+@Function doStateRunning(ES_Event ThisEvent)
+*
+* @brief This function is called when the robot is in the Running state. It will
+*        check for the tape sensors and bumpers to see if the robot needs to
+*        transition to a different state. If the robot is in the Running state
+*        and the tape sensors are triggered, the robot will transition to the
+*        Dispense state. If the robot is in the Running state and the bumpers
+*        are triggered, the robot will transition to the Evade state. If the
+*        robot is in the Running state and the tape sensors and bumpers are
+*        triggered, the robot will transition to the Evade state. If the robot
+*        is in the Running state and the tape sensors and bumpers are not
+*        triggered, the robot will continue to run.
+
+* @param ThisEvent - the event (type and param) to be responded.
+* @return Event - return event (type and param), in general should be ES_NO_EVENT
+* @author carol sanders, 2024.09.20
+*/
+
+/** 
+ * 
+ * @Function doStateFollowTape(ES_Event ThisEvent)
+ * 
+ * @brief This function is called when the robot is in the FollowTape state. It will
+ *      check for the tape sensors and bumpers to see if the robot needs to
+ *      transition to a different state. If the robot is in the FollowTape state
+ *      and the tape sensors are triggered, the robot will transition to the Dispense
+ *      state. If the robot is in the FollowTape state and the bumpers are triggered,
+ *      the robot will transition to the Evade state. If the robot is in the FollowTape
+ *      state and the tape sensors and bumpers are triggered, the robot will transition
+ *      to the Evade state. If the robot is in the FollowTape state and the tape sensors
+ *      and bumpers are not triggered, the robot will continue to follow the tape.
+ * @return Event - return event (type and param), in general should be ES_NO_EVENT
+ * @author carol sanders, 2024.09.20
+*/
 
 #endif /* HSM_Robot_H */
 
