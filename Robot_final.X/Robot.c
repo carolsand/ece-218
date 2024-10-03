@@ -257,6 +257,23 @@ char Robot_RightMtrSpeed(char newSpeed) {
 }
 
 /**
+ * @Function Robot_Set_Speed(char speed)
+ * @param speed - A value between -100 and 100 which is the new speed
+ * @param of the motor. 0 stops the motor. A NEGATIVE VALUE is REVERSE.
+ * @return SUCCESS or ERROR
+ * @brief  This function is used to set the speed of the motors going forward.
+ * @author Dyamic Duo, 2024.06.13*/
+char Robot_Set_Speed(char speed) {
+    char returnValue = SUCCESS;
+
+    returnValue = Robot_LeftMtrSpeed(speed);
+    returnValue = Robot_RightMtrSpeed(speed);
+
+    return returnValue;
+}
+
+
+/**
  * @Function Robot_Drive(char speed)
  * @param speed - A value between -100 and 100 which is the new speed
  * @param of the motor. 0 stops the motor. A NEGATIVE VALUE is REVERSE.
@@ -264,6 +281,7 @@ char Robot_RightMtrSpeed(char newSpeed) {
  * @brief  This function is used to set the speed of the motors going forward.
  * @author Dyamic Duo, 2024.06.13*/
 char Robot_Drive(char speed) {
+    /* DO NOT USE - use Robot_Set_Speed instead */
     char returnValue = SUCCESS;
 
     returnValue = Robot_LeftMtrSpeed(speed);
@@ -281,6 +299,7 @@ char Robot_Drive(char speed) {
  * @author Dyamic Duo, 2024.06.13*/
 char Robot_Reverse(char speed) {
     char returnValue = SUCCESS;
+    /* DO NOT USE - use Robot_Set_Speed instead */
     char trueSpeed = -speed;
 
     returnValue = Robot_LeftMtrSpeed(trueSpeed);
@@ -682,13 +701,13 @@ void main(void) {
             Robot_OpenDoor();
         }
         if (Robot_ReadObstclLeftBumper() == BUMPER_TRIPPED) {
-            Robot_Drive(0);
+            Robot_Set_Speed(0);
         }
         if (Robot_ReadWallRightBumper() == BUMPER_TRIPPED) {
             Robot_CloseDoor();
         }
         if (Robot_ReadObstclRightBumper() == BUMPER_TRIPPED) {
-            Robot_Drive(100);
+            Robot_Set_Speed(100);
         }
 
         i = GetChar();
@@ -754,7 +773,7 @@ void main(void) {
             RC_RemovePins(DOOR_SERVO);
         }
         if (i == 's') {
-            Robot_Drive(0);
+            Robot_Set_Speed(0);
         }
 
         if (i == 'l') {

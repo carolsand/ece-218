@@ -78,7 +78,7 @@ void leavingTheSlot(void) {
 uint8_t InitRobotHSM(uint8_t Priority) {
     MyPriority = Priority;
     CurrentState = InitPState;
-    
+
     // Post the initial transition event
     return ES_PostToService(MyPriority, INIT_EVENT);
 }
@@ -147,7 +147,7 @@ ES_Event RunRobotHSM(ES_Event ThisEvent) {
 
         case AvoidDeadBot:
             if (ThisEvent.EventType == ES_ENTRY) {
-                Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                Robot_Set_Speed(-OBSTACLE_BACKUP_SPEED);
                 ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
             } else if (ThisEvent.EventType == ES_TIMEOUT) {
                 if (ThisEvent.EventParam == BU_OBST_TIMER) {
@@ -223,12 +223,12 @@ void doStateRunning(ES_Event ThisEvent) {
     switch (ThisEvent.EventType) {
         case ES_ENTRY:
             Robot_CloseDoor();
-            Robot_Drive(NOMINAL_SPEED); // start motors
+            Robot_Set_Speed(NOMINAL_SPEED); // start motors
             break;
 
         case OBSTCL_BUMP:
             //if any of the obstacle bumpers were hit, go in reverse
-            Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+            Robot_Set_Speed(-OBSTACLE_BACKUP_SPEED);
             //start back up timer to determine how long robot backs up
             ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
             //transition to avoid dead bot state
@@ -238,7 +238,7 @@ void doStateRunning(ES_Event ThisEvent) {
 
         case WALL_BUMP:
             //if any of the wall bumpers were hit, go forward
-            Robot_Reverse(BUMP_BACKUP_SPEED);
+            Robot_Set_Speed(-BUMP_BACKUP_SPEED);
             // might need to add back in ES_InitTimer....
             //start back up timer to determine how long robot backs up
             ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
@@ -249,7 +249,7 @@ void doStateRunning(ES_Event ThisEvent) {
 
         case FOUND_TAPE:
             if (iAmByTheSlot) {
-                Robot_Drive(NOMINAL_SPEED); // start motors
+                Robot_Set_Speed(NOMINAL_SPEED); // start motors
                 iAmByTheSlot = 0;
             } else {
                 tapeSensorValue = ThisEvent.EventParam; //save tape sensor value
@@ -280,7 +280,7 @@ void doStateFollowTape(ES_Event ThisEvent){
                     ES_Timer_StopTimer(BU_TAPE_TIMER);
                     ES_Timer_StopTimer(TURN_TAPE_TIMER);
                     //if any of the obstacle bumpers were hit, go in reverse
-                    Robot_Reverse(OBSTACLE_BACKUP_SPEED);
+                    Robot_Set_Speed(-OBSTACLE_BACKUP_SPEED);
                     //start back up timer to determine how long robot backs up
                     ES_Timer_InitTimer(BU_OBST_TIMER, TIME_BACKUP_OBSTACLE);
                     //transition to avoid dead bot state
@@ -291,7 +291,7 @@ void doStateFollowTape(ES_Event ThisEvent){
                     ES_Timer_StopTimer(BU_TAPE_TIMER);
                     ES_Timer_StopTimer(TURN_TAPE_TIMER);
                     //if any of the wall bumpers were hit, go forward
-                    Robot_Reverse(BUMP_BACKUP_SPEED);
+                    Robot_Set_Speed(-BUMP_BACKUP_SPEED);
                     // might need to add back in ES_InitTimer....
                     //start back up timer to determine how long robot backs up
                     ES_Timer_InitTimer(BU_BUMP_TIMER, TIME_BACKUP_BUMP);
@@ -305,8 +305,7 @@ void doStateFollowTape(ES_Event ThisEvent){
                 default:
                     break;
             }
-        } 
-    
+        }
 }
 
 /*

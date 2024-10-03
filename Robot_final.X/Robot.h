@@ -55,6 +55,15 @@
 void Robot_Init(void);
 
 /**
+ * @Function Robot_Set_Speed(char speed)
+ * @param speed - A value between -100 and 100 which is the new speed
+ * @param of the motor. 0 stops the motor. A negative value is reverse.
+ * @return SUCCESS or ERROR
+ * @brief  This function is used to set the speed of the motors.
+ * @author Dyamic Duo, 2024.06.13*/
+char Robot_Set_Speed(char speed);
+
+/**
  * @Function Robot_Drive(char speed)
  * @param speed - A value between -100 and 100 which is the new speed
  * @param of the motor. 0 stops the motor. A negative value is reverse.
