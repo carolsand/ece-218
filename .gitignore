@@ -3,3 +3,8 @@ build/
 private/
 EnumToString.log
 .vscode/
+<<<<<<< Updated upstream
+=======
+.generated_files/*
+Robot_final.X/.generated_files/*
+>>>>>>> Stashed changes

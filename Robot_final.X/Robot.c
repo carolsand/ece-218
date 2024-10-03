@@ -1,6 +1,6 @@
 /*
  * File:   dynamicduo.c
- * Author: cas-l
+ * Author: cas-l 10/
  *
  * Created on May 22, 2024, 10:08 PM
  */
